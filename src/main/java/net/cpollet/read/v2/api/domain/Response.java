@@ -27,6 +27,7 @@ public class Response<IdType> {
     @Override
     public String toString() {
         Map<String, Object> map = new HashMap<>();
+        map.put("success", !hasErrors());
         map.put("executionTime", executionTime);
         map.put("result", values);
         map.put("messages", messages);
