@@ -14,8 +14,9 @@ public class TimerStage<IdType extends Id> implements Stage<IdType, String> {
     @Override
     public InternalResponse<IdType, String> execute(InternalRequest<IdType, String> request) {
         long start = System.currentTimeMillis();
-        return next.execute(request).withExecutionTime(
-                System.currentTimeMillis() - start
-        );
+        return next.execute(request)
+                .withExecutionTime(
+                        System.currentTimeMillis() - start
+                );
     }
 }
