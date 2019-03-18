@@ -14,9 +14,9 @@ public class AttributeConversionStage<IdType extends Id> implements Stage<IdType
     private final Stage<IdType, AttributeDef<IdType>> next;
     private final AttributeStore<IdType> attributesStore;
 
-    public AttributeConversionStage(AttributeStore<IdType> attributesStore, Stage<IdType, AttributeDef<IdType>> next) {
-        this.attributesStore = attributesStore;
+    public AttributeConversionStage(Stage<IdType, AttributeDef<IdType>> next, AttributeStore<IdType> attributesStore) {
         this.next = next;
+        this.attributesStore = attributesStore;
     }
 
     @Override

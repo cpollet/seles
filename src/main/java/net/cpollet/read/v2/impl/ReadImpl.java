@@ -34,7 +34,6 @@ public class ReadImpl<IdType extends Id> implements Read<IdType> {
         return InternalResponse.unwrap(
                 new TimerStage<>(
                         new AttributeConversionStage<>(
-                                attributeStore,
                                 new LogDeprecatedStage<>(
                                         new IdsValidationStage<>(
                                                 new ValueConversionStage<>(
@@ -45,7 +44,8 @@ public class ReadImpl<IdType extends Id> implements Read<IdType> {
                                                         caster
                                                 )
                                         )
-                                )
+                                ),
+                                attributeStore
                         )
                 ).execute(
                         InternalRequest.wrap(request)
