@@ -20,10 +20,10 @@ public class ReadImpl<IdType extends Id> implements Read<IdType> {
         if (attribute.name().equals("currency") && value.equals("currency:100000")) {
             throw new ConversionException("why not");
         }
-        return String.format("convert(%s)", value);
+        return attribute.nested() ? value : String.format("convert(%s)", value);
     };
 
-    private final ValueConverter<IdType, AttributeDef<IdType>> caster = (attribute, value) -> String.format("cast(%s)", value);
+    private final ValueConverter<IdType, AttributeDef<IdType>> caster = (attribute, value) -> attribute.nested() ? value : String.format("cast(%s)", value);
 
     public ReadImpl(AttributeStore<IdType> attributeStore) {
         this.attributeStore = attributeStore;

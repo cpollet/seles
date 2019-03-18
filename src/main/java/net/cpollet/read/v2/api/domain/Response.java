@@ -24,6 +24,14 @@ public class Response<IdType> {
         return !errors.isEmpty();
     }
 
+    public Map<IdType, Map<String, Object>> values() {
+        return values;
+    }
+
+    public Collection<String> errors() {
+        return errors;
+    }
+
     @Override
     public String toString() {
         Map<String, Object> map = new HashMap<>();

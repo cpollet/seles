@@ -2,6 +2,7 @@ package net.cpollet.read.v2.impl;
 
 import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.impl.methods.Method;
+import net.cpollet.read.v2.impl.methods.NestedMethod;
 import net.cpollet.read.v2.impl.methods.NoopMethod;
 
 import java.util.Objects;
@@ -21,6 +22,7 @@ public class AttributeDef<IdType extends Id> {
         this.invalid = invalid;
     }
 
+    @SuppressWarnings("unchecked")
     public static <IdType extends Id> AttributeDef<IdType> invalid(String name) {
         return new AttributeDef(name, NoopMethod.get(), true);
     }
@@ -35,6 +37,14 @@ public class AttributeDef<IdType extends Id> {
 
     public boolean invalid() {
         return invalid;
+    }
+
+    public boolean deprecated() {
+        return name.equals("currency");
+    }
+
+    public boolean nested() {
+        return method instanceof NestedMethod;
     }
 
     @Override
@@ -53,9 +63,5 @@ public class AttributeDef<IdType extends Id> {
     @Override
     public int hashCode() {
         return Objects.hash(name);
-    }
-
-    public boolean deprecated() {
-        return name.equals("currency");
     }
 }

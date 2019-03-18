@@ -33,6 +33,9 @@ public class IdsValidationStage<IdType extends Id> implements Stage<IdType, Attr
 
     @SuppressWarnings("unchecked")
     private Collection<IdType> invalidIds(Collection<IdType> ids) {
-        return Collections.singleton((IdType) new PortfolioId("999999"));
+        if (ids.contains(new PortfolioId("999999"))) {
+            return Collections.singleton((IdType) new PortfolioId("999999"));
+        }
+        return Collections.emptySet();
     }
 }

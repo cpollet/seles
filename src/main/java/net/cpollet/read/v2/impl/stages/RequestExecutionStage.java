@@ -12,39 +12,23 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class RequestExecutionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
     @Override
     public InternalResponse<IdType, AttributeDef<IdType>> execute(final InternalRequest<IdType, AttributeDef<IdType>> request) {
-        return new InternalResponse<>(
-                flatten(
-                        fetch(
-                                request.ids(),
-                                groupByMethod(request.attributes())
-                        )
-                )
+        FetchResult<IdType> fetchResult = fetch(
+                request.ids(),
+                groupByMethod(request.attributes())
         );
+
+        return new InternalResponse<>(fetchResult.result())
+                .withErrors(fetchResult.errors());
     }
 
-    private Map<IdType, Map<AttributeDef<IdType>, Object>> flatten(List<Map<IdType, Map<AttributeDef<IdType>, Object>>> listOfMaps) {
-        Map<IdType, Map<AttributeDef<IdType>, Object>> result = new HashMap<>();
-
-        for (Map<IdType, Map<AttributeDef<IdType>, Object>> map : listOfMaps) {
-            map.forEach((id, value) -> {
-                result.putIfAbsent(id, new HashMap<>());
-                result.get(id).putAll(value);
-            });
-        }
-
-        return result;
-    }
-
-    private List<Map<IdType, Map<AttributeDef<IdType>, Object>>> fetch(Collection<IdType> ids, Map<Method<IdType>, List<AttributeDef<IdType>>> attributesGroupedByMethod) {
-        return attributesGroupedByMethod.entrySet().parallelStream()
+    private FetchResult<IdType> fetch(Collection<IdType> ids, Map<Method<IdType>, List<AttributeDef<IdType>>> attributesGroupedByMethod) {
+        return attributesGroupedByMethod.entrySet().stream()
                 .map(e -> e.getKey().fetch(e.getValue(), ids))
-                .map(FetchResult::result) // FIXME do something about errors ;)
-                .collect(Collectors.toList());
+                .reduce(new FetchResult<>(), FetchResult::append);
     }
 
     private Map<Method<IdType>, List<AttributeDef<IdType>>> groupByMethod(Collection<AttributeDef<IdType>> attributes) {
