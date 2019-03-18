@@ -7,6 +7,7 @@ import net.cpollet.read.v2.api.domain.Response;
 import net.cpollet.read.v2.impl.stages.AttributeConversionStage;
 import net.cpollet.read.v2.impl.stages.ConversionException;
 import net.cpollet.read.v2.impl.stages.IdsValidationStage;
+import net.cpollet.read.v2.impl.stages.LogDeprecatedStage;
 import net.cpollet.read.v2.impl.stages.RequestExecutionStage;
 import net.cpollet.read.v2.impl.stages.TimerStage;
 import net.cpollet.read.v2.impl.stages.ValueConversionStage;
@@ -34,13 +35,15 @@ public class ReadImpl<IdType extends Id> implements Read<IdType> {
                 new TimerStage<>(
                         new AttributeConversionStage<>(
                                 attributeStore,
-                                new IdsValidationStage<>(
-                                        new ValueConversionStage<>(
+                                new LogDeprecatedStage<>(
+                                        new IdsValidationStage<>(
                                                 new ValueConversionStage<>(
-                                                        new RequestExecutionStage<>(),
-                                                        converter
-                                                ),
-                                                caster
+                                                        new ValueConversionStage<>(
+                                                                new RequestExecutionStage<>(),
+                                                                converter
+                                                        ),
+                                                        caster
+                                                )
                                         )
                                 )
                         )

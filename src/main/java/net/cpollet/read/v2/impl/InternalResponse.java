@@ -17,20 +17,22 @@ import java.util.stream.Collectors;
 public class InternalResponse<IdType extends Id, AttributeType> {
     private final Map<IdType, Map<AttributeType, Object>> values;
     private final Collection<String> errors;
+    private final Collection<String> messages;
     private final long executionTime;
 
-    private InternalResponse(Map<IdType, Map<AttributeType, Object>> values, Collection<String> errors, long executionTime) {
+    private InternalResponse(Map<IdType, Map<AttributeType, Object>> values, Collection<String> errors, Collection<String> messages, long executionTime) {
         this.values = Collections.unmodifiableMap(values);
         this.errors = Collections.unmodifiableCollection(errors);
+        this.messages = Collections.unmodifiableCollection(messages);
         this.executionTime = executionTime;
     }
 
     public InternalResponse(Map<IdType, Map<AttributeType, Object>> values) {
-        this(values, Collections.emptyList(), 0L);
+        this(values, Collections.emptyList(), Collections.emptyList(), 0L);
     }
 
     static <IdType extends Id> Response<IdType> unwrap(InternalResponse<IdType, String> response) {
-        return new Response<>(response.values, response.errors, response.executionTime);
+        return new Response<>(response.values, response.errors, response.messages, response.executionTime);
     }
 
     public <AttributeTypeTo> InternalResponse<IdType, AttributeTypeTo> mapAttributes(BiMap<AttributeType, AttributeTypeTo> conversionMap) {
@@ -40,7 +42,7 @@ public class InternalResponse<IdType extends Id, AttributeType> {
                         e -> convertAttributes(e.getValue(), conversionMap)
                 ));
 
-        return new InternalResponse<>(convertedMap, errors, executionTime);
+        return new InternalResponse<>(convertedMap, errors, messages, executionTime);
     }
 
     private <AttributeTypeTo> Map<AttributeTypeTo, Object> convertAttributes(Map<AttributeType, Object> map, BiMap<AttributeType, AttributeTypeTo> conversionMap) {
@@ -67,7 +69,7 @@ public class InternalResponse<IdType extends Id, AttributeType> {
             });
         });
 
-        return new InternalResponse<>(convertedValues, errors, executionTime)
+        return new InternalResponse<>(convertedValues, errors, messages, executionTime)
                 .withErrors(conversionErrors);
     }
 
@@ -78,11 +80,21 @@ public class InternalResponse<IdType extends Id, AttributeType> {
         ArrayList<String> mergedErrors = new ArrayList<>(this.errors.size() + errors.size());
         mergedErrors.addAll(this.errors);
         mergedErrors.addAll(errors);
-        return new InternalResponse<>(values, mergedErrors, executionTime);
+        return new InternalResponse<>(values, mergedErrors, messages, executionTime);
+    }
+
+    public InternalResponse<IdType, AttributeType> withMessages(Collection<String> messages) {
+        if (messages.isEmpty()) {
+            return this;
+        }
+        ArrayList<String> mergedMessages = new ArrayList<>(this.messages.size() + messages.size());
+        mergedMessages.addAll(this.messages);
+        mergedMessages.addAll(messages);
+        return new InternalResponse<>(values, errors, mergedMessages, executionTime);
     }
 
     public InternalResponse<IdType, AttributeType> withExecutionTime(long executionTime) {
-        return new InternalResponse<>(values, errors, executionTime);
+        return new InternalResponse<>(values, errors, messages, executionTime);
     }
 
     public boolean hasErrors() {

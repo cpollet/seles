@@ -54,4 +54,8 @@ public class AttributeDef<IdType extends Id> {
     public int hashCode() {
         return Objects.hash(name);
     }
+
+    public boolean deprecated() {
+        return name.equals("currency");
+    }
 }
