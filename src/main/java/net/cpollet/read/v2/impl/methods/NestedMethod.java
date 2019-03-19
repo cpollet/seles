@@ -13,13 +13,13 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class NestedMethod<IdType extends Id> implements Method<IdType> {
+public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements Method<IdType> {
     private final String prefix;
     private final AttributeDef<IdType> attribute;
-    private final ReadImpl read;
-    private final Function<Object, ? extends Id> idProvider;
+    private final ReadImpl<NestedIdType> read;
+    private final Function<Object, NestedIdType> idProvider;
 
-    public NestedMethod(String prefix, AttributeDef<IdType> attribute, ReadImpl read, Function<Object, ? extends Id> idProvider) {
+    public NestedMethod(String prefix, AttributeDef<IdType> attribute, ReadImpl<NestedIdType> read, Function<Object, NestedIdType> idProvider) {
         this.prefix = prefix;
         this.attribute = attribute;
         this.read = read;
@@ -28,7 +28,7 @@ public class NestedMethod<IdType extends Id> implements Method<IdType> {
 
     @Override
     public FetchResult<IdType> fetch(List<AttributeDef<IdType>> attributes, Collection<IdType> ids) {
-        Map<Id, IdType> nestedIdsToIds = attribute.method().fetch(Collections.singletonList(attribute), ids)
+        Map<NestedIdType, IdType> nestedIdsToIds = attribute.method().fetch(Collections.singletonList(attribute), ids)
                 .result().entrySet().stream()
                 .collect(Collectors.toMap(
                         e -> idProvider.apply(e.getValue().get(attribute)),
@@ -37,18 +37,18 @@ public class NestedMethod<IdType extends Id> implements Method<IdType> {
 
         Map<String, AttributeDef<IdType>> attributeNamesToAttributeDefs = attributes.stream()
                 .collect(Collectors.toMap(
-                        AttributeDef::name,
+                        a -> a.name().substring(prefix.length() + 1),
                         a -> a
                 ));
 
-        Response<Id> response = nestedFetch(attributes, nestedIdsToIds.keySet());
+        Response<NestedIdType> response = nestedFetch(attributeNamesToAttributeDefs.keySet(), nestedIdsToIds.keySet());
 
         Map<IdType, Map<AttributeDef<IdType>, Object>> result = response.values().entrySet().stream()
                 .collect(Collectors.toMap(
                         e -> nestedIdsToIds.get(e.getKey()),
                         e -> e.getValue().entrySet().stream()
                                 .collect(Collectors.toMap(
-                                        e1 -> attributeNamesToAttributeDefs.get(prefix + "." + e1.getKey()),
+                                        v -> attributeNamesToAttributeDefs.get(v.getKey()),
                                         Map.Entry::getValue
                                 ))
                 ));
@@ -61,13 +61,10 @@ public class NestedMethod<IdType extends Id> implements Method<IdType> {
         );
     }
 
-    @SuppressWarnings("unchecked")
-    private Response<Id> nestedFetch(List<AttributeDef<IdType>> attributes, Collection<Id> nestedIds) {
-        return read.execute(new Request(
+    private Response<NestedIdType> nestedFetch(Collection<String> attributes, Collection<NestedIdType> nestedIds) {
+        return read.execute(new Request<>(
                 nestedIds,
-                attributes.stream()
-                        .map(a -> a.name().substring(prefix.length() + 1))
-                        .collect(Collectors.toSet())
+                attributes
         ));
     }
 }

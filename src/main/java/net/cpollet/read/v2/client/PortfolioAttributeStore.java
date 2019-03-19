@@ -50,7 +50,7 @@ public class PortfolioAttributeStore implements AttributeStore<PortfolioId> {
         }));
         attributes.put("currency", new AttributeDef<>("currency", standard));
 
-        NestedMethod<PortfolioId> nested = new NestedMethod<>(
+        NestedMethod<PortfolioId, PersonId> nested = new NestedMethod<>(
                 "owner",
                 attributes.get("ownerId"),
                 new ReadImpl<>(PersonAttributeStore.INSTANCE),

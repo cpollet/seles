@@ -48,7 +48,7 @@ public class PersonAttributeStore implements AttributeStore<PersonId> {
             }
         }));
 
-        NestedMethod<PersonId> nested = new NestedMethod<>(
+        NestedMethod<PersonId, PortfolioId> nested = new NestedMethod<>(
                 "portfolio",
                 attributes.get("portfolioId"),
                 new ReadImpl<>(PortfolioAttributeStore.INSTANCE),
