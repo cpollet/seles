@@ -1,5 +1,6 @@
 package net.cpollet.read.v2.impl.methods;
 
+import net.cpollet.read.v2.api.Read;
 import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.domain.Request;
 import net.cpollet.read.v2.api.domain.Response;
@@ -16,10 +17,10 @@ import java.util.stream.Collectors;
 public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements Method<IdType> {
     private final String prefix;
     private final AttributeDef<IdType> attribute;
-    private final ReadImpl<NestedIdType> read;
+    private final Read<NestedIdType> read;
     private final Function<Object, NestedIdType> idProvider;
 
-    public NestedMethod(String prefix, AttributeDef<IdType> attribute, ReadImpl<NestedIdType> read, Function<Object, NestedIdType> idProvider) {
+    public NestedMethod(String prefix, AttributeDef<IdType> attribute, Read<NestedIdType> read, Function<Object, NestedIdType> idProvider) {
         this.prefix = prefix;
         this.attribute = attribute;
         this.read = read;
