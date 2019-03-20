@@ -16,8 +16,8 @@ public class Reader {
         PortfolioAttributeStore portfolioAttributeStore = new PortfolioAttributeStore();
         PersonAttributeStore personAttributeStore = new PersonAttributeStore();
 
-        ReadImpl<PortfolioId> portfolioReader = new ReadImpl<>(portfolioAttributeStore);
-        ReadImpl<PersonId> personReader = new ReadImpl<>(personAttributeStore);
+        ReadImpl<PortfolioId> portfolioReader = new ReadImpl<>(portfolioAttributeStore, new DefaultIdValidator<>());
+        ReadImpl<PersonId> personReader = new ReadImpl<>(personAttributeStore, new DefaultIdValidator<>());
 
         portfolioAttributeStore.nest(
                 Arrays.asList("owner.email", "owner.id_unknown", "owner.portfolio.id"),

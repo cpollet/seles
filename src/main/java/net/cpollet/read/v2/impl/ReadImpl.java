@@ -1,5 +1,6 @@
 package net.cpollet.read.v2.impl;
 
+import net.cpollet.read.v2.api.IdValidator;
 import net.cpollet.read.v2.api.Read;
 import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.domain.Request;
@@ -15,6 +16,7 @@ import net.cpollet.read.v2.impl.stages.ValueConverter;
 
 public class ReadImpl<IdType extends Id> implements Read<IdType> {
     private final AttributeStore<IdType> attributeStore;
+    private final IdValidator<IdType> idValidator;
 
     private final ValueConverter<IdType, AttributeDef<IdType>> converter = (attribute, value) -> {
         if (attribute.name().equals("currency") && value.equals("currency:100000")) {
@@ -25,8 +27,9 @@ public class ReadImpl<IdType extends Id> implements Read<IdType> {
 
     private final ValueConverter<IdType, AttributeDef<IdType>> caster = (attribute, value) -> attribute.nested() ? value : String.format("cast(%s)", value);
 
-    public ReadImpl(AttributeStore<IdType> attributeStore) {
+    public ReadImpl(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator) {
         this.attributeStore = attributeStore;
+        this.idValidator = idValidator;
     }
 
     @Override
@@ -42,8 +45,8 @@ public class ReadImpl<IdType extends Id> implements Read<IdType> {
                                                                 converter
                                                         ),
                                                         caster
-                                                )
-                                        )
+                                                ),
+                                                new CachedIdValidator<>(idValidator))
                                 ),
                                 attributeStore
                         )
