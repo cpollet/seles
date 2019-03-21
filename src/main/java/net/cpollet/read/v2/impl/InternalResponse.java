@@ -54,11 +54,11 @@ public class InternalResponse<IdType extends Id, AttributeType> {
     }
 
     public InternalResponse<IdType, AttributeType> convertValues(Map<AttributeType, ValueConverter<AttributeType>> converters) {
-        Map<IdType, Map<AttributeType, Object>> convertedValues = new HashMap<>();
+        Map<IdType, Map<AttributeType, Object>> convertedValues = new HashMap<>(values.size());
         List<String> conversionErrors = new ArrayList<>();
 
         values.forEach((id, attributesValues) -> {
-            convertedValues.putIfAbsent(id, new HashMap<>());
+            convertedValues.putIfAbsent(id, new HashMap<>(values.get(id).size()));
             attributesValues.forEach((attribute, value) -> {
                 try {
                     convertedValues.get(id).put(attribute, converters.get(attribute).toExternalValue(attribute, value));

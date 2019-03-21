@@ -2,6 +2,7 @@ package net.cpollet.read.v2.impl.stages;
 
 import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.impl.AttributeDef;
+import net.cpollet.read.v2.impl.ConversionResult;
 import net.cpollet.read.v2.impl.InternalRequest;
 import net.cpollet.read.v2.impl.InternalResponse;
 
@@ -26,8 +27,11 @@ public class ValueConversionStage<IdType extends Id> implements Stage<IdType, At
                         converterSupplier
                 ));
 
+        ConversionResult<InternalRequest<IdType, AttributeDef<IdType>>> conversionResult = request.convertValues(converters);
+
         return next
-                .execute(request)
-                .convertValues(converters);
+                .execute(conversionResult.result())
+                .convertValues(converters)
+                .withErrors(conversionResult.errors());
     }
 }

@@ -54,16 +54,34 @@ public class AttributeDef<IdType extends Id> {
     }
 
     public ValueConverter<AttributeDef<IdType>> converter() {
-        return (attribute, value) -> {
-            if (attribute.name().equals("currency") && value.equals("currency:100000")) {
-                throw new ConversionException("why not");
+        return new ValueConverter<AttributeDef<IdType>>() {
+            @Override
+            public Object toExternalValue(AttributeDef<IdType> attribute, Object value) throws ConversionException {
+                if (attribute.name().equals("currency") && value.equals("currency:100000")) {
+                    throw new ConversionException("why not");
+                }
+                return attribute.nested() ? value : String.format("externalValue(%s)", value);
             }
-            return attribute.nested() ? value : String.format("externalValue(%s)", value);
+
+            @Override
+            public Object toInternalValue(AttributeDef<IdType> attribute, Object value) throws ConversionException {
+                return value;
+            }
         };
     }
 
-    public <IdType extends Id> ValueConverter<AttributeDef<IdType>> caster() {
-        return (attribute, value) -> attribute.nested() ? value : String.format("externalCast(%s)", value);
+    public ValueConverter<AttributeDef<IdType>> caster() {
+        return new ValueConverter<AttributeDef<IdType>>() {
+            @Override
+            public Object toExternalValue(AttributeDef<IdType> attribute, Object value) throws ConversionException {
+                return attribute.nested() ? value : String.format("externalCast(%s)", value);
+            }
+
+            @Override
+            public Object toInternalValue(AttributeDef<IdType> attribute, Object value) throws ConversionException {
+                return value;
+            }
+        };
     }
 
     @Override

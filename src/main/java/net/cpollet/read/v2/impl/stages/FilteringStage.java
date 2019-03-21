@@ -34,7 +34,12 @@ public class FilteringStage<IdType extends Id> implements Stage<IdType, Attribut
 
         return next.execute(
                 request.withoutAttributes(filteredAttributes)
-        ).append(filteredValues);
-
+        )
+                .append(filteredValues)
+                .withMessages(
+                        filteredAttributes.stream()
+                                .map(a -> String.format("[%s] is hidden", a.name()))
+                                .collect(Collectors.toSet())
+                );
     }
 }

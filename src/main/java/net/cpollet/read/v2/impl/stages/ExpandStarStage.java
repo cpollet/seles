@@ -20,6 +20,10 @@ public class ExpandStarStage<IdType extends Id> implements Stage<IdType, String>
 
     @Override
     public InternalResponse<IdType, String> execute(InternalRequest<IdType, String> request) {
+        if (!request.is(InternalRequest.RequestType.READ)) {
+            throw new IllegalStateException("Can only apply ExpandStarStage to a request of type READ");
+        }
+
         if (!request.attributes().contains("*")) {
             return next.execute(request);
         }

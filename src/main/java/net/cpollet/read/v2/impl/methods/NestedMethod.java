@@ -1,10 +1,12 @@
 package net.cpollet.read.v2.impl.methods;
 
-import net.cpollet.read.v2.api.Read;
+import net.cpollet.read.v2.api.Executor;
 import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.domain.Request;
 import net.cpollet.read.v2.api.domain.Response;
 import net.cpollet.read.v2.impl.AttributeDef;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,15 +16,17 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements Method<IdType> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NestedMethod.class);
+
     private final String prefix;
     private final AttributeDef<IdType> attribute;
-    private final Read<NestedIdType> read;
+    private final Executor<NestedIdType> executor;
     private final Function<Object, NestedIdType> idProvider;
 
-    public NestedMethod(String prefix, AttributeDef<IdType> attribute, Read<NestedIdType> read, Function<Object, NestedIdType> idProvider) {
+    public NestedMethod(String prefix, AttributeDef<IdType> attribute, Executor<NestedIdType> executor, Function<Object, NestedIdType> idProvider) {
         this.prefix = prefix;
         this.attribute = attribute;
-        this.read = read;
+        this.executor = executor;
         this.idProvider = idProvider;
     }
 
@@ -61,8 +65,17 @@ public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements
         );
     }
 
+    @Override
+    public Collection<String> update(Map<AttributeDef<IdType>, Object> attributeValues, Collection<IdType> ids) {
+        ids.forEach(
+                id -> attributeValues.forEach((a, v) -> LOGGER.info("{}:{} -> {}", id, a, v))
+        );
+
+        return Collections.emptyList();
+    }
+
     private Response<NestedIdType> nestedFetch(Collection<String> attributes, Collection<NestedIdType> nestedIds) {
-        return read.execute(new Request<>(
+        return executor.read(new Request<>(
                 nestedIds,
                 attributes
         ));
