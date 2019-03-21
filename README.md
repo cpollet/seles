@@ -1,1 +1,12 @@
-
+ - log stacktrace
+ - stop execution
+ - crud
+ - search
+ - inject stages from client
+ - audit / security
+ - unit tests
+ - attributes metadata
+ - invalidate cache
+ - filtering stage
+ - rights stage
+ - better separation client/api/impl
