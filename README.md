@@ -7,6 +7,5 @@
  - unit tests
  - attributes metadata
  - invalidate cache
- - filtering stage
  - rights stage
  - better separation client/api/impl

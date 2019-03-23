@@ -100,4 +100,14 @@ public class InternalResponse<IdType extends Id, AttributeType> {
     public boolean hasErrors() {
         return !errors.isEmpty();
     }
+
+    public InternalResponse<IdType, AttributeType> append(Map<IdType, Map<AttributeType, String>> values) {
+        HashMap<IdType, Map<AttributeType, Object>> newResult = new HashMap<>(this.values);
+        values.forEach((key, value) -> {
+            newResult.putIfAbsent(key, new HashMap<>());
+            newResult.get(key).putAll(value);
+        });
+
+        return new InternalResponse<>(newResult, errors, messages, executionTime);
+    }
 }
