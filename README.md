@@ -10,3 +10,4 @@
  - filtering stage
  - rights stage
  - better separation client/api/impl
+ - *
