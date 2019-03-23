@@ -5,7 +5,6 @@ import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.domain.Request;
 import net.cpollet.read.v2.api.domain.Response;
 import net.cpollet.read.v2.impl.AttributeDef;
-import net.cpollet.read.v2.impl.ReadImpl;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -67,5 +66,9 @@ public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements
                 nestedIds,
                 attributes
         ));
+    }
+
+    public boolean supports(String attributeName) {
+        return attributeName.startsWith(prefix + ".");
     }
 }
