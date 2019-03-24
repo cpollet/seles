@@ -8,6 +8,7 @@ import net.cpollet.read.v2.api.domain.Request;
 import net.cpollet.read.v2.api.domain.Response;
 import net.cpollet.read.v2.impl.stages.AttributeConversionStage;
 import net.cpollet.read.v2.impl.stages.ConversionException;
+import net.cpollet.read.v2.impl.stages.ExpandStarStage;
 import net.cpollet.read.v2.impl.stages.FilteringStage;
 import net.cpollet.read.v2.impl.stages.IdsValidationStage;
 import net.cpollet.read.v2.impl.stages.LogDeprecatedStage;
@@ -38,19 +39,22 @@ public class ReadImpl<IdType extends Id> implements Read<IdType> {
     public Response<IdType> execute(Request<IdType> request) {
         return InternalResponse.unwrap(
                 new TimerStage<>(
-                        new AttributeConversionStage<>(
-                                new LogDeprecatedStage<>(
-                                        new IdsValidationStage<>(
-                                                new ValueConversionStage<>(
+                        new ExpandStarStage<>(
+                                new AttributeConversionStage<>(
+                                        new LogDeprecatedStage<>(
+                                                new IdsValidationStage<>(
                                                         new ValueConversionStage<>(
-                                                                new FilteringStage<>(
-                                                                        new RequestExecutionStage<>()
+                                                                new ValueConversionStage<>(
+                                                                        new FilteringStage<>(
+                                                                                new RequestExecutionStage<>()
+                                                                        ),
+                                                                        converter
                                                                 ),
-                                                                converter
+                                                                caster
                                                         ),
-                                                        caster
-                                                ),
-                                                new CachedIdValidator<>(idValidator))
+                                                        new CachedIdValidator<>(idValidator))
+                                        ),
+                                        attributeStore
                                 ),
                                 attributeStore
                         )

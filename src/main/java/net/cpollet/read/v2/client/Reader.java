@@ -14,6 +14,7 @@ import net.cpollet.read.v2.impl.methods.StandardMethod;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,6 +51,14 @@ public class Reader {
                                         "owner.id_unknown",
                                         "owner.portfolio.id"
                                 )
+                        )
+                )
+        );
+        System.out.println(
+                portfolioReader.execute(
+                        new Request<>(
+                                Collections.singletonList(new PortfolioId("100000")),
+                                Collections.singletonList("*")
                         )
                 )
         );
