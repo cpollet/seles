@@ -29,6 +29,12 @@ public class InternalRequest<IdType, AttributeType> {
         return new InternalRequest<>(newIds, attributes);
     }
 
+    public InternalRequest<IdType, AttributeType> withAttributes(Collection<AttributeType> attributesToAdd) {
+        ArrayList<AttributeType> newAttributes = new ArrayList<>(attributes);
+        newAttributes.addAll(attributesToAdd);
+        return new InternalRequest<>(ids, newAttributes);
+    }
+
     public InternalRequest<IdType, AttributeType> withoutAttributes(Collection<AttributeType> attributesToRemove) {
         ArrayList<AttributeType> newAttributes = new ArrayList<>(attributes);
         newAttributes.removeAll(attributesToRemove);

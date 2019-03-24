@@ -17,12 +17,14 @@ public class DefaultAttributeStore<IdType extends Id> implements AttributeStore<
 
     private final String context;
     private final Map<String, AttributeDef<IdType>> attributes;
+    private final Map<String, AttributeDef<IdType>> nestedAttributesCache;
     private final Collection<NestedMethod<IdType, ? extends Id>> nestedAttributes;
 
     public DefaultAttributeStore(String context) {
         this.context = context;
-        attributes = new ConcurrentHashMap<>();
-        nestedAttributes = new Vector<>();
+        this.attributes = new ConcurrentHashMap<>();
+        this.nestedAttributesCache = new ConcurrentHashMap<>();
+        this.nestedAttributes = new Vector<>();
     }
 
     @Override
@@ -39,6 +41,9 @@ public class DefaultAttributeStore<IdType extends Id> implements AttributeStore<
     public AttributeDef<IdType> fetch(String attributeName) {
         if (attributes.containsKey(attributeName)) {
             return attributes.get(attributeName);
+        }
+        if (nestedAttributesCache.containsKey(attributeName)) {
+            return nestedAttributesCache.get(attributeName);
         }
 
         return nestedAttributes.stream()
@@ -57,9 +62,14 @@ public class DefaultAttributeStore<IdType extends Id> implements AttributeStore<
                             }
 
                             AttributeDef<IdType> attributeDef = new AttributeDef<>(attributeName, l.get(0));
-                            attributes.put(attributeName, attributeDef);
+                            nestedAttributesCache.put(attributeName, attributeDef);
                             return attributeDef;
                         }
                 ));
+    }
+
+    @Override
+    public Collection<AttributeDef<IdType>> directAttributes() {
+        return attributes.values();
     }
 }
