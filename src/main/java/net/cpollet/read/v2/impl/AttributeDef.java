@@ -64,4 +64,8 @@ public class AttributeDef<IdType extends Id> {
     public int hashCode() {
         return Objects.hash(name);
     }
+
+    public boolean filtered() {
+        return name.equals("email") || name.equals("hidden") || name.equals("filtered");
+    }
 }

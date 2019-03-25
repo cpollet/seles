@@ -19,7 +19,7 @@ public class FilteringStage<IdType extends Id> implements Stage<IdType, Attribut
     @Override
     public InternalResponse<IdType, AttributeDef<IdType>> execute(InternalRequest<IdType, AttributeDef<IdType>> request) {
         Set<AttributeDef<IdType>> filteredAttributes = request.attributes().stream()
-                .filter(a -> a.name().equals("email"))
+                .filter(AttributeDef::filtered)
                 .collect(Collectors.toSet());
 
         Map<IdType, Map<AttributeDef<IdType>, String>> filteredValues = request.ids().stream()
