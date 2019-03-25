@@ -53,7 +53,7 @@ public class InternalResponse<IdType extends Id, AttributeType> {
                 ));
     }
 
-    public InternalResponse<IdType, AttributeType> convertValues(ValueConverter<IdType, AttributeType> converter) {
+    public InternalResponse<IdType, AttributeType> convertValues(ValueConverter<AttributeType> converter) {
         Map<IdType, Map<AttributeType, Object>> convertedValues = new HashMap<>();
         List<String> conversionErrors = new ArrayList<>();
 

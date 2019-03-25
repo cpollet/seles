@@ -21,14 +21,14 @@ public class ReadImpl<IdType extends Id> implements Read<IdType> {
     private final AttributeStore<IdType> attributeStore;
     private final IdValidator<IdType> idValidator;
 
-    private final ValueConverter<IdType, AttributeDef<IdType>> converter = (attribute, value) -> {
+    private final ValueConverter<AttributeDef<IdType>> converter = (attribute, value) -> {
         if (attribute.name().equals("currency") && value.equals("currency:100000")) {
             throw new ConversionException("why not");
         }
         return attribute.nested() ? value : String.format("convert(%s)", value);
     };
 
-    private final ValueConverter<IdType, AttributeDef<IdType>> caster = (attribute, value) -> attribute.nested() ? value : String.format("cast(%s)", value);
+    private final ValueConverter<AttributeDef<IdType>> caster = (attribute, value) -> attribute.nested() ? value : String.format("cast(%s)", value);
 
     public ReadImpl(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator) {
         this.attributeStore = attributeStore;

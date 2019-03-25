@@ -7,9 +7,9 @@ import net.cpollet.read.v2.impl.InternalResponse;
 
 public class ValueConversionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
     private final Stage<IdType, AttributeDef<IdType>> next;
-    private final ValueConverter<IdType, AttributeDef<IdType>> converter;
+    private final ValueConverter<AttributeDef<IdType>> converter;
 
-    public ValueConversionStage(Stage<IdType, AttributeDef<IdType>> next, ValueConverter<IdType, AttributeDef<IdType>> converter) {
+    public ValueConversionStage(Stage<IdType, AttributeDef<IdType>> next, ValueConverter<AttributeDef<IdType>> converter) {
         this.next = next;
         this.converter = converter;
     }
