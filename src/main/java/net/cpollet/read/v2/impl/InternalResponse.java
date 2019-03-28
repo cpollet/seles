@@ -61,7 +61,7 @@ public class InternalResponse<IdType extends Id, AttributeType> {
             convertedValues.putIfAbsent(id, new HashMap<>());
             attributesValues.forEach((attribute, value) -> {
                 try {
-                    convertedValues.get(id).put(attribute, converters.get(attribute).convert(attribute, value));
+                    convertedValues.get(id).put(attribute, converters.get(attribute).toExternalValue(attribute, value));
                 } catch (ConversionException e) {
                     conversionErrors.add(String.format("Error while converting attribute [%s] value for key [%s]", attribute, id));
                     // LOG ERROR

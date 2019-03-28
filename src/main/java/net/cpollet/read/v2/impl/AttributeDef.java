@@ -58,12 +58,12 @@ public class AttributeDef<IdType extends Id> {
             if (attribute.name().equals("currency") && value.equals("currency:100000")) {
                 throw new ConversionException("why not");
             }
-            return attribute.nested() ? value : String.format("convert(%s)", value);
+            return attribute.nested() ? value : String.format("externalValue(%s)", value);
         };
     }
 
     public <IdType extends Id> ValueConverter<AttributeDef<IdType>> caster() {
-        return (attribute, value) -> attribute.nested() ? value : String.format("cast(%s)", value);
+        return (attribute, value) -> attribute.nested() ? value : String.format("externalCast(%s)", value);
     }
 
     @Override
