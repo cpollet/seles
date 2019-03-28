@@ -53,7 +53,7 @@ public class InternalResponse<IdType extends Id, AttributeType> {
                 ));
     }
 
-    public InternalResponse<IdType, AttributeType> convertValues(ValueConverter<AttributeType> converter) {
+    public InternalResponse<IdType, AttributeType> convertValues(Map<AttributeType, ValueConverter<AttributeType>> converters) {
         Map<IdType, Map<AttributeType, Object>> convertedValues = new HashMap<>();
         List<String> conversionErrors = new ArrayList<>();
 
@@ -61,7 +61,7 @@ public class InternalResponse<IdType extends Id, AttributeType> {
             convertedValues.putIfAbsent(id, new HashMap<>());
             attributesValues.forEach((attribute, value) -> {
                 try {
-                    convertedValues.get(id).put(attribute, converter.convert(attribute, value));
+                    convertedValues.get(id).put(attribute, converters.get(attribute).convert(attribute, value));
                 } catch (ConversionException e) {
                     conversionErrors.add(String.format("Error while converting attribute [%s] value for key [%s]", attribute, id));
                     // LOG ERROR
