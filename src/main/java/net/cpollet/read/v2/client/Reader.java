@@ -86,7 +86,7 @@ public class Reader {
                 );
             }
         }));
-        portfolioAttributeStore.nest(new NestedMethod<>(
+        portfolioAttributeStore.add(new NestedMethod<>(
                 "owner", portfolioAttributeStore.fetch("ownerId"), personReader, o -> new PersonId((Integer) o)
         ));
     }
@@ -111,7 +111,7 @@ public class Reader {
                 );
             }
         }));
-        personAttributeStore.nest(new NestedMethod<>(
+        personAttributeStore.add(new NestedMethod<>(
                 "portfolio", personAttributeStore.fetch("portfolioId"), portfolioReader, o -> new PortfolioId((String) o)
         ));
     }

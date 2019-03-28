@@ -33,7 +33,7 @@ public class DefaultAttributeStore<IdType extends Id> implements AttributeStore<
     }
 
     @Override
-    public <NestedIdType extends Id> void nest(NestedMethod<IdType, NestedIdType> nestedMethod) {
+    public <NestedIdType extends Id> void add(NestedMethod<IdType, NestedIdType> nestedMethod) {
         nestedAttributes.add(nestedMethod);
     }
 
