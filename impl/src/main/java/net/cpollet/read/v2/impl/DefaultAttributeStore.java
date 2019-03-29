@@ -1,6 +1,5 @@
 package net.cpollet.read.v2.impl;
 
-import net.cpollet.read.v2.api.AttributeStore;
 import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.impl.methods.NestedMethod;
 import org.slf4j.Logger;

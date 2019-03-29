@@ -1,6 +1,5 @@
 package net.cpollet.read.v2.impl;
 
-import net.cpollet.read.v2.api.AttributeStore;
 import net.cpollet.read.v2.api.Executor;
 import net.cpollet.read.v2.api.IdValidator;
 import net.cpollet.read.v2.api.domain.Id;

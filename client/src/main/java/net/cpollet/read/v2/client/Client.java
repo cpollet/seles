@@ -1,11 +1,11 @@
 package net.cpollet.read.v2.client;
 
-import net.cpollet.read.v2.api.AttributeStore;
 import net.cpollet.read.v2.api.Executor;
 import net.cpollet.read.v2.api.domain.Request;
 import net.cpollet.read.v2.client.domain.PersonId;
 import net.cpollet.read.v2.client.domain.PortfolioId;
 import net.cpollet.read.v2.impl.AttributeDef;
+import net.cpollet.read.v2.impl.AttributeStore;
 import net.cpollet.read.v2.impl.CachedIdValidator;
 import net.cpollet.read.v2.impl.DefaultAttributeStore;
 import net.cpollet.read.v2.impl.ExecutorImpl;
