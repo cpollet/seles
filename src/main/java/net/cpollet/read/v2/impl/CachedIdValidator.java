@@ -4,16 +4,17 @@ import net.cpollet.read.v2.api.IdValidator;
 import net.cpollet.read.v2.api.domain.Id;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CachedIdValidator<IdType extends Id> implements IdValidator<IdType> {
+public class CachedIdValidator<IdType extends Id> implements IdValidator<IdType>, Cache {
     private final IdValidator<IdType> nested;
     private final Set<IdType> validIds;
 
     public CachedIdValidator(IdValidator<IdType> nested) {
         this.nested = nested;
-        this.validIds = new HashSet<>();
+        this.validIds = Collections.synchronizedSet(new HashSet<>());
     }
 
     @Override
@@ -37,5 +38,11 @@ public class CachedIdValidator<IdType extends Id> implements IdValidator<IdType>
         HashSet<IdType> newValidIds = new HashSet<>(ids);
         newValidIds.removeAll(invalidIds);
         validIds.addAll(newValidIds);
+    }
+
+    @Override
+    public void invalidate() {
+        // remove all elements of the final validIds Set
+        validIds.retainAll(Collections.<IdType>emptySet());
     }
 }

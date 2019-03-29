@@ -42,7 +42,7 @@ public class ExecutorImpl<IdType extends Id> implements Executor<IdType> {
                                                                 ),
                                                                 AttributeDef::caster
                                                         ),
-                                                        new CachedIdValidator<>(idValidator)
+                                                        idValidator
                                                 )
                                         ),
                                         attributeStore
@@ -73,7 +73,7 @@ public class ExecutorImpl<IdType extends Id> implements Executor<IdType> {
                                                         ),
                                                         AttributeDef::caster
                                                 ),
-                                                new CachedIdValidator<>(idValidator)
+                                                idValidator
                                         )
                                 ),
                                 attributeStore

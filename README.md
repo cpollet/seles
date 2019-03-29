@@ -6,7 +6,6 @@
  - audit / security
  - unit tests
  - attributes metadata
- - invalidate cache
  - rights stage
  - better separation client/api/impl
  - access mode check stage

@@ -6,6 +6,7 @@ import net.cpollet.read.v2.api.domain.Request;
 import net.cpollet.read.v2.client.domain.PersonId;
 import net.cpollet.read.v2.client.domain.PortfolioId;
 import net.cpollet.read.v2.impl.AttributeDef;
+import net.cpollet.read.v2.impl.CachedIdValidator;
 import net.cpollet.read.v2.impl.DefaultAttributeStore;
 import net.cpollet.read.v2.impl.ExecutorImpl;
 import net.cpollet.read.v2.impl.methods.FetchResult;
@@ -32,8 +33,14 @@ public class Client {
         AttributeStore<PortfolioId> portfolioAttributeStore = new DefaultAttributeStore<>("portfolio");
         AttributeStore<PersonId> personAttributeStore = new DefaultAttributeStore<>("person");
 
-        Executor<PortfolioId> portfolioExecutor = new ExecutorImpl<>(portfolioAttributeStore, new DefaultIdValidator<>());
-        Executor<PersonId> personExecutor = new ExecutorImpl<>(personAttributeStore, new DefaultIdValidator<>());
+        Executor<PortfolioId> portfolioExecutor = new ExecutorImpl<>(
+                portfolioAttributeStore,
+                new CachedIdValidator<>(new DefaultIdValidator<>())
+        );
+        Executor<PersonId> personExecutor = new ExecutorImpl<>(
+                personAttributeStore,
+                new CachedIdValidator<>(new DefaultIdValidator<>())
+        );
 
         configurePortfolioAttributesStore(portfolioAttributeStore, personExecutor);
         configurePersonAttributesStore(personAttributeStore, portfolioExecutor);
