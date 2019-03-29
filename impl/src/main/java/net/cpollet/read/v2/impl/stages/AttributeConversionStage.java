@@ -1,12 +1,13 @@
 package net.cpollet.read.v2.impl.stages;
 
-import net.cpollet.read.v2.impl.AttributeStore;
 import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.impl.AttributeDef;
+import net.cpollet.read.v2.impl.AttributeStore;
 import net.cpollet.read.v2.impl.InternalRequest;
 import net.cpollet.read.v2.impl.InternalResponse;
 import net.cpollet.read.v2.impl.data.BiMap;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,20 +22,20 @@ public class AttributeConversionStage<IdType extends Id> implements Stage<IdType
 
     @Override
     public InternalResponse<IdType, String> execute(final InternalRequest<IdType, String> request) {
-        Set<AttributeDef<IdType>> attributes = request.attributes().stream()
-                .map(attributesStore::fetch)
-                .collect(Collectors.toSet());
-
-        Set<String> invalidAttributes = attributes.stream()
-                .filter(AttributeDef::invalid)
-                .map(AttributeDef::name)
-                .collect(Collectors.toSet());
-
         BiMap<AttributeDef<IdType>, String> validAttributesMap = new BiMap<>(
-                attributes.stream()
-                        .filter(a -> !a.invalid())
-                        .collect(Collectors.toMap(a -> a, AttributeDef::name))
+                request.attributes().stream()
+                        .map(attributesStore::fetch)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toMap(
+                                a -> a,
+                                AttributeDef::name
+                        ))
         );
+
+        Set<String> invalidAttributes = request.attributes().stream()
+                .filter(attributeName -> !validAttributesMap.rightContains(attributeName))
+                .collect(Collectors.toSet());
 
         return next
                 .execute(

@@ -36,4 +36,12 @@ public class BiMap<L, R> {
     public R getRight(L left) {
         return leftToRight.get(left);
     }
+
+    public boolean rightContains(R right) {
+        return rightToLeft.containsKey(right);
+    }
+
+    public boolean leftContains(L left) {
+        return leftToRight.containsKey(left);
+    }
 }

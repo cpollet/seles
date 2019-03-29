@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -37,12 +38,12 @@ public class DefaultAttributeStore<IdType extends Id> implements AttributeStore<
     }
 
     @Override
-    public AttributeDef<IdType> fetch(String attributeName) {
+    public Optional<AttributeDef<IdType>> fetch(String attributeName) {
         if (attributes.containsKey(attributeName)) {
-            return attributes.get(attributeName);
+            return Optional.of(attributes.get(attributeName));
         }
         if (nestedAttributesCache.containsKey(attributeName)) {
-            return nestedAttributesCache.get(attributeName);
+            return Optional.of(nestedAttributesCache.get(attributeName));
         }
 
         return nestedAttributes.stream()
@@ -52,17 +53,17 @@ public class DefaultAttributeStore<IdType extends Id> implements AttributeStore<
                         l -> {
                             if (l.isEmpty()) {
                                 LOGGER.info("Attribute '{}:{}' does not exist", context, attributeName);
-                                return AttributeDef.invalid(attributeName);
+                                return Optional.empty();
                             }
 
                             if (l.size() > 1) {
                                 LOGGER.info("Attribute '{}:{}' is supported by multiple nested methods, expected only one", context, attributeName);
-                                return AttributeDef.invalid(attributeName);
+                                return Optional.empty();
                             }
 
                             AttributeDef<IdType> attributeDef = new AttributeDef<>(attributeName, l.get(0));
                             nestedAttributesCache.put(attributeName, attributeDef);
-                            return attributeDef;
+                            return Optional.of(attributeDef);
                         }
                 ));
     }

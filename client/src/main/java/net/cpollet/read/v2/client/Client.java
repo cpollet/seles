@@ -137,7 +137,7 @@ public class Client {
             }
         }));
         portfolioAttributeStore.add(new NestedMethod<>(
-                "owner", portfolioAttributeStore.fetch("ownerId"), personExecutor, o -> new PersonId((Integer) o)
+                "owner", portfolioAttributeStore.fetch("ownerId").orElseThrow(IllegalStateException::new), personExecutor, o -> new PersonId((Integer) o)
         ));
     }
 
@@ -170,7 +170,7 @@ public class Client {
             }
         }));
         personAttributeStore.add(new NestedMethod<>(
-                "portfolio", personAttributeStore.fetch("portfolioId"), portfolioExecutor, o -> new PortfolioId((String) o)
+                "portfolio", personAttributeStore.fetch("portfolioId").orElseThrow(IllegalStateException::new), portfolioExecutor, o -> new PortfolioId((String) o)
         ));
     }
 }
