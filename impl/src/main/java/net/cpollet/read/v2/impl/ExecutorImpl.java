@@ -32,14 +32,14 @@ public class ExecutorImpl<IdType extends Id> implements Executor<IdType> {
                                 new AttributeConversionStage<>(
                                         new LogDeprecatedStage<>(
                                                 new IdsValidationStage<>(
-                                                        new ValueConversionStage<>(
+                                                        new FilteringStage<>(
                                                                 new ValueConversionStage<>(
-                                                                        new FilteringStage<>(
-                                                                                new ReadRequestExecutionStage<>()
+                                                                        new ValueConversionStage<>(
+                                                                                new ReadRequestExecutionStage<>(),
+                                                                                AttributeDef::converter
                                                                         ),
-                                                                        AttributeDef::converter
-                                                                ),
-                                                                AttributeDef::caster
+                                                                        AttributeDef::caster
+                                                                )
                                                         ),
                                                         idValidator
                                                 )
@@ -61,16 +61,16 @@ public class ExecutorImpl<IdType extends Id> implements Executor<IdType> {
                         new AttributeConversionStage<>(
                                 new LogDeprecatedStage<>(
                                         new IdsValidationStage<>(
-                                                new ValueConversionStage<>(
+                                                new FilteringStage<>(
                                                         new ValueConversionStage<>(
-                                                                new FilteringStage<>(
+                                                                new ValueConversionStage<>(
                                                                         new UpdateRequestExecutionStage<>(
                                                                                 new ReadRequestExecutionStage<>()
-                                                                        )
+                                                                        ),
+                                                                        AttributeDef::converter
                                                                 ),
-                                                                AttributeDef::converter
-                                                        ),
-                                                        AttributeDef::caster
+                                                                AttributeDef::caster
+                                                        )
                                                 ),
                                                 idValidator
                                         )
