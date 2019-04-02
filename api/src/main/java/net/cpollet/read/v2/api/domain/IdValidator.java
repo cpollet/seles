@@ -1,4 +1,4 @@
-package net.cpollet.read.v2.api;
+package net.cpollet.read.v2.api.domain;
 
 import net.cpollet.read.v2.api.domain.Id;
 

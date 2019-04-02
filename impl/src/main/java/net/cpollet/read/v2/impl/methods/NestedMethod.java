@@ -1,10 +1,12 @@
 package net.cpollet.read.v2.impl.methods;
 
-import net.cpollet.read.v2.api.Executor;
+import net.cpollet.read.v2.api.execution.Executor;
+import net.cpollet.read.v2.api.methods.FetchResult;
+import net.cpollet.read.v2.api.methods.Method;
 import net.cpollet.read.v2.api.domain.Id;
-import net.cpollet.read.v2.api.domain.Request;
-import net.cpollet.read.v2.api.domain.Response;
-import net.cpollet.read.v2.impl.AttributeDef;
+import net.cpollet.read.v2.api.execution.Request;
+import net.cpollet.read.v2.api.execution.Response;
+import net.cpollet.read.v2.api.attribute.AttributeDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

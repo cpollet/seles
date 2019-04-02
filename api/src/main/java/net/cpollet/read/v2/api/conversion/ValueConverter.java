@@ -1,4 +1,4 @@
-package net.cpollet.read.v2.impl.stages;
+package net.cpollet.read.v2.api.conversion;
 
 public interface ValueConverter<AttributeType> {
     Object toExternalValue(AttributeType attribute, Object value) throws ConversionException;

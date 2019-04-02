@@ -1,6 +1,10 @@
-package net.cpollet.read.v2.impl;
+package net.cpollet.read.v2.impl.attribute;
 
+import net.cpollet.read.v2.api.attribute.AttributeDef;
+import net.cpollet.read.v2.api.attribute.AttributeStore;
+import net.cpollet.read.v2.api.execution.Executor;
 import net.cpollet.read.v2.api.domain.Id;
+import net.cpollet.read.v2.impl.conversion.NoopValueConverter;
 import net.cpollet.read.v2.impl.methods.NestedMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DefaultAttributeStore<IdType extends Id> implements AttributeStore<IdType> {
@@ -33,8 +38,8 @@ public class DefaultAttributeStore<IdType extends Id> implements AttributeStore<
     }
 
     @Override
-    public <NestedIdType extends Id> void add(NestedMethod<IdType, NestedIdType> nestedMethod) {
-        nestedAttributes.add(nestedMethod);
+    public <NestedIdType extends Id> void nest(String prefix, AttributeDef<IdType> attribute, Executor<NestedIdType> executor, Function<Object, NestedIdType> idProvider) {
+        nestedAttributes.add(new NestedMethod<>(prefix, attribute, executor, idProvider));
     }
 
     @Override
@@ -61,7 +66,12 @@ public class DefaultAttributeStore<IdType extends Id> implements AttributeStore<
                                 return Optional.empty();
                             }
 
-                            AttributeDef<IdType> attributeDef = new AttributeDef<>(attributeName, l.get(0));
+                            AttributeDef<IdType> attributeDef = new AttributeDef<>(
+                                    attributeName,
+                                    l.get(0),
+                                    NoopValueConverter.instance(),
+                                    NoopValueConverter.instance()
+                            );
                             nestedAttributesCache.put(attributeName, attributeDef);
                             return Optional.of(attributeDef);
                         }

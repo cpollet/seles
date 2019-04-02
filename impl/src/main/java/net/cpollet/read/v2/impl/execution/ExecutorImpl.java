@@ -1,10 +1,12 @@
-package net.cpollet.read.v2.impl;
+package net.cpollet.read.v2.impl.execution;
 
-import net.cpollet.read.v2.api.Executor;
-import net.cpollet.read.v2.api.IdValidator;
+import net.cpollet.read.v2.api.attribute.AttributeDef;
+import net.cpollet.read.v2.api.attribute.AttributeStore;
+import net.cpollet.read.v2.api.execution.Executor;
+import net.cpollet.read.v2.api.domain.IdValidator;
 import net.cpollet.read.v2.api.domain.Id;
-import net.cpollet.read.v2.api.domain.Request;
-import net.cpollet.read.v2.api.domain.Response;
+import net.cpollet.read.v2.api.execution.Request;
+import net.cpollet.read.v2.api.execution.Response;
 import net.cpollet.read.v2.impl.stages.AttributeConversionStage;
 import net.cpollet.read.v2.impl.stages.ExpandStarStage;
 import net.cpollet.read.v2.impl.stages.FilteringStage;

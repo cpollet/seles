@@ -1,20 +1,16 @@
 package net.cpollet.read.v2.client;
 
-import net.cpollet.read.v2.api.Executor;
-import net.cpollet.read.v2.api.domain.Request;
+import net.cpollet.read.v2.api.attribute.AttributeDef;
+import net.cpollet.read.v2.api.attribute.AttributeStore;
+import net.cpollet.read.v2.api.execution.Executor;
+import net.cpollet.read.v2.api.methods.FetchResult;
+import net.cpollet.read.v2.api.methods.Method;
+import net.cpollet.read.v2.api.execution.Request;
 import net.cpollet.read.v2.client.domain.PersonId;
 import net.cpollet.read.v2.client.domain.PortfolioId;
-import net.cpollet.read.v2.impl.AttributeDef;
-import net.cpollet.read.v2.impl.AttributeStore;
-import net.cpollet.read.v2.impl.CachedIdValidator;
-import net.cpollet.read.v2.impl.DefaultAttributeStore;
-import net.cpollet.read.v2.impl.ExecutorImpl;
-import net.cpollet.read.v2.impl.methods.FetchResult;
-import net.cpollet.read.v2.impl.methods.Method;
-import net.cpollet.read.v2.impl.methods.NestedMethod;
-import net.cpollet.read.v2.impl.methods.StandardMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,24 +22,20 @@ import java.util.stream.Collectors;
 
 public class Client {
     private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
-    private static final Method<PortfolioId> standardPortfolio = new StandardMethod<>();
-    private static final Method<PersonId> standardPerson = new StandardMethod<>();
 
     public static void main(String[] args) {
-        AttributeStore<PortfolioId> portfolioAttributeStore = new DefaultAttributeStore<>("portfolio");
-        AttributeStore<PersonId> personAttributeStore = new DefaultAttributeStore<>("person");
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
 
-        Executor<PortfolioId> portfolioExecutor = new ExecutorImpl<>(
-                portfolioAttributeStore,
-                new CachedIdValidator<>(new DefaultIdValidator<>())
-        );
-        Executor<PersonId> personExecutor = new ExecutorImpl<>(
-                personAttributeStore,
-                new CachedIdValidator<>(new DefaultIdValidator<>())
-        );
+        AttributeStore<PortfolioId> portfolioAttributeStore = (AttributeStore<PortfolioId>) context.getBean("portfolio.attributeStore");
+        Executor<PortfolioId> portfolioExecutor = (Executor<PortfolioId>) context.getBean("portfolio.executor");
+        Method<PortfolioId> portfolioStandard = (Method<PortfolioId>) context.getBean("portfolio.standard");
 
-        configurePortfolioAttributesStore(portfolioAttributeStore, personExecutor);
-        configurePersonAttributesStore(personAttributeStore, portfolioExecutor);
+        AttributeStore<PersonId> personAttributeStore = (AttributeStore<PersonId>) context.getBean("person.attributeStore");
+        Executor<PersonId> personExecutor = (Executor<PersonId>) context.getBean("person.executor");
+        Method<PersonId> personStandard = (Method<PersonId>) context.getBean("person.standard");
+
+        configurePersonAttributesStore(personAttributeStore, portfolioExecutor, personStandard);
+        configurePortfolioAttributesStore(portfolioAttributeStore, personExecutor, portfolioStandard);
 
         read(portfolioExecutor);
         write(portfolioExecutor);
@@ -104,7 +96,7 @@ public class Client {
         );
     }
 
-    private static void configurePortfolioAttributesStore(AttributeStore<PortfolioId> portfolioAttributeStore, Executor<PersonId> personExecutor) {
+    private static void configurePortfolioAttributesStore(AttributeStore<PortfolioId> portfolioAttributeStore, Executor<PersonId> personExecutor, Method<PortfolioId> standardPortfolio) {
         portfolioAttributeStore.add("id", new AttributeDef<>("id", standardPortfolio));
         portfolioAttributeStore.add("status", new AttributeDef<>("status", standardPortfolio));
         portfolioAttributeStore.add("currency", new AttributeDef<>("currency", standardPortfolio));
@@ -136,12 +128,15 @@ public class Client {
                 return Collections.emptyList();
             }
         }));
-        portfolioAttributeStore.add(new NestedMethod<>(
-                "owner", portfolioAttributeStore.fetch("ownerId").orElseThrow(IllegalStateException::new), personExecutor, o -> new PersonId((Integer) o)
-        ));
+        portfolioAttributeStore.nest(
+                "owner",
+                portfolioAttributeStore.fetch("ownerId").orElseThrow(IllegalStateException::new),
+                personExecutor,
+                o -> new PersonId((Integer) o)
+        );
     }
 
-    private static void configurePersonAttributesStore(AttributeStore<PersonId> personAttributeStore, Executor<PortfolioId> portfolioExecutor) {
+    private static void configurePersonAttributesStore(AttributeStore<PersonId> personAttributeStore, Executor<PortfolioId> portfolioExecutor, Method<PersonId> standardPerson) {
         personAttributeStore.add("email", new AttributeDef<>("email", standardPerson));
         personAttributeStore.add("portfolioId", new AttributeDef<>("portfolioId", new Method<PersonId>() {
             @Override
@@ -169,8 +164,11 @@ public class Client {
                 return Collections.emptyList();
             }
         }));
-        personAttributeStore.add(new NestedMethod<>(
-                "portfolio", personAttributeStore.fetch("portfolioId").orElseThrow(IllegalStateException::new), portfolioExecutor, o -> new PortfolioId((String) o)
-        ));
+        personAttributeStore.nest(
+                "portfolio",
+                personAttributeStore.fetch("portfolioId").orElseThrow(IllegalStateException::new),
+                portfolioExecutor,
+                o -> new PortfolioId((String) o)
+        );
     }
 }

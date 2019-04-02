@@ -1,6 +1,7 @@
-package net.cpollet.read.v2.impl;
+package net.cpollet.read.v2.impl.domain;
 
-import net.cpollet.read.v2.api.IdValidator;
+import net.cpollet.read.v2.api.Cache;
+import net.cpollet.read.v2.api.domain.IdValidator;
 import net.cpollet.read.v2.api.domain.Id;
 
 import java.util.Collection;

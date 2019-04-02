@@ -1,4 +1,4 @@
-package net.cpollet.read.v2.impl;
+package net.cpollet.read.v2.impl.conversion;
 
 import java.util.Collection;
 import java.util.Collections;

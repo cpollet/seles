@@ -1,8 +1,6 @@
-package net.cpollet.read.v2.api;
+package net.cpollet.read.v2.api.execution;
 
 import net.cpollet.read.v2.api.domain.Id;
-import net.cpollet.read.v2.api.domain.Request;
-import net.cpollet.read.v2.api.domain.Response;
 
 public interface Executor<IdType extends Id> {
     Response<IdType> read(Request<IdType> request);

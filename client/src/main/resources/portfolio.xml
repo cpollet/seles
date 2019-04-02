@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="portfolio.attributeStore" class="net.cpollet.read.v2.impl.attribute.DefaultAttributeStore">
+        <constructor-arg name="context" value="portfolio"/>
+    </bean>
+
+    <bean id="portfolio.executor" class="net.cpollet.read.v2.impl.execution.ExecutorImpl">
+        <constructor-arg name="attributeStore" ref="portfolio.attributeStore"/>
+        <constructor-arg name="idValidator">
+            <bean class="net.cpollet.read.v2.impl.domain.CachedIdValidator">
+                <constructor-arg name="nested">
+                    <bean class="net.cpollet.read.v2.client.domain.PortfolioIdValidator"/>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="portfolio.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod"/>
+
+</beans>

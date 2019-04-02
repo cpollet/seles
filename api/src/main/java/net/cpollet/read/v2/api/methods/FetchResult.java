@@ -1,7 +1,7 @@
-package net.cpollet.read.v2.impl.methods;
+package net.cpollet.read.v2.api.methods;
 
+import net.cpollet.read.v2.api.attribute.AttributeDef;
 import net.cpollet.read.v2.api.domain.Id;
-import net.cpollet.read.v2.impl.AttributeDef;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +13,7 @@ public class FetchResult<IdType extends Id> {
     private final Map<IdType, Map<AttributeDef<IdType>, Object>> result;
     private final Collection<String> errors;
 
-    FetchResult(Map<IdType, Map<AttributeDef<IdType>, Object>> result, Collection<String> errors) {
+    public FetchResult(Map<IdType, Map<AttributeDef<IdType>, Object>> result, Collection<String> errors) {
         this.result = Collections.unmodifiableMap(result);
         this.errors = Collections.unmodifiableCollection(errors);
     }

@@ -1,10 +1,11 @@
-package net.cpollet.read.v2.impl;
+package net.cpollet.read.v2.impl.execution;
 
 import net.cpollet.read.v2.api.domain.Id;
-import net.cpollet.read.v2.api.domain.Request;
+import net.cpollet.read.v2.api.execution.Request;
+import net.cpollet.read.v2.impl.conversion.ConversionResult;
 import net.cpollet.read.v2.impl.data.BiMap;
-import net.cpollet.read.v2.impl.stages.ConversionException;
-import net.cpollet.read.v2.impl.stages.ValueConverter;
+import net.cpollet.read.v2.api.conversion.ConversionException;
+import net.cpollet.read.v2.api.conversion.ValueConverter;
 
 import java.util.ArrayList;
 import java.util.Arrays;

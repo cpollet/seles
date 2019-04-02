@@ -1,4 +1,4 @@
-package net.cpollet.read.v2.api.domain;
+package net.cpollet.read.v2.api.execution;
 
 import java.util.Collection;
 import java.util.Collections;

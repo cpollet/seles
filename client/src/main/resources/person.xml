@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="person.attributeStore" class="net.cpollet.read.v2.impl.attribute.DefaultAttributeStore">
+        <constructor-arg name="context" value="person"/>
+    </bean>
+
+    <bean id="person.executor" class="net.cpollet.read.v2.impl.execution.ExecutorImpl">
+        <constructor-arg name="attributeStore" ref="person.attributeStore"/>
+        <constructor-arg name="idValidator">
+            <bean class="net.cpollet.read.v2.impl.domain.CachedIdValidator">
+                <constructor-arg name="nested">
+                    <bean class="net.cpollet.read.v2.client.domain.DefaultIdValidator"/>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="person.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod"/>
+
+</beans>

@@ -1,7 +1,8 @@
-package net.cpollet.read.v2.impl;
+package net.cpollet.read.v2.impl.attribute;
 
+import net.cpollet.read.v2.api.attribute.AttributeDef;
 import net.cpollet.read.v2.api.domain.Id;
-import net.cpollet.read.v2.impl.methods.Method;
+import net.cpollet.read.v2.api.methods.Method;
 
 import java.util.ArrayList;
 import java.util.Collection;
