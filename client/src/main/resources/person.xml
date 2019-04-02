@@ -6,6 +6,24 @@
 
     <bean id="person.attributeStore" class="net.cpollet.read.v2.impl.attribute.DefaultAttributeStore">
         <constructor-arg name="context" value="person"/>
+        <constructor-arg name="attributes">
+            <list>
+                <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                    <constructor-arg name="name" value="email"/>
+                    <constructor-arg name="method" ref="person.method.standard"/>
+                    <constructor-arg name="converter" ref="person.converter.default"/>
+                    <constructor-arg name="caster" ref="person.caster.default"/>
+                </bean>
+                <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                    <constructor-arg name="name" value="portfolioId"/>
+                    <constructor-arg name="method">
+                        <bean class="net.cpollet.read.v2.client.methods.OwnedPortfolioIdMethod"/>
+                    </constructor-arg>
+                    <constructor-arg name="converter" ref="person.converter.default"/>
+                    <constructor-arg name="caster" ref="person.caster.default"/>
+                </bean>
+            </list>
+        </constructor-arg>
     </bean>
 
     <bean id="person.executor" class="net.cpollet.read.v2.impl.execution.ExecutorImpl">
@@ -19,6 +37,8 @@
         </constructor-arg>
     </bean>
 
-    <bean id="person.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod"/>
+    <bean id="person.method.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod"/>
 
+    <bean id="person.converter.default" class="net.cpollet.read.v2.client.conversion.DefaultValueConverter"/>
+    <bean id="person.caster.default" class="net.cpollet.read.v2.client.conversion.DefaultValueCaster"/>
 </beans>

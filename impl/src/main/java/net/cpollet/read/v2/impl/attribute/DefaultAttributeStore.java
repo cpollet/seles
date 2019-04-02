@@ -2,14 +2,15 @@ package net.cpollet.read.v2.impl.attribute;
 
 import net.cpollet.read.v2.api.attribute.AttributeDef;
 import net.cpollet.read.v2.api.attribute.AttributeStore;
-import net.cpollet.read.v2.api.execution.Executor;
 import net.cpollet.read.v2.api.domain.Id;
+import net.cpollet.read.v2.api.execution.Executor;
 import net.cpollet.read.v2.impl.conversion.NoopValueConverter;
 import net.cpollet.read.v2.impl.methods.NestedMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Vector;
@@ -25,9 +26,15 @@ public class DefaultAttributeStore<IdType extends Id> implements AttributeStore<
     private final Map<String, AttributeDef<IdType>> nestedAttributesCache;
     private final Collection<NestedMethod<IdType, ? extends Id>> nestedAttributes;
 
-    public DefaultAttributeStore(String context) {
+    public DefaultAttributeStore(String context, List<AttributeDef<IdType>> attributes) {
         this.context = context;
-        this.attributes = new ConcurrentHashMap<>();
+        this.attributes = new ConcurrentHashMap<>(
+                attributes.stream()
+                        .collect(Collectors.toMap(
+                                AttributeDef::name,
+                                a -> a
+                        ))
+        );
         this.nestedAttributesCache = new ConcurrentHashMap<>();
         this.nestedAttributes = new Vector<>();
     }

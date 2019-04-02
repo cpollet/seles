@@ -1,6 +1,5 @@
 package net.cpollet.read.v2.api.attribute;
 
-import net.cpollet.read.v2.api.conversion.ConversionException;
 import net.cpollet.read.v2.api.conversion.ValueConverter;
 import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.methods.Method;
@@ -18,39 +17,6 @@ public class AttributeDef<IdType extends Id> {
         this.method = method;
         this.converter = converter;
         this.caster = caster;
-    }
-
-    @Deprecated
-    public AttributeDef(String name, Method<IdType> method) {
-        this(
-                name,
-                method,
-                new ValueConverter<AttributeDef<IdType>>() {
-                    @Override
-                    public Object toExternalValue(AttributeDef<IdType> attribute, Object value) throws ConversionException {
-                        if (attribute.name().equals("currency") && value.equals("currency:100000")) {
-                            throw new ConversionException("why not");
-                        }
-                        return String.format("externalValue(%s)", value);
-                    }
-
-                    @Override
-                    public Object toInternalValue(AttributeDef<IdType> attribute, Object value) throws ConversionException {
-                        return value;
-                    }
-                },
-                new ValueConverter<AttributeDef<IdType>>() {
-                    @Override
-                    public Object toExternalValue(AttributeDef<IdType> attribute, Object value) throws ConversionException {
-                        return String.format("externalCast(%s)", value);
-                    }
-
-                    @Override
-                    public Object toInternalValue(AttributeDef<IdType> attribute, Object value) throws ConversionException {
-                        return value;
-                    }
-                }
-        );
     }
 
     public String name() {
