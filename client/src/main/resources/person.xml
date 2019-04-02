@@ -4,8 +4,7 @@
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="person.attributeStore" class="net.cpollet.read.v2.impl.attribute.DefaultAttributeStore">
-        <constructor-arg name="context" value="person"/>
+    <bean id="person.attributeStore" class="net.cpollet.read.v2.impl.attribute.DirectAttributeStore">
         <constructor-arg name="attributes">
             <list>
                 <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">

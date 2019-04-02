@@ -13,47 +13,47 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class DefaultAttributeStore<IdType extends Id> implements AttributeStore<IdType> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAttributeStore.class);
+public class NestedAttributeStore<IdType extends Id> implements AttributeStore<IdType> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NestedAttributeStore.class);
 
+    private final AttributeStore<IdType> parentStore;
     private final String context;
-    private final Map<String, AttributeDef<IdType>> attributes;
+
+    private final Collection<NestedMethod<IdType, Id>> nestedAttributes;
     private final Map<String, AttributeDef<IdType>> nestedAttributesCache;
-    private final Collection<NestedMethod<IdType, ? extends Id>> nestedAttributes;
 
-    public DefaultAttributeStore(String context, List<AttributeDef<IdType>> attributes) {
+    public NestedAttributeStore(AttributeStore<IdType> parentStore, String context, List<NestedAttributes> attributes) {
+        this.parentStore = parentStore;
         this.context = context;
-        this.attributes = new ConcurrentHashMap<>(
-                attributes.stream()
-                        .collect(Collectors.toMap(
-                                AttributeDef::name,
-                                a -> a
-                        ))
-        );
+        this.nestedAttributes = attributes.stream()
+                .map(a -> new NestedMethod<IdType, Id>(
+                                a.prefix,
+                                parentStore.fetch(a.attribute).orElseThrow(IllegalArgumentException::new),
+                                a.executor,
+                                a.idProvider
+                        )
+                )
+                .collect(Collectors.toList());
+
         this.nestedAttributesCache = new ConcurrentHashMap<>();
-        this.nestedAttributes = new Vector<>();
-    }
-
-    @Override
-    public void add(String name, AttributeDef<IdType> def) {
-        attributes.put(name, def);
-    }
-
-    @Override
-    public <NestedIdType extends Id> void nest(String prefix, AttributeDef<IdType> attribute, Executor<NestedIdType> executor, Function<Object, NestedIdType> idProvider) {
-        nestedAttributes.add(new NestedMethod<>(prefix, attribute, executor, idProvider));
     }
 
     @Override
     public Optional<AttributeDef<IdType>> fetch(String attributeName) {
-        if (attributes.containsKey(attributeName)) {
-            return Optional.of(attributes.get(attributeName));
+        Optional<AttributeDef<IdType>> attribute = parentStore.fetch(attributeName);
+
+        if (attribute.isPresent()) {
+            return attribute;
         }
+
+        return fetchNested(attributeName);
+    }
+
+    private Optional<AttributeDef<IdType>> fetchNested(String attributeName) {
         if (nestedAttributesCache.containsKey(attributeName)) {
             return Optional.of(nestedAttributesCache.get(attributeName));
         }
@@ -87,6 +87,20 @@ public class DefaultAttributeStore<IdType extends Id> implements AttributeStore<
 
     @Override
     public Collection<AttributeDef<IdType>> directAttributes() {
-        return attributes.values();
+        return parentStore.directAttributes();
+    }
+
+    public static class NestedAttributes<NestedIdType extends Id> {
+        private final String prefix;
+        private final String attribute;
+        private final Executor<NestedIdType> executor;
+        private final Function<Object, NestedIdType> idProvider;
+
+        public NestedAttributes(String prefix, String attribute, Executor<NestedIdType> executor, Function<Object, NestedIdType> idProvider) {
+            this.prefix = prefix;
+            this.attribute = attribute;
+            this.executor = executor;
+            this.idProvider = idProvider;
+        }
     }
 }

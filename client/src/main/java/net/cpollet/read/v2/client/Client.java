@@ -1,9 +1,7 @@
 package net.cpollet.read.v2.client;
 
-import net.cpollet.read.v2.api.attribute.AttributeStore;
 import net.cpollet.read.v2.api.execution.Executor;
 import net.cpollet.read.v2.api.execution.Request;
-import net.cpollet.read.v2.client.domain.PersonId;
 import net.cpollet.read.v2.client.domain.PortfolioId;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -15,25 +13,7 @@ import java.util.Map;
 public class Client {
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
-
-        AttributeStore<PortfolioId> portfolioAttributeStore = (AttributeStore<PortfolioId>) context.getBean("portfolio.attributeStore");
         Executor<PortfolioId> portfolioExecutor = (Executor<PortfolioId>) context.getBean("portfolio.executor");
-
-        AttributeStore<PersonId> personAttributeStore = (AttributeStore<PersonId>) context.getBean("person.attributeStore");
-        Executor<PersonId> personExecutor = (Executor<PersonId>) context.getBean("person.executor");
-
-        portfolioAttributeStore.nest(
-                "owner",
-                portfolioAttributeStore.fetch("ownerId").orElseThrow(IllegalStateException::new),
-                personExecutor,
-                o -> new PersonId((Integer) o)
-        );
-        personAttributeStore.nest(
-                "portfolio",
-                personAttributeStore.fetch("portfolioId").orElseThrow(IllegalStateException::new),
-                portfolioExecutor,
-                o -> new PortfolioId((String) o)
-        );
 
         read(portfolioExecutor);
         write(portfolioExecutor);
@@ -56,7 +36,8 @@ public class Client {
                                         "unknown",
                                         "owner.email",
                                         "owner.unknown",
-                                        "owner.portfolio.id"
+                                        "owner.portfolio.id",
+                                        "owner.address.street" // TODO implement
                                 )
                         )
                 )

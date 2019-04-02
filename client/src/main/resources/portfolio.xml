@@ -4,41 +4,57 @@
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="portfolio.attributeStore" class="net.cpollet.read.v2.impl.attribute.DefaultAttributeStore">
+    <bean id="portfolio.attributeStore" class="net.cpollet.read.v2.impl.attribute.NestedAttributeStore">
         <constructor-arg name="context" value="portfolio"/>
+        <constructor-arg name="parentStore">
+            <bean class="net.cpollet.read.v2.impl.attribute.DirectAttributeStore">
+                <constructor-arg name="attributes">
+                    <list>
+                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                            <constructor-arg name="name" value="id"/>
+                            <constructor-arg name="method" ref="portfolio.method.standard"/>
+                            <constructor-arg name="converter" ref="portfolio.converter.default"/>
+                            <constructor-arg name="caster" ref="portfolio.caster.default"/>
+                        </bean>
+                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                            <constructor-arg name="name" value="status"/>
+                            <constructor-arg name="method" ref="portfolio.method.standard"/>
+                            <constructor-arg name="converter" ref="portfolio.converter.default"/>
+                            <constructor-arg name="caster" ref="portfolio.caster.default"/>
+                        </bean>
+                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                            <constructor-arg name="name" value="currency"/>
+                            <constructor-arg name="method" ref="portfolio.method.standard"/>
+                            <constructor-arg name="converter" ref="portfolio.converter.default"/>
+                            <constructor-arg name="caster" ref="portfolio.caster.default"/>
+                        </bean>
+                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                            <constructor-arg name="name" value="hidden"/>
+                            <constructor-arg name="method" ref="portfolio.method.standard"/>
+                            <constructor-arg name="converter" ref="portfolio.converter.default"/>
+                            <constructor-arg name="caster" ref="portfolio.caster.default"/>
+                        </bean>
+                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                            <constructor-arg name="name" value="ownerId"/>
+                            <constructor-arg name="method">
+                                <bean class="net.cpollet.read.v2.client.methods.OwnerIdMethod"/>
+                            </constructor-arg>
+                            <constructor-arg name="converter" ref="portfolio.converter.default"/>
+                            <constructor-arg name="caster" ref="portfolio.caster.default"/>
+                        </bean>
+                    </list>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
         <constructor-arg name="attributes">
             <list>
-                <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
-                    <constructor-arg name="name" value="id"/>
-                    <constructor-arg name="method" ref="portfolio.method.standard"/>
-                    <constructor-arg name="converter" ref="portfolio.converter.default"/>
-                    <constructor-arg name="caster" ref="portfolio.caster.default"/>
-                </bean>
-                <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
-                    <constructor-arg name="name" value="status"/>
-                    <constructor-arg name="method" ref="portfolio.method.standard"/>
-                    <constructor-arg name="converter" ref="portfolio.converter.default"/>
-                    <constructor-arg name="caster" ref="portfolio.caster.default"/>
-                </bean>
-                <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
-                    <constructor-arg name="name" value="currency"/>
-                    <constructor-arg name="method" ref="portfolio.method.standard"/>
-                    <constructor-arg name="converter" ref="portfolio.converter.default"/>
-                    <constructor-arg name="caster" ref="portfolio.caster.default"/>
-                </bean>
-                <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
-                    <constructor-arg name="name" value="hidden"/>
-                    <constructor-arg name="method" ref="portfolio.method.standard"/>
-                    <constructor-arg name="converter" ref="portfolio.converter.default"/>
-                    <constructor-arg name="caster" ref="portfolio.caster.default"/>
-                </bean>
-                <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
-                    <constructor-arg name="name" value="ownerId"/>
-                    <constructor-arg name="method">
-                        <bean class="net.cpollet.read.v2.client.methods.OwnerIdMethod"/>
+                <bean class="net.cpollet.read.v2.impl.attribute.NestedAttributeStore.NestedAttributes">
+                    <constructor-arg name="prefix" value="owner"/>
+                    <constructor-arg name="attribute" value="ownerId"/>
+                    <constructor-arg name="executor" ref="person.executor"/>
+                    <constructor-arg name="idProvider">
+                        <bean class="net.cpollet.read.v2.client.domain.OwnerIdToPersonId"/>
                     </constructor-arg>
-                    <constructor-arg name="converter" ref="portfolio.converter.default"/>
-                    <constructor-arg name="caster" ref="portfolio.caster.default"/>
                 </bean>
             </list>
         </constructor-arg>
