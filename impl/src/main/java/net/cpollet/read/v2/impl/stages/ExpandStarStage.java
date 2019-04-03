@@ -32,7 +32,7 @@ public class ExpandStarStage<IdType extends Id> implements Stage<IdType, String>
                 request
                         .withoutAttributes(Collections.singleton("*"))
                         .withAttributes(
-                                attributeStore.directAttributes().stream()
+                                attributeStore.attributes().stream()
                                         .map(AttributeDef::name)
                                         .collect(Collectors.toSet())
                         )

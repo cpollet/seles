@@ -5,7 +5,6 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="portfolio.attributeStore" class="net.cpollet.read.v2.impl.attribute.NestedAttributeStore">
-        <constructor-arg name="context" value="portfolio"/>
         <constructor-arg name="parentStore">
             <bean class="net.cpollet.read.v2.impl.attribute.DirectAttributeStore">
                 <constructor-arg name="attributes">

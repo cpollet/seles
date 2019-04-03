@@ -43,7 +43,7 @@ public class Client {
                                         "unknown",
                                         "owner.email",
                                         "owner.unknown",
-                                        "owner.portfolio.id",
+                                        "owner.portfolioId",
                                         "owner.address.street" // TODO implement
                                 )
                         )

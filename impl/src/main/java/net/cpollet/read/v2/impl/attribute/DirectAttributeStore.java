@@ -32,7 +32,7 @@ public class DirectAttributeStore<IdType extends Id> implements AttributeStore<I
     }
 
     @Override
-    public Collection<AttributeDef<IdType>> directAttributes() {
+    public Collection<AttributeDef<IdType>> attributes() {
         return attributes.values();
     }
 

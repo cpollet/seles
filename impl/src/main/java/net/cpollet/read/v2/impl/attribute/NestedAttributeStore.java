@@ -7,98 +7,84 @@ import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.execution.Executor;
 import net.cpollet.read.v2.impl.conversion.NoopValueConverter;
 import net.cpollet.read.v2.impl.methods.NestedMethod;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class NestedAttributeStore<IdType extends Id> implements AttributeStore<IdType> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(NestedAttributeStore.class);
+    private final Map<String, AttributeDef<IdType>> store;
 
-    private final AttributeStore<IdType> parentStore;
-    private final String context;
-
-    private final Collection<NestedMethod<IdType, Id>> nestedAttributes;
-    private final Map<String, AttributeDef<IdType>> nestedAttributesCache;
-
-    public NestedAttributeStore(AttributeStore<IdType> parentStore, String context, List<NestedAttributes<Id>> attributes) {
-        this.parentStore = parentStore;
-        this.context = context;
-
-        this.nestedAttributes = attributes.stream()
-                .map(a -> new NestedMethod<>(
-                                a.prefix,
-                                parentStore.fetch(a.attribute).orElseThrow(IllegalArgumentException::new),
-                                a.executor,
-                                a.idProvider
+    public NestedAttributeStore(AttributeStore<IdType> parentStore, List<NestedAttributes<Id>> attributes) {
+        HashMap<String, AttributeDef<IdType>> tmpStore = new HashMap<>(
+                parentStore.attributes().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        AttributeDef::name,
+                                        a -> a
+                                )
                         )
-                )
-                .collect(Collectors.toList());
+        );
 
-        // TODO prefill this
-        this.nestedAttributesCache = new ConcurrentHashMap<>();
+        attributes.forEach(
+                a -> {
+                    NestedMethod<IdType, Id> method = new NestedMethod<>(
+                            a.prefix,
+                            parentStore.fetch(a.attribute).orElseThrow(IllegalArgumentException::new),
+                            a.executor,
+                            a.idProvider
+                    );
+                    a.executor.attributeStore().attributes().forEach(
+                            na -> {
+                                String attributeName = String.format("%s.%s", a.prefix, na.name());
+
+                                if (tmpStore.containsKey(attributeName)) {
+                                    throw new IllegalStateException(String.format("Attribute [%s] already exists", attributeName));
+                                }
+
+                                tmpStore.put(
+                                        attributeName,
+                                        new AttributeDef<>(
+                                                attributeName,
+                                                na.filtered(),
+                                                na.deprecated(),
+                                                method,
+                                                NoopValueConverter.instance(),
+                                                NoopValueConverter.instance()
+                                        )
+                                );
+                            }
+                    );
+
+                }
+        );
+
+        this.store = Collections.unmodifiableMap(tmpStore);
     }
 
     @Override
     public Optional<AttributeDef<IdType>> fetch(String attributeName) {
-        Optional<AttributeDef<IdType>> attribute = parentStore.fetch(attributeName);
-
-        if (attribute.isPresent()) {
-            return attribute;
-        }
-
-        return fetchNested(attributeName);
-    }
-
-    private Optional<AttributeDef<IdType>> fetchNested(String attributeName) {
-        if (nestedAttributesCache.containsKey(attributeName)) {
-            return Optional.of(nestedAttributesCache.get(attributeName));
-        }
-
-        return nestedAttributes.stream()
-                .filter(m -> m.supports(attributeName))
-                .collect(Collectors.collectingAndThen(
-                        Collectors.toList(),
-                        l -> {
-                            if (l.isEmpty()) {
-                                LOGGER.info("Attribute '{}:{}' does not exist", context, attributeName);
-                                return Optional.empty();
-                            }
-
-                            if (l.size() > 1) {
-                                LOGGER.info("Attribute '{}:{}' is supported by multiple nested methods, expected only one", context, attributeName);
-                                return Optional.empty();
-                            }
-
-                            AttributeDef<IdType> attributeDef = new AttributeDef<>(
-                                    attributeName,
-                                    false,
-                                    false,
-                                    l.get(0),
-                                    NoopValueConverter.instance(),
-                                    NoopValueConverter.instance()
-                            );
-                            nestedAttributesCache.put(attributeName, attributeDef);
-                            return Optional.of(attributeDef);
-                        }
-                ));
+        return Optional.ofNullable(store.get(attributeName));
     }
 
     @Override
-    public Collection<AttributeDef<IdType>> directAttributes() {
-        return parentStore.directAttributes();
+
+    public Collection<AttributeDef<IdType>> attributes() {
+        return store.values();
     }
 
     @Override
     public <T> Set<T> print(AttributeStorePrinter<T> printer) {
-        return parentStore.print(printer);
+        store.values().forEach(
+                printer::attribute
+        );
+        return printer.print();
     }
 
     public static class NestedAttributes<NestedIdType extends Id> {

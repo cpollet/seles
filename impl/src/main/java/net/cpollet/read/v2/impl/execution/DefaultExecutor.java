@@ -25,8 +25,10 @@ import java.util.function.Function;
 public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     private final Stage<IdType, String> readStack;
     private final Stage<IdType, String> updateStack;
+    private final AttributeStore<IdType> attributeStore;
 
     public DefaultExecutor(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator, Configuration configuration) {
+        this.attributeStore=attributeStore;
         this.readStack =
                 new TimerStage<>(
                         new ExpandStarStage<>(attributeStore,
@@ -49,7 +51,6 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
                                 )
                         )
                 );
-
         this.updateStack =
                 new TimerStage<>(
                         new AttributeConversionStage<>(attributeStore,
@@ -92,6 +93,11 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
 
     private Function<Guarded, Boolean> haltOnUpdateError(Configuration configuration) {
         return req -> configuration.haltOnUpdateError && req.hasGuardFlag(Guarded.Flag.UPDATE_ERROR);
+    }
+
+    @Override
+    public AttributeStore<IdType> attributeStore() {
+        return attributeStore;
     }
 
     @Override
