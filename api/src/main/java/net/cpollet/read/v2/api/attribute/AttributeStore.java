@@ -12,5 +12,6 @@ public interface AttributeStore<IdType extends Id> {
 
     Collection<AttributeDef<IdType>> directAttributes();
 
+    // FIXME really useful?
     <T> Set<T> print(AttributeStorePrinter<T> printer);
 }
