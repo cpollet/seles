@@ -8,12 +8,22 @@ import java.util.Objects;
 
 public class AttributeDef<IdType extends Id> {
     private final String name;
+    private final boolean filtered;
+    private final boolean deprecated;
     private final Method<IdType> method;
     private final ValueConverter<AttributeDef<IdType>> converter;
     private final ValueConverter<AttributeDef<IdType>> caster;
 
-    public AttributeDef(String name, Method<IdType> method, ValueConverter<AttributeDef<IdType>> converter, ValueConverter<AttributeDef<IdType>> caster) {
+    public AttributeDef(
+            String name,
+            boolean filtered,
+            boolean deprecated,
+            Method<IdType> method,
+            ValueConverter<AttributeDef<IdType>> converter,
+            ValueConverter<AttributeDef<IdType>> caster) {
         this.name = name;
+        this.filtered=filtered;
+        this.deprecated= deprecated;
         this.method = method;
         this.converter = converter;
         this.caster = caster;
@@ -28,11 +38,11 @@ public class AttributeDef<IdType extends Id> {
     }
 
     public boolean deprecated() {
-        return name.equals("currency");
+        return deprecated;
     }
 
     public boolean filtered() {
-        return name.equals("email") || name.equals("hidden") || name.equals("filtered");
+        return filtered;
     }
 
     public ValueConverter<AttributeDef<IdType>> converter() {

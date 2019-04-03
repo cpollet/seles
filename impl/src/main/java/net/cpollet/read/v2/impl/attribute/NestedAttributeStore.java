@@ -75,6 +75,8 @@ public class NestedAttributeStore<IdType extends Id> implements AttributeStore<I
 
                             AttributeDef<IdType> attributeDef = new AttributeDef<>(
                                     attributeName,
+                                    false,
+                                    false,
                                     l.get(0),
                                     NoopValueConverter.instance(),
                                     NoopValueConverter.instance()

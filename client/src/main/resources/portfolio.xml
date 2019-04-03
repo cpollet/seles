@@ -12,30 +12,40 @@
                     <list>
                         <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="id"/>
+                            <constructor-arg name="deprecated" value="false"/>
+                            <constructor-arg name="filtered" value="false"/>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
                         </bean>
                         <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="status"/>
+                            <constructor-arg name="deprecated" value="false"/>
+                            <constructor-arg name="filtered" value="false"/>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
                         </bean>
                         <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="currency"/>
+                            <constructor-arg name="deprecated" value="true"/>
+                            <constructor-arg name="filtered" value="false"/>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
                         </bean>
                         <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="hidden"/>
+                            <constructor-arg name="deprecated" value="false"/>
+                            <constructor-arg name="filtered" value="true"/>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
                         </bean>
                         <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="ownerId"/>
+                            <constructor-arg name="deprecated" value="false"/>
+                            <constructor-arg name="filtered" value="false"/>
                             <constructor-arg name="method">
                                 <bean class="net.cpollet.read.v2.client.methods.OwnerIdMethod"/>
                             </constructor-arg>

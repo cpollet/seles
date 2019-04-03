@@ -9,12 +9,16 @@
             <list>
                 <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                     <constructor-arg name="name" value="email"/>
+                    <constructor-arg name="deprecated" value="false"/>
+                    <constructor-arg name="filtered" value="true"/>
                     <constructor-arg name="method" ref="person.method.standard"/>
                     <constructor-arg name="converter" ref="person.converter.default"/>
                     <constructor-arg name="caster" ref="person.caster.default"/>
                 </bean>
                 <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                     <constructor-arg name="name" value="portfolioId"/>
+                    <constructor-arg name="deprecated" value="false"/>
+                    <constructor-arg name="filtered" value="false"/>
                     <constructor-arg name="method">
                         <bean class="net.cpollet.read.v2.client.methods.OwnedPortfolioIdMethod"/>
                     </constructor-arg>
