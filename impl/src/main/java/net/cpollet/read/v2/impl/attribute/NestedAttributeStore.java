@@ -28,11 +28,12 @@ public class NestedAttributeStore<IdType extends Id> implements AttributeStore<I
     private final Collection<NestedMethod<IdType, Id>> nestedAttributes;
     private final Map<String, AttributeDef<IdType>> nestedAttributesCache;
 
-    public NestedAttributeStore(AttributeStore<IdType> parentStore, String context, List<NestedAttributes> attributes) {
+    public NestedAttributeStore(AttributeStore<IdType> parentStore, String context, List<NestedAttributes<Id>> attributes) {
         this.parentStore = parentStore;
         this.context = context;
+
         this.nestedAttributes = attributes.stream()
-                .map(a -> new NestedMethod<IdType, Id>(
+                .map(a -> new NestedMethod<>(
                                 a.prefix,
                                 parentStore.fetch(a.attribute).orElseThrow(IllegalArgumentException::new),
                                 a.executor,
