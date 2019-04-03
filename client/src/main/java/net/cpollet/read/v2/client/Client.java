@@ -16,8 +16,8 @@ import java.util.Map;
 public class Client {
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
-        Executor<PortfolioId> portfolioExecutor = (Executor<PortfolioId>) context.getBean("portfolio.executor");
-        AttributeStore<PortfolioId> portfolioAttributeStore = (AttributeStore<PortfolioId>) context.getBean("portfolio.attributeStore");
+        @SuppressWarnings("unchecked") Executor<PortfolioId> portfolioExecutor = (Executor<PortfolioId>) context.getBean("portfolio.executor");
+        @SuppressWarnings("unchecked") AttributeStore<PortfolioId> portfolioAttributeStore = (AttributeStore<PortfolioId>) context.getBean("portfolio.attributeStore");
 
         System.out.println(
                 new GsonBuilder().setPrettyPrinting().create().toJson(portfolioAttributeStore.print(new AttributeStoreMetadataPrinter()))

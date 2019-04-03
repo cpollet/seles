@@ -127,7 +127,6 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
         return ids;
     }
 
-    @Deprecated
     public Collection<AttributeType> attributes() {
         return attributes;
     }
