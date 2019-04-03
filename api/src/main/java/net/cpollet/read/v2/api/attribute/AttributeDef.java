@@ -1,5 +1,6 @@
 package net.cpollet.read.v2.api.attribute;
 
+import net.cpollet.read.v2.api.attribute.printer.AttributePrinter;
 import net.cpollet.read.v2.api.conversion.ValueConverter;
 import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.methods.Method;
@@ -22,8 +23,8 @@ public class AttributeDef<IdType extends Id> {
             ValueConverter<AttributeDef<IdType>> converter,
             ValueConverter<AttributeDef<IdType>> caster) {
         this.name = name;
-        this.filtered=filtered;
-        this.deprecated= deprecated;
+        this.filtered = filtered;
+        this.deprecated = deprecated;
         this.method = method;
         this.converter = converter;
         this.caster = caster;
@@ -51,6 +52,14 @@ public class AttributeDef<IdType extends Id> {
 
     public ValueConverter<AttributeDef<IdType>> caster() {
         return caster;
+    }
+
+    public <T> T print(AttributePrinter<T> printer) {
+        return printer
+                .name(name)
+                .filtered(filtered)
+                .deprecated(deprecated)
+                .print();
     }
 
     @Override

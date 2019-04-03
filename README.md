@@ -7,7 +7,6 @@
  - inject stages from client
  - audit / security
  - unit tests
- - attributes metadata
  - rights stage
  - access mode check stage
  - notification

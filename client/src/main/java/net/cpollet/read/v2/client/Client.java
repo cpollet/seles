@@ -1,5 +1,8 @@
 package net.cpollet.read.v2.client;
 
+import com.google.gson.GsonBuilder;
+import net.cpollet.read.v2.api.attribute.AttributeStore;
+import net.cpollet.read.v2.api.attribute.printer.AttributeStoreMetadataPrinter;
 import net.cpollet.read.v2.api.execution.Executor;
 import net.cpollet.read.v2.api.execution.Request;
 import net.cpollet.read.v2.client.domain.PortfolioId;
@@ -14,7 +17,11 @@ public class Client {
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
         Executor<PortfolioId> portfolioExecutor = (Executor<PortfolioId>) context.getBean("portfolio.executor");
+        AttributeStore<PortfolioId> portfolioAttributeStore = (AttributeStore<PortfolioId>) context.getBean("portfolio.attributeStore");
 
+        System.out.println(
+                new GsonBuilder().setPrettyPrinting().create().toJson(portfolioAttributeStore.print(new AttributeStoreMetadataPrinter()))
+        );
         read(portfolioExecutor);
         write(portfolioExecutor);
     }
