@@ -2,7 +2,7 @@ package net.cpollet.read.v2.client;
 
 import com.google.gson.GsonBuilder;
 import net.cpollet.read.v2.api.attribute.AttributeStore;
-import net.cpollet.read.v2.api.attribute.printer.AttributeStoreMetadataPrinter;
+import net.cpollet.read.v2.api.attribute.printer.AttributeMetadataPrinter;
 import net.cpollet.read.v2.api.execution.Executor;
 import net.cpollet.read.v2.api.execution.Request;
 import net.cpollet.read.v2.client.domain.PortfolioId;
@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Client {
     public static void main(String[] args) {
@@ -19,11 +20,22 @@ public class Client {
         @SuppressWarnings("unchecked") Executor<PortfolioId> portfolioExecutor = (Executor<PortfolioId>) context.getBean("portfolio.executor");
         @SuppressWarnings("unchecked") AttributeStore<PortfolioId> portfolioAttributeStore = (AttributeStore<PortfolioId>) context.getBean("portfolio.attributeStore");
 
-        System.out.println(
-                new GsonBuilder().setPrettyPrinting().create().toJson(portfolioAttributeStore.print(new AttributeStoreMetadataPrinter()))
-        );
+        printMetadata(portfolioAttributeStore);
         read(portfolioExecutor);
         write(portfolioExecutor);
+    }
+
+    private static void printMetadata(AttributeStore<PortfolioId> portfolioAttributeStore) {
+        System.out.println(
+                new GsonBuilder()
+                        .setPrettyPrinting()
+                        .create()
+                        .toJson(
+                                portfolioAttributeStore.attributes().stream()
+                                        .map(a -> a.print(new AttributeMetadataPrinter()))
+                                        .collect(Collectors.toList())
+                        )
+        );
     }
 
     private static void read(Executor<PortfolioId> portfolioExecutor) {

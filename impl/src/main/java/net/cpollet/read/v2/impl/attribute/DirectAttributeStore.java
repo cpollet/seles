@@ -2,7 +2,6 @@ package net.cpollet.read.v2.impl.attribute;
 
 import net.cpollet.read.v2.api.attribute.AttributeDef;
 import net.cpollet.read.v2.api.attribute.AttributeStore;
-import net.cpollet.read.v2.api.attribute.printer.AttributeStorePrinter;
 import net.cpollet.read.v2.api.domain.Id;
 
 import java.util.Collection;
@@ -10,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DirectAttributeStore<IdType extends Id> implements AttributeStore<IdType> {
@@ -34,11 +32,5 @@ public class DirectAttributeStore<IdType extends Id> implements AttributeStore<I
     @Override
     public Collection<AttributeDef<IdType>> attributes() {
         return attributes.values();
-    }
-
-    @Override
-    public <T> Set<T> print(AttributeStorePrinter<T> printer) {
-        attributes.values().forEach(printer::attribute);
-        return printer.print();
     }
 }

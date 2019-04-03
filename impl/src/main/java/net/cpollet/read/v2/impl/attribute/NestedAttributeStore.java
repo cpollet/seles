@@ -2,7 +2,6 @@ package net.cpollet.read.v2.impl.attribute;
 
 import net.cpollet.read.v2.api.attribute.AttributeDef;
 import net.cpollet.read.v2.api.attribute.AttributeStore;
-import net.cpollet.read.v2.api.attribute.printer.AttributeStorePrinter;
 import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.execution.Executor;
 import net.cpollet.read.v2.impl.conversion.NoopValueConverter;
@@ -14,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -77,14 +75,6 @@ public class NestedAttributeStore<IdType extends Id> implements AttributeStore<I
 
     public Collection<AttributeDef<IdType>> attributes() {
         return store.values();
-    }
-
-    @Override
-    public <T> Set<T> print(AttributeStorePrinter<T> printer) {
-        store.values().forEach(
-                printer::attribute
-        );
-        return printer.print();
     }
 
     public static class NestedAttributes<NestedIdType extends Id> {
