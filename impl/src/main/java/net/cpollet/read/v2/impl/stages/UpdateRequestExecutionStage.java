@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateRequestExecutionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
-    private final Stage<IdType, AttributeDef<IdType>> readStage;
+    private final Stage<IdType, AttributeDef<IdType>> next;
 
-    public UpdateRequestExecutionStage(Stage<IdType, AttributeDef<IdType>> readStage) {
-        this.readStage = readStage;
+    public UpdateRequestExecutionStage(Stage<IdType, AttributeDef<IdType>> next) {
+        this.next = next;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class UpdateRequestExecutionStage<IdType extends Id> implements Stage<IdT
                 )
         );
 
-        return readStage
+        return next
                 .execute(
                         request.addGuardedFlagIf(!errors.isEmpty(), Guarded.Flag.UPDATE_ERROR)
                 )
