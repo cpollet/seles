@@ -42,6 +42,7 @@ public class NestedAttributeStore<IdType extends Id> implements AttributeStore<I
                 )
                 .collect(Collectors.toList());
 
+        // TODO prefill this
         this.nestedAttributesCache = new ConcurrentHashMap<>();
     }
 
