@@ -7,6 +7,7 @@ import net.cpollet.read.v2.api.attribute.AttributeDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +40,6 @@ public class StandardMethod<IdType extends Id> implements Method<IdType> {
                 id -> attributeValues.forEach((a, v) -> LOGGER.info("{}:{} -> {}", id, a, v))
         );
 
-        return Collections.emptyList();
+        return Collections.singletonList("update error");
     }
 }

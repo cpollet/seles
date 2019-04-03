@@ -1,11 +1,12 @@
 package net.cpollet.read.v2.impl.stages;
 
-import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.attribute.AttributeDef;
 import net.cpollet.read.v2.api.attribute.AttributeStore;
+import net.cpollet.read.v2.api.domain.Id;
+import net.cpollet.read.v2.impl.Guarded;
+import net.cpollet.read.v2.impl.data.BiMap;
 import net.cpollet.read.v2.impl.execution.InternalRequest;
 import net.cpollet.read.v2.impl.execution.InternalResponse;
-import net.cpollet.read.v2.impl.data.BiMap;
 
 import java.util.Optional;
 import java.util.Set;
@@ -15,7 +16,7 @@ public class AttributeConversionStage<IdType extends Id> implements Stage<IdType
     private final Stage<IdType, AttributeDef<IdType>> next;
     private final AttributeStore<IdType> attributesStore;
 
-    public AttributeConversionStage(Stage<IdType, AttributeDef<IdType>> next, AttributeStore<IdType> attributesStore) {
+    public AttributeConversionStage(AttributeStore<IdType> attributesStore, Stage<IdType, AttributeDef<IdType>> next) {
         this.next = next;
         this.attributesStore = attributesStore;
     }
@@ -42,6 +43,7 @@ public class AttributeConversionStage<IdType extends Id> implements Stage<IdType
                         request
                                 .withoutAttributes(invalidAttributes)
                                 .mapAttributes(validAttributesMap)
+                                .addGuardedFlagIf(!invalidAttributes.isEmpty(), Guarded.Flag.ATTRIBUTE_CONVERSION_ERROR)
                 )
                 .mapAttributes(validAttributesMap)
                 .withErrors(

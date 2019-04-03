@@ -38,6 +38,14 @@
                 </constructor-arg>
             </bean>
         </constructor-arg>
+        <constructor-arg name="configuration">
+            <bean class="net.cpollet.read.v2.impl.execution.DefaultExecutor.Configuration">
+                <constructor-arg name="haltOnAttributeConversionError" value="false"/>
+                <constructor-arg name="haltOnIdValidationError" value="false"/>
+                <constructor-arg name="haltOnInputValueConversionError" value="false"/>
+                <constructor-arg name="haltOnUpdateError" value="false"/>
+            </bean>
+        </constructor-arg>
     </bean>
 
     <bean id="person.method.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod"/>

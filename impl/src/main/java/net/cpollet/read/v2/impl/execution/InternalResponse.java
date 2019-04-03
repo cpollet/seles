@@ -67,7 +67,7 @@ public class InternalResponse<IdType extends Id, AttributeType> {
                 try {
                     convertedValues.get(id).put(attribute, converters.get(attribute).toExternalValue(attribute, value));
                 } catch (ConversionException e) {
-                    LOGGER.error("Error while converting value of attribute {}", attribute, e);
+                    LOGGER.error("Error while converting output value of attribute {}", attribute, e);
                     conversionErrors.add(String.format("Error while converting attribute [%s] value for key [%s]", attribute, id));
                 }
             });

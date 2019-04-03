@@ -1,5 +1,8 @@
- - stop execution
- - crud
+ - CRUD
+   - C nok
+   - R ok
+   - U ok
+   - D nok 
  - search
  - inject stages from client
  - audit / security

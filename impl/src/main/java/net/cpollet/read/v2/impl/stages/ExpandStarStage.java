@@ -13,7 +13,7 @@ public class ExpandStarStage<IdType extends Id> implements Stage<IdType, String>
     private final Stage<IdType, String> next;
     private final AttributeStore<IdType> attributeStore;
 
-    public ExpandStarStage(Stage<IdType, String> next, AttributeStore<IdType> attributeStore) {
+    public ExpandStarStage(AttributeStore<IdType> attributeStore, Stage<IdType, String> next) {
         this.next = next;
         this.attributeStore = attributeStore;
     }

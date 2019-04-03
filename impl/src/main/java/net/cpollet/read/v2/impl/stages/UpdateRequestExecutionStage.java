@@ -1,7 +1,8 @@
 package net.cpollet.read.v2.impl.stages;
 
-import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.attribute.AttributeDef;
+import net.cpollet.read.v2.api.domain.Id;
+import net.cpollet.read.v2.impl.Guarded;
 import net.cpollet.read.v2.impl.attribute.AttributesGrouper;
 import net.cpollet.read.v2.impl.execution.InternalRequest;
 import net.cpollet.read.v2.impl.execution.InternalResponse;
@@ -29,7 +30,10 @@ public class UpdateRequestExecutionStage<IdType extends Id> implements Stage<IdT
                 )
         );
 
-        return readStage.execute(request)
+        return readStage
+                .execute(
+                        request.addGuardedFlagIf(!errors.isEmpty(), Guarded.Flag.UPDATE_ERROR)
+                )
                 .withErrors(errors);
     }
 }

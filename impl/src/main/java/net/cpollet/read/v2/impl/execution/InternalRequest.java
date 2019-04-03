@@ -4,6 +4,7 @@ import net.cpollet.read.v2.api.conversion.ConversionException;
 import net.cpollet.read.v2.api.conversion.ValueConverter;
 import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.execution.Request;
+import net.cpollet.read.v2.impl.Guarded;
 import net.cpollet.read.v2.impl.conversion.ConversionResult;
 import net.cpollet.read.v2.impl.data.BiMap;
 import org.slf4j.Logger;
@@ -14,15 +15,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class InternalRequest<IdType, AttributeType> {
+public class InternalRequest<IdType, AttributeType> implements Guarded<InternalRequest<IdType, AttributeType>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(InternalRequest.class);
 
+    private final Set<Flag> guardFlags;
     private final Collection<IdType> ids;
     private final Collection<AttributeType> attributes;
     private final Map<AttributeType, Object> attributeValues;
@@ -38,23 +41,25 @@ public class InternalRequest<IdType, AttributeType> {
 
             return UPDATE;
         }
+
     }
 
-    private InternalRequest(Collection<IdType> ids, Collection<AttributeType> attributes, Map<AttributeType, Object> attributesValues) {
+    private InternalRequest(Collection<IdType> ids, Collection<AttributeType> attributes, Map<AttributeType, Object> attributesValues, Set<Flag> guardFlags) {
         this.ids = Collections.unmodifiableCollection(ids);
         this.attributes = Collections.unmodifiableCollection(attributes);
         this.attributeValues = Collections.unmodifiableMap(attributesValues);
         this.type = RequestType.from(attributes, attributesValues);
+        this.guardFlags = Collections.unmodifiableSet(guardFlags);
     }
 
     static <IdType extends Id> InternalRequest<IdType, String> wrap(Request<IdType> request) {
-        return new InternalRequest<>(request.getIds(), request.getAttributes(), request.getAttributesValues());
+        return new InternalRequest<>(request.getIds(), request.getAttributes(), request.getAttributesValues(), Collections.emptySet());
     }
 
     public InternalRequest<IdType, AttributeType> withoutIds(Collection<IdType> idsToRemove) {
         ArrayList<IdType> newIds = new ArrayList<>(ids);
         newIds.removeAll(idsToRemove);
-        return new InternalRequest<>(newIds, attributes, attributeValues);
+        return new InternalRequest<>(newIds, attributes, attributeValues, guardFlags);
     }
 
     public InternalRequest<IdType, AttributeType> withAttributes(Collection<AttributeType> attributesToAdd) {
@@ -64,7 +69,7 @@ public class InternalRequest<IdType, AttributeType> {
 
         ArrayList<AttributeType> newAttributes = new ArrayList<>(attributes);
         newAttributes.addAll(attributesToAdd);
-        return new InternalRequest<>(ids, newAttributes, attributeValues);
+        return new InternalRequest<>(ids, newAttributes, attributeValues, guardFlags);
     }
 
     public InternalRequest<IdType, AttributeType> withoutAttributes(Collection<AttributeType> attributesToRemove) {
@@ -74,7 +79,7 @@ public class InternalRequest<IdType, AttributeType> {
         Map<AttributeType, Object> newAttributesValues = new HashMap<>(attributeValues);
         attributesToRemove.forEach(newAttributesValues::remove);
 
-        return new InternalRequest<>(ids, newAttributes, newAttributesValues);
+        return new InternalRequest<>(ids, newAttributes, newAttributesValues, guardFlags);
     }
 
     public <AttributeTypeTo> InternalRequest<IdType, AttributeTypeTo> mapAttributes(BiMap<AttributeTypeTo, AttributeType> conversionMap) {
@@ -88,7 +93,7 @@ public class InternalRequest<IdType, AttributeType> {
                         attributeValues::get
                 ));
 
-        return new InternalRequest<>(ids, newAttributes, newAttributeValues);
+        return new InternalRequest<>(ids, newAttributes, newAttributeValues, guardFlags);
     }
 
     public ConversionResult<InternalRequest<IdType, AttributeType>> convertValues(Map<AttributeType, ValueConverter<AttributeType>> converters) {
@@ -104,12 +109,12 @@ public class InternalRequest<IdType, AttributeType> {
                 convertedAttributeValues.put(attribute, converters.get(attribute).toInternalValue(attribute, value));
             } catch (ConversionException e) {
                 LOGGER.error("Error while converting value of attribute {}", attribute, e);
-                conversionErrors.add(String.format("Error while converting value of attribute [%s] ", attribute));
+                conversionErrors.add(String.format("Error while converting input value of attribute [%s]", attribute));
             }
         });
 
         return new ConversionResult<>(
-                new InternalRequest<>(ids, attributes, convertedAttributeValues),
+                new InternalRequest<>(ids, attributes, convertedAttributeValues, guardFlags),
                 conversionErrors
         );
     }
@@ -142,5 +147,21 @@ public class InternalRequest<IdType, AttributeType> {
                         Map.Entry::getKey,
                         Map.Entry::getValue
                 ));
+    }
+
+    @Override
+    public boolean hasGuardFlag(Flag flag) {
+        return guardFlags.contains(flag);
+    }
+
+    @Override
+    public InternalRequest<IdType, AttributeType> addGuardedFlagIf(boolean condition, Flag flag) {
+        if (!condition) {
+            return this;
+        }
+
+        Set<Flag> newGuardFlags = new HashSet<>(guardFlags);
+        newGuardFlags.add(flag);
+        return new InternalRequest<>(ids, attributes, attributeValues, newGuardFlags);
     }
 }
