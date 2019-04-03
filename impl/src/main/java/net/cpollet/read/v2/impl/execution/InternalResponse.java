@@ -1,10 +1,12 @@
 package net.cpollet.read.v2.impl.execution;
 
+import net.cpollet.read.v2.api.conversion.ConversionException;
+import net.cpollet.read.v2.api.conversion.ValueConverter;
 import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.execution.Response;
 import net.cpollet.read.v2.impl.data.BiMap;
-import net.cpollet.read.v2.api.conversion.ConversionException;
-import net.cpollet.read.v2.api.conversion.ValueConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +17,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InternalResponse<IdType extends Id, AttributeType> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InternalRequest.class);
+
     private final Map<IdType, Map<AttributeType, Object>> values;
     private final Collection<String> errors;
     private final Collection<String> messages;
@@ -63,8 +67,8 @@ public class InternalResponse<IdType extends Id, AttributeType> {
                 try {
                     convertedValues.get(id).put(attribute, converters.get(attribute).toExternalValue(attribute, value));
                 } catch (ConversionException e) {
+                    LOGGER.error("Error while converting value of attribute {}", attribute, e);
                     conversionErrors.add(String.format("Error while converting attribute [%s] value for key [%s]", attribute, id));
-                    // LOG ERROR
                 }
             });
         });

@@ -1,4 +1,3 @@
- - log stacktrace
  - stop execution
  - crud
  - search
@@ -7,7 +6,6 @@
  - unit tests
  - attributes metadata
  - rights stage
- - better separation client/api/impl
  - access mode check stage
  - notification
  - transactions
