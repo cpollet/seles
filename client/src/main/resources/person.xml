@@ -4,26 +4,52 @@
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="person.attributeStore" class="net.cpollet.read.v2.impl.attribute.DirectAttributeStore">
+    <bean id="person.attributeStore" class="net.cpollet.read.v2.impl.attribute.NestedAttributeStore">
+        <constructor-arg name="parentStore">
+            <bean class="net.cpollet.read.v2.impl.attribute.DirectAttributeStore">
+                <constructor-arg name="attributes">
+                    <list>
+                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                            <constructor-arg name="name" value="email"/>
+                            <constructor-arg name="deprecated" value="false"/>
+                            <constructor-arg name="filtered" value="true"/>
+                            <constructor-arg name="method" ref="person.method.standard"/>
+                            <constructor-arg name="converter" ref="person.converter.default"/>
+                            <constructor-arg name="caster" ref="person.caster.default"/>
+                        </bean>
+                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                            <constructor-arg name="name" value="addressId"/>
+                            <constructor-arg name="deprecated" value="false"/>
+                            <constructor-arg name="filtered" value="true"/>
+                            <constructor-arg name="method">
+                                <bean class="net.cpollet.read.v2.client.methods.AddressIdMethod"/>
+                            </constructor-arg>
+                            <constructor-arg name="converter" ref="person.converter.default"/>
+                            <constructor-arg name="caster" ref="person.caster.default"/>
+                        </bean>
+                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                            <constructor-arg name="name" value="portfolioId"/>
+                            <constructor-arg name="deprecated" value="false"/>
+                            <constructor-arg name="filtered" value="false"/>
+                            <constructor-arg name="method">
+                                <bean class="net.cpollet.read.v2.client.methods.OwnedPortfolioIdMethod"/>
+                            </constructor-arg>
+                            <constructor-arg name="converter" ref="person.converter.default"/>
+                            <constructor-arg name="caster" ref="person.caster.default"/>
+                        </bean>
+                    </list>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
         <constructor-arg name="attributes">
             <list>
-                <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
-                    <constructor-arg name="name" value="email"/>
-                    <constructor-arg name="deprecated" value="false"/>
-                    <constructor-arg name="filtered" value="true"/>
-                    <constructor-arg name="method" ref="person.method.standard"/>
-                    <constructor-arg name="converter" ref="person.converter.default"/>
-                    <constructor-arg name="caster" ref="person.caster.default"/>
-                </bean>
-                <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
-                    <constructor-arg name="name" value="portfolioId"/>
-                    <constructor-arg name="deprecated" value="false"/>
-                    <constructor-arg name="filtered" value="false"/>
-                    <constructor-arg name="method">
-                        <bean class="net.cpollet.read.v2.client.methods.OwnedPortfolioIdMethod"/>
+                <bean class="net.cpollet.read.v2.impl.attribute.NestedAttributeStore.NestedAttributes">
+                    <constructor-arg name="prefix" value="address"/>
+                    <constructor-arg name="attribute" value="addressId"/>
+                    <constructor-arg name="executor" ref="address.executor"/>
+                    <constructor-arg name="idProvider">
+                        <bean class="net.cpollet.read.v2.client.domain.AddressIdToAddressId"/>
                     </constructor-arg>
-                    <constructor-arg name="converter" ref="person.converter.default"/>
-                    <constructor-arg name="caster" ref="person.caster.default"/>
                 </bean>
             </list>
         </constructor-arg>
