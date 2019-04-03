@@ -29,7 +29,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="person.executor" class="net.cpollet.read.v2.impl.execution.ExecutorImpl">
+    <bean id="person.executor" class="net.cpollet.read.v2.impl.execution.DefaultExecutor">
         <constructor-arg name="attributeStore" ref="person.attributeStore"/>
         <constructor-arg name="idValidator">
             <bean class="net.cpollet.read.v2.impl.domain.CachedIdValidator">

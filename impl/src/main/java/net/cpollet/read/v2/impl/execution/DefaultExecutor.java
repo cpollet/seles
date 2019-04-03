@@ -17,11 +17,11 @@ import net.cpollet.read.v2.impl.stages.TimerStage;
 import net.cpollet.read.v2.impl.stages.UpdateRequestExecutionStage;
 import net.cpollet.read.v2.impl.stages.ValueConversionStage;
 
-public class ExecutorImpl<IdType extends Id> implements Executor<IdType> {
+public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     private final AttributeStore<IdType> attributeStore;
     private final IdValidator<IdType> idValidator;
 
-    public ExecutorImpl(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator) {
+    public DefaultExecutor(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator) {
         this.attributeStore = attributeStore;
         this.idValidator = idValidator;
     }

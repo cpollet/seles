@@ -70,7 +70,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="portfolio.executor" class="net.cpollet.read.v2.impl.execution.ExecutorImpl">
+    <bean id="portfolio.executor" class="net.cpollet.read.v2.impl.execution.DefaultExecutor">
         <constructor-arg name="attributeStore" ref="portfolio.attributeStore"/>
         <constructor-arg name="idValidator">
             <bean class="net.cpollet.read.v2.impl.domain.CachedIdValidator">
