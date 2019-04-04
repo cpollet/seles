@@ -21,12 +21,16 @@ public class Request<IdType> {
         this.attributesValues = Collections.unmodifiableMap(attributesValues);
     }
 
-    public Request(Collection<IdType> ids, Collection<String> attributes) {
-        this(ids, attributes, Collections.emptyMap());
+    public static <IdType> Request<IdType> read(Collection<IdType> ids, Collection<String> attributes) {
+        return new Request<>(ids, attributes, Collections.emptyMap());
     }
 
-    public Request(Collection<IdType> ids, Map<String, Object> attributesValues) {
-        this(ids, attributesValues.keySet(), attributesValues);
+    public static <IdType> Request<IdType> delete(Collection<IdType> ids, Collection<String> attributes) {
+        return new Request<>(ids, attributes, Collections.emptyMap());
+    }
+
+    public static <IdType> Request<IdType> write(Collection<IdType> ids, Map<String, Object> attributesValues) {
+        return new Request<>(ids, attributesValues.keySet(), attributesValues);
     }
 
     public Collection<IdType> getIds() {

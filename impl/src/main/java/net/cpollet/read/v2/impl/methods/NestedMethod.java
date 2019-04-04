@@ -1,12 +1,12 @@
 package net.cpollet.read.v2.impl.methods;
 
-import net.cpollet.read.v2.api.execution.Executor;
-import net.cpollet.read.v2.api.methods.FetchResult;
-import net.cpollet.read.v2.api.methods.Method;
+import net.cpollet.read.v2.api.attribute.AttributeDef;
 import net.cpollet.read.v2.api.domain.Id;
+import net.cpollet.read.v2.api.execution.Executor;
 import net.cpollet.read.v2.api.execution.Request;
 import net.cpollet.read.v2.api.execution.Response;
-import net.cpollet.read.v2.api.attribute.AttributeDef;
+import net.cpollet.read.v2.api.methods.FetchResult;
+import net.cpollet.read.v2.api.methods.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +18,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements Method<IdType> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(NestedMethod.class);
-
     private final String prefix;
     private final AttributeDef<IdType> attribute;
     private final Executor<NestedIdType> executor;
@@ -68,7 +66,7 @@ public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements
     }
 
     private Response<NestedIdType> nestedFetch(Collection<String> attributes, Collection<NestedIdType> nestedIds) {
-        return executor.read(new Request<>(
+        return executor.read(Request.read(
                 nestedIds,
                 attributes
         ));

@@ -32,7 +32,7 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
     private final RequestType type;
 
     public enum RequestType {
-        READ, UPDATE; // FIXME what about DELETE? Pass this information from Executor, when calling wrap()
+        READ, UPDATE; // FIXME what about DELETE? Pass this information from Executor, when calling wrap()... or from the Request...
 
         public static <AttributeType> RequestType from(Collection<AttributeType> attributes, Map<AttributeType, Object> attributesValues) {
             if (attributesValues.isEmpty()) {

@@ -36,7 +36,7 @@ public class InternalRequestHelper {
 
     public static InternalRequest<StringId, String> toStringInternalRequest(List<String> attributes) {
         return InternalRequest.wrap(
-                new Request<>(
+                Request.read(
                         Collections.emptyList(),
                         attributes
                 )

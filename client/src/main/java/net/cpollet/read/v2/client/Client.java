@@ -28,7 +28,7 @@ public class Client {
 
     private static void printMetadata(AttributeStore<PortfolioId> portfolioAttributeStore) {
         System.out.println("-- METADATA ------");
-            System.out.println(
+        System.out.println(
                 new GsonBuilder()
                         .setPrettyPrinting()
                         .create()
@@ -44,7 +44,7 @@ public class Client {
         System.out.println("-- READ ------");
         System.out.println(
                 portfolioExecutor.read(
-                        new Request<>(
+                        Request.read(
                                 Arrays.asList(
                                         new PortfolioId("100000"),
                                         new PortfolioId("200000"),
@@ -66,7 +66,7 @@ public class Client {
         );
         System.out.println(
                 portfolioExecutor.read(
-                        new Request<>(
+                        Request.read(
                                 Collections.singletonList(new PortfolioId("200000")),
                                 Collections.singletonList("*")
                         )
@@ -85,7 +85,7 @@ public class Client {
 
         System.out.println(
                 portfolioExecutor.update(
-                        new Request<>(
+                        Request.write(
                                 Arrays.asList(
                                         new PortfolioId("100000"),
                                         new PortfolioId("200000"),
@@ -101,7 +101,7 @@ public class Client {
         System.out.println("-- DELETE ------");
         System.out.println(
                 portfolioExecutor.delete(
-                        new Request<>(
+                        Request.delete(
                                 Arrays.asList(
                                         new PortfolioId("100000"),
                                         new PortfolioId("200000"),

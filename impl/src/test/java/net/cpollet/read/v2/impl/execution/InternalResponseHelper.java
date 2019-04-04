@@ -21,7 +21,7 @@ public class InternalResponseHelper {
                 new AttributeConversionStage<>(store, request -> response)
                         .execute(
                                 InternalRequest.wrap(
-                                        new Request<>(Collections.emptyList(), Collections.emptyList())
+                                        Request.read(Collections.emptyList(), Collections.emptyList())
                                 )
                         )
         );
