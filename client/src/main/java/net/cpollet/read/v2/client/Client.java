@@ -23,10 +23,12 @@ public class Client {
         printMetadata(portfolioAttributeStore);
         read(portfolioExecutor);
         write(portfolioExecutor);
+        delete(portfolioExecutor);
     }
 
     private static void printMetadata(AttributeStore<PortfolioId> portfolioAttributeStore) {
-        System.out.println(
+        System.out.println("-- METADATA ------");
+            System.out.println(
                 new GsonBuilder()
                         .setPrettyPrinting()
                         .create()
@@ -39,6 +41,7 @@ public class Client {
     }
 
     private static void read(Executor<PortfolioId> portfolioExecutor) {
+        System.out.println("-- READ ------");
         System.out.println(
                 portfolioExecutor.read(
                         new Request<>(
@@ -56,7 +59,7 @@ public class Client {
                                         "owner.email",
                                         "owner.unknown",
                                         "owner.portfolioId",
-                                        "owner.address.street" // TODO implement
+                                        "owner.address.street"
                                 )
                         )
                 )
@@ -72,6 +75,7 @@ public class Client {
     }
 
     private static void write(Executor<PortfolioId> portfolioExecutor) {
+        System.out.println("-- WRITE ------");
         Map<String, Object> attributesValues = new HashMap<>();
         attributesValues.put("status", 40);
         attributesValues.put("ownerId", 123123);
@@ -88,6 +92,25 @@ public class Client {
                                         new PortfolioId("999999")
                                 ),
                                 attributesValues
+                        )
+                )
+        );
+    }
+
+    private static void delete(Executor<PortfolioId> portfolioExecutor) {
+        System.out.println("-- DELETE ------");
+        System.out.println(
+                portfolioExecutor.delete(
+                        new Request<>(
+                                Arrays.asList(
+                                        new PortfolioId("100000"),
+                                        new PortfolioId("200000"),
+                                        new PortfolioId("999999")
+                                ),
+                                Arrays.asList(
+                                        "id",
+                                        "status"
+                                )
                         )
                 )
         );

@@ -78,4 +78,9 @@ public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements
     public Collection<String> update(Map<AttributeDef<IdType>, Object> attributeValues, Collection<IdType> ids) {
         throw new RuntimeException("not implemented");
     }
+
+    @Override
+    public Collection<String> delete(List<AttributeDef<IdType>> attributes, Collection<IdType> ids) {
+        throw new RuntimeException("not implemented");
+    }
 }

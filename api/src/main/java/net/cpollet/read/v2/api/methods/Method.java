@@ -11,4 +11,6 @@ public interface Method<IdType extends Id> {
     FetchResult<IdType> fetch(List<AttributeDef<IdType>> attributes, Collection<IdType> ids);
 
     Collection<String> update(Map<AttributeDef<IdType>, Object> attributeValues, Collection<IdType> ids);
+
+    Collection<String> delete(List<AttributeDef<IdType>> attributes, Collection<IdType> ids);
 }

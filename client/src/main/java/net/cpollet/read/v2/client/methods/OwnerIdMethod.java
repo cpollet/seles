@@ -36,7 +36,16 @@ public class OwnerIdMethod implements Method<PortfolioId> {
     @Override
     public Collection<String> update(Map<AttributeDef<PortfolioId>, Object> attributeValues, Collection<PortfolioId> ids) {
         ids.forEach(
-                id -> attributeValues.forEach((a, v) -> LOGGER.info("{}:{} -> {}", id, a, v))
+                id -> attributeValues.forEach((a, v) -> LOGGER.info("UPDATE {}:{} -> {}", id, a, v))
+        );
+
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<String> delete(List<AttributeDef<PortfolioId>> attributes, Collection<PortfolioId> ids) {
+        ids.forEach(
+                id -> attributes.forEach(a -> LOGGER.info("DELETE {}:{}", id, a))
         );
 
         return Collections.emptyList();

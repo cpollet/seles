@@ -22,7 +22,5 @@ public interface Executor<IdType extends Id> {
         throw new IllegalStateException();
     }
 
-    default Response<IdType> delete(Request<IdType> request) {
-        throw new IllegalStateException();
-    }
+    Response<IdType> delete(Request<IdType> request);
 }

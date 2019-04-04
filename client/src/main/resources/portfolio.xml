@@ -30,6 +30,8 @@
                             <constructor-arg name="modes">
                                 <set>
                                     <value>READ</value>
+                                    <value>WRITE</value>
+                                    <value>DELETE</value>
                                 </set>
                             </constructor-arg>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>

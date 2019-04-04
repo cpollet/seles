@@ -9,6 +9,7 @@ import net.cpollet.read.v2.api.execution.Request;
 import net.cpollet.read.v2.api.execution.Response;
 import net.cpollet.read.v2.impl.Guarded;
 import net.cpollet.read.v2.impl.stages.AttributeConversionStage;
+import net.cpollet.read.v2.impl.stages.DeleteRequestExecutionStage;
 import net.cpollet.read.v2.impl.stages.ExpandStarStage;
 import net.cpollet.read.v2.impl.stages.FilteringStage;
 import net.cpollet.read.v2.impl.stages.IdsValidationStage;
@@ -26,6 +27,7 @@ import java.util.function.Function;
 public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     private final Stage<IdType, String> readStack;
     private final Stage<IdType, String> updateStack;
+    private final Stage<IdType, String> deleteStack;
     private final AttributeStore<IdType> attributeStore;
 
     public DefaultExecutor(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator, Configuration configuration) {
@@ -48,9 +50,32 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
                                 )
                         )
                 );
+        this.deleteStack = new TimerStage<>(
+                rwdStages(configuration, idValidator, AttributeDef.Mode.DELETE,
+                        new DeleteRequestExecutionStage<>()
+                )
+        );
     }
 
+    /**
+     * stages used for READ and WRITE requests
+     */
     private Stage<IdType, String> rwStages(Configuration configuration, IdValidator<IdType> idValidator, AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> inner) {
+        return rwdStages(configuration, idValidator, mode,
+                new FilteringStage<>(
+                        new ValueConversionStage<>(AttributeDef::caster,
+                                new ValueConversionStage<>(AttributeDef::converter,
+                                        inner
+                                )
+                        )
+                )
+        );
+    }
+
+    /**
+     * Stages used for READ, WRITE and DELETE requests
+     */
+    private Stage<IdType, String> rwdStages(Configuration configuration, IdValidator<IdType> idValidator, AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> inner) {
         return new AttributeConversionStage<>(attributeStore,
                 new RequestHaltStage<>(haltOnAttributeConversionError(configuration),
                         new ModeValidationStage<>(mode,
@@ -58,13 +83,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
                                         new LogDeprecatedStage<>(
                                                 new IdsValidationStage<>(idValidator,
                                                         new RequestHaltStage<>(haltOnIdValidationError(configuration),
-                                                                new FilteringStage<>(
-                                                                        new ValueConversionStage<>(AttributeDef::caster,
-                                                                                new ValueConversionStage<>(AttributeDef::converter,
-                                                                                        inner
-                                                                                )
-                                                                        )
-                                                                )
+                                                                inner
                                                         )
                                                 )
                                         )
@@ -112,6 +131,15 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     public Response<IdType> update(Request<IdType> request) {
         return InternalResponse.unwrap(
                 updateStack.execute(
+                        InternalRequest.wrap(request)
+                )
+        );
+    }
+
+    @Override
+    public Response<IdType> delete(Request<IdType> request) {
+        return InternalResponse.unwrap(
+                deleteStack.execute(
                         InternalRequest.wrap(request)
                 )
         );

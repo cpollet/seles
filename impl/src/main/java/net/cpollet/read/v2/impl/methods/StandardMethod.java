@@ -37,9 +37,18 @@ public class StandardMethod<IdType extends Id> implements Method<IdType> {
     @Override
     public Collection<String> update(Map<AttributeDef<IdType>, Object> attributeValues, Collection<IdType> ids) {
         ids.forEach(
-                id -> attributeValues.forEach((a, v) -> LOGGER.info("{}:{} -> {}", id, a, v))
+                id -> attributeValues.forEach((a, v) -> LOGGER.info("UPDATE {}:{} -> {}", id, a, v))
         );
 
         return Collections.singletonList("update error");
+    }
+
+    @Override
+    public Collection<String> delete(List<AttributeDef<IdType>> attributes, Collection<IdType> ids) {
+        ids.forEach(
+                id -> attributes.forEach(a -> LOGGER.info("DELETE {}:{}", id, a))
+        );
+
+        return Collections.singletonList("delete error");
     }
 }
