@@ -31,7 +31,7 @@ class LogDeprecatedStageTest {
         Response<StringId> res = InternalResponseHelper.toResponse(
                 store,
                 stage.execute(
-                        InternalRequestHelper.from(store)
+                        InternalRequestHelper.toAttributeDefInternalRequest(store)
                 )
         );
 

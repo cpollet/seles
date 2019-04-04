@@ -6,7 +6,6 @@
  - search
  - inject stages from client
  - audit / security
- - unit tests
  - rights stage
  - notification
  - transactions

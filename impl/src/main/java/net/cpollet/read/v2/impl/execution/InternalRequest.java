@@ -26,8 +26,8 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
     private static final Logger LOGGER = LoggerFactory.getLogger(InternalRequest.class);
 
     private final Set<Flag> guardFlags;
-    private final Collection<IdType> ids;
-    private final Collection<AttributeType> attributes;
+    private final Set<IdType> ids;
+    private final Set<AttributeType> attributes;
     private final Map<AttributeType, Object> attributeValues;
     private final RequestType type;
 
@@ -44,20 +44,25 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
 
     }
 
-    private InternalRequest(Collection<IdType> ids, Collection<AttributeType> attributes, Map<AttributeType, Object> attributesValues, Set<Flag> guardFlags) {
-        this.ids = Collections.unmodifiableCollection(ids);
-        this.attributes = Collections.unmodifiableCollection(attributes);
+    private InternalRequest(Set<IdType> ids, Set<AttributeType> attributes, Map<AttributeType, Object> attributesValues, Set<Flag> guardFlags) {
+        this.ids = Collections.unmodifiableSet(ids);
+        this.attributes = Collections.unmodifiableSet(attributes);
         this.attributeValues = Collections.unmodifiableMap(attributesValues);
         this.type = RequestType.from(attributes, attributesValues);
         this.guardFlags = Collections.unmodifiableSet(guardFlags);
     }
 
     static <IdType extends Id> InternalRequest<IdType, String> wrap(Request<IdType> request) {
-        return new InternalRequest<>(request.getIds(), request.getAttributes(), request.getAttributesValues(), Collections.emptySet());
+        return new InternalRequest<>(
+                new HashSet<>(request.getIds()),
+                new HashSet<>(request.getAttributes()),
+                request.getAttributesValues(),
+                Collections.emptySet()
+        );
     }
 
     public InternalRequest<IdType, AttributeType> withoutIds(Collection<IdType> idsToRemove) {
-        ArrayList<IdType> newIds = new ArrayList<>(ids);
+        Set<IdType> newIds = new HashSet<>(ids);
         newIds.removeAll(idsToRemove);
         return new InternalRequest<>(newIds, attributes, attributeValues, guardFlags);
     }
@@ -67,13 +72,13 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
             throw new IllegalStateException("Cannot add attributes to an UPDATE request");
         }
 
-        ArrayList<AttributeType> newAttributes = new ArrayList<>(attributes);
+        Set<AttributeType> newAttributes = new HashSet<>(attributes);
         newAttributes.addAll(attributesToAdd);
         return new InternalRequest<>(ids, newAttributes, attributeValues, guardFlags);
     }
 
     public InternalRequest<IdType, AttributeType> withoutAttributes(Collection<AttributeType> attributesToRemove) {
-        ArrayList<AttributeType> newAttributes = new ArrayList<>(attributes);
+        Set<AttributeType> newAttributes = new HashSet<>(attributes);
         newAttributes.removeAll(attributesToRemove);
 
         Map<AttributeType, Object> newAttributesValues = new HashMap<>(attributeValues);
