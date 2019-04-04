@@ -1,7 +1,7 @@
  - CRUD
    - C nok
    - R ok
-   - U ok
+   - U ok - fix nested
    - D nok 
  - search
  - inject stages from client
