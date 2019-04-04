@@ -32,6 +32,10 @@ public class Response<IdType> {
         return errors;
     }
 
+    public Collection<String> messages() {
+        return messages;
+    }
+
     @Override
     public String toString() {
         Map<String, Object> map = new HashMap<>();
