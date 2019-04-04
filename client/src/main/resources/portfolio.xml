@@ -14,6 +14,11 @@
                             <constructor-arg name="deprecated" value="false"/>
                             <constructor-arg name="filtered" value="false"/>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
+                            <constructor-arg name="modes">
+                                <set>
+                                    <value>READ</value>
+                                </set>
+                            </constructor-arg>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
                         </bean>
@@ -22,6 +27,11 @@
                             <constructor-arg name="deprecated" value="false"/>
                             <constructor-arg name="filtered" value="false"/>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
+                            <constructor-arg name="modes">
+                                <set>
+                                    <value>READ</value>
+                                </set>
+                            </constructor-arg>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
                         </bean>
@@ -30,6 +40,11 @@
                             <constructor-arg name="deprecated" value="true"/>
                             <constructor-arg name="filtered" value="false"/>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
+                            <constructor-arg name="modes">
+                                <set>
+                                    <value>READ</value>
+                                </set>
+                            </constructor-arg>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
                         </bean>
@@ -38,6 +53,11 @@
                             <constructor-arg name="deprecated" value="false"/>
                             <constructor-arg name="filtered" value="true"/>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
+                            <constructor-arg name="modes">
+                                <set>
+                                    <value>READ</value>
+                                </set>
+                            </constructor-arg>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
                         </bean>
@@ -47,6 +67,11 @@
                             <constructor-arg name="filtered" value="false"/>
                             <constructor-arg name="method">
                                 <bean class="net.cpollet.read.v2.client.methods.OwnerIdMethod"/>
+                            </constructor-arg>
+                            <constructor-arg name="modes">
+                                <set>
+                                    <value>READ</value>
+                                </set>
                             </constructor-arg>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
@@ -84,6 +109,7 @@
                 <constructor-arg name="haltOnIdValidationError" value="false"/>
                 <constructor-arg name="haltOnInputValueConversionError" value="false"/>
                 <constructor-arg name="haltOnUpdateError" value="false"/>
+                <constructor-arg name="haltOnModeError" value="false"/>
             </bean>
         </constructor-arg>
     </bean>

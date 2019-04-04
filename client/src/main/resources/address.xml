@@ -12,6 +12,11 @@
                     <constructor-arg name="deprecated" value="false"/>
                     <constructor-arg name="filtered" value="false"/>
                     <constructor-arg name="method" ref="address.method.standard"/>
+                    <constructor-arg name="modes">
+                        <set>
+                            <value>READ</value>
+                        </set>
+                    </constructor-arg>
                     <constructor-arg name="converter" ref="address.converter.default"/>
                     <constructor-arg name="caster" ref="address.caster.default"/>
                 </bean>
@@ -34,6 +39,7 @@
                 <constructor-arg name="haltOnIdValidationError" value="false"/>
                 <constructor-arg name="haltOnInputValueConversionError" value="false"/>
                 <constructor-arg name="haltOnUpdateError" value="false"/>
+                <constructor-arg name="haltOnModeError" value="false"/>
             </bean>
         </constructor-arg>
     </bean>

@@ -6,26 +6,35 @@ import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.methods.Method;
 
 import java.util.Objects;
+import java.util.Set;
 
 public class AttributeDef<IdType extends Id> {
     private final String name;
     private final boolean filtered;
     private final boolean deprecated;
     private final Method<IdType> method;
+    private final Set<Mode> modes;
     private final ValueConverter<AttributeDef<IdType>> converter;
     private final ValueConverter<AttributeDef<IdType>> caster;
 
+
+
+    public enum Mode {
+        READ, WRITE, DELETE, CREATE;
+    }
     public AttributeDef(
             String name,
             boolean filtered,
             boolean deprecated,
             Method<IdType> method,
+            Set<Mode> modes,
             ValueConverter<AttributeDef<IdType>> converter,
             ValueConverter<AttributeDef<IdType>> caster) {
         this.name = name;
         this.filtered = filtered;
         this.deprecated = deprecated;
         this.method = method;
+        this.modes = modes;
         this.converter = converter;
         this.caster = caster;
     }
@@ -36,6 +45,14 @@ public class AttributeDef<IdType extends Id> {
 
     public Method<IdType> method() {
         return method;
+    }
+
+    public boolean supports(Mode mode) {
+        return modes.contains(mode);
+    }
+
+    public Set<Mode> modes() {
+        return modes;
     }
 
     public boolean deprecated() {
@@ -59,6 +76,7 @@ public class AttributeDef<IdType extends Id> {
                 .name(name)
                 .filtered(filtered)
                 .deprecated(deprecated)
+                .modes(modes)
                 .print();
     }
 

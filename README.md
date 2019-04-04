@@ -8,6 +8,5 @@
  - audit / security
  - unit tests
  - rights stage
- - access mode check stage
  - notification
  - transactions

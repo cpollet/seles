@@ -53,6 +53,7 @@ public class NestedAttributeStore<IdType extends Id> implements AttributeStore<I
                                                 na.filtered(),
                                                 na.deprecated(),
                                                 method,
+                                                na.modes(),
                                                 NoopValueConverter.instance(),
                                                 NoopValueConverter.instance()
                                         )

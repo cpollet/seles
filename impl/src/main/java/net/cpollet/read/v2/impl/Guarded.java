@@ -5,7 +5,8 @@ public interface Guarded<T> {
         ATTRIBUTE_CONVERSION_ERROR,
         INVALID_IDS,
         INPUT_VALUE_CONVERSION_ERROR,
-        UPDATE_ERROR
+        UPDATE_ERROR,
+        INVALID_MODE
     }
 
     boolean hasGuardFlag(Flag flag);

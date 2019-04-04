@@ -13,6 +13,7 @@ import net.cpollet.read.v2.impl.stages.ExpandStarStage;
 import net.cpollet.read.v2.impl.stages.FilteringStage;
 import net.cpollet.read.v2.impl.stages.IdsValidationStage;
 import net.cpollet.read.v2.impl.stages.LogDeprecatedStage;
+import net.cpollet.read.v2.impl.stages.ModeValidationStage;
 import net.cpollet.read.v2.impl.stages.ReadRequestExecutionStage;
 import net.cpollet.read.v2.impl.stages.RequestHaltStage;
 import net.cpollet.read.v2.impl.stages.Stage;
@@ -28,59 +29,57 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     private final AttributeStore<IdType> attributeStore;
 
     public DefaultExecutor(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator, Configuration configuration) {
-        this.attributeStore=attributeStore;
+        this.attributeStore = attributeStore;
         this.readStack =
                 new TimerStage<>(
                         new ExpandStarStage<>(attributeStore,
-                                new AttributeConversionStage<>(attributeStore,
-                                        new RequestHaltStage<>(haltOnAttributeConversionError(configuration),
-                                                new LogDeprecatedStage<>(
-                                                        new IdsValidationStage<>(idValidator,
-                                                                new RequestHaltStage<>(haltOnIdValidationError(configuration),
-                                                                        new FilteringStage<>(
-                                                                                new ValueConversionStage<>(AttributeDef::caster,
-                                                                                        new ValueConversionStage<>(AttributeDef::converter,
-                                                                                                new ReadRequestExecutionStage<>()
-                                                                                        )
-                                                                                )
-                                                                        )
-                                                                )
-                                                        )
-                                                )
-                                        )
+                                rwStages(configuration, idValidator, AttributeDef.Mode.READ,
+                                        new ReadRequestExecutionStage<>()
                                 )
                         )
                 );
         this.updateStack =
                 new TimerStage<>(
-                        new AttributeConversionStage<>(attributeStore,
-                                new RequestHaltStage<>(haltOnAttributeConversionError(configuration),
-                                        new LogDeprecatedStage<>(
-                                                new IdsValidationStage<>(idValidator,
-                                                        new RequestHaltStage<>(haltOnIdValidationError(configuration),
-                                                                new FilteringStage<>(
-                                                                        new ValueConversionStage<>(AttributeDef::caster,
-                                                                                new ValueConversionStage<>(AttributeDef::converter,
-                                                                                        new RequestHaltStage<>(haltOnInputValueConversionError(configuration),
-                                                                                                new UpdateRequestExecutionStage<>(
-                                                                                                        new RequestHaltStage<>(haltOnUpdateError(configuration),
-                                                                                                                new ReadRequestExecutionStage<>()
-                                                                                                        )
-                                                                                                )
-                                                                                        )
-                                                                                )
-                                                                        )
-                                                                )
-                                                        )
-                                                )
+                        rwStages(configuration, idValidator, AttributeDef.Mode.WRITE,
+                                new UpdateRequestExecutionStage<>(
+                                        new RequestHaltStage<>(haltOnUpdateError(configuration),
+                                                new ReadRequestExecutionStage<>()
                                         )
                                 )
                         )
                 );
     }
 
+    private Stage<IdType, String> rwStages(Configuration configuration, IdValidator<IdType> idValidator, AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> inner) {
+        return new AttributeConversionStage<>(attributeStore,
+                new RequestHaltStage<>(haltOnAttributeConversionError(configuration),
+                        new ModeValidationStage<>(mode,
+                                new RequestHaltStage<>(haltOnModeError(configuration),
+                                        new LogDeprecatedStage<>(
+                                                new IdsValidationStage<>(idValidator,
+                                                        new RequestHaltStage<>(haltOnIdValidationError(configuration),
+                                                                new FilteringStage<>(
+                                                                        new ValueConversionStage<>(AttributeDef::caster,
+                                                                                new ValueConversionStage<>(AttributeDef::converter,
+                                                                                        inner
+                                                                                )
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+        );
+    }
+
     private Function<Guarded, Boolean> haltOnAttributeConversionError(Configuration configuration) {
         return req -> configuration.haltOnAttributeConversionError && req.hasGuardFlag(Guarded.Flag.ATTRIBUTE_CONVERSION_ERROR);
+    }
+
+    private Function<Guarded, Boolean> haltOnModeError(Configuration configuration) {
+        return req -> configuration.haltOnModeError && req.hasGuardFlag(Guarded.Flag.INVALID_MODE);
     }
 
     private Function<Guarded, Boolean> haltOnIdValidationError(Configuration configuration) {
@@ -123,12 +122,14 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
         private final boolean haltOnIdValidationError;
         private final boolean haltOnInputValueConversionError;
         private final boolean haltOnUpdateError;
+        private final boolean haltOnModeError;
 
-        public Configuration(boolean haltOnAttributeConversionError, boolean haltOnIdValidationError, boolean haltOnInputValueConversionError, boolean haltOnUpdateError) {
+        public Configuration(boolean haltOnAttributeConversionError, boolean haltOnIdValidationError, boolean haltOnInputValueConversionError, boolean haltOnUpdateError, boolean haltOnModeError) {
             this.haltOnAttributeConversionError = haltOnAttributeConversionError;
             this.haltOnIdValidationError = haltOnIdValidationError;
             this.haltOnInputValueConversionError = haltOnInputValueConversionError;
             this.haltOnUpdateError = haltOnUpdateError;
+            this.haltOnModeError = haltOnModeError;
         }
     }
 }
