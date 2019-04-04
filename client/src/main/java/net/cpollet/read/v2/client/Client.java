@@ -24,6 +24,7 @@ public class Client {
         read(portfolioExecutor);
         write(portfolioExecutor);
         delete(portfolioExecutor);
+        create(portfolioExecutor);
     }
 
     private static void printMetadata(AttributeStore<PortfolioId> portfolioAttributeStore) {
@@ -111,6 +112,21 @@ public class Client {
                                         "id",
                                         "status"
                                 )
+                        )
+                )
+        );
+    }
+
+    private static void create(Executor<PortfolioId> portfolioExecutor) {
+        System.out.println("-- CREATE ------");
+        Map<String, Object> attributesValues = new HashMap<>();
+        attributesValues.put("status", 40);
+        attributesValues.put("ownerId", 123123);
+
+        System.out.println(
+                portfolioExecutor.create(
+                        Request.create(
+                                attributesValues
                         )
                 )
         );

@@ -22,12 +22,14 @@ import net.cpollet.read.v2.impl.stages.TimerStage;
 import net.cpollet.read.v2.impl.stages.UpdateRequestExecutionStage;
 import net.cpollet.read.v2.impl.stages.ValueConversionStage;
 
+import java.util.Collections;
 import java.util.function.Function;
 
 public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     private final Stage<IdType, String> readStack;
     private final Stage<IdType, String> updateStack;
     private final Stage<IdType, String> deleteStack;
+    private final Stage<IdType, String> createStack;
     private final AttributeStore<IdType> attributeStore;
 
     public DefaultExecutor(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator, Configuration configuration) {
@@ -50,15 +52,22 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
                                 )
                         )
                 );
-        this.deleteStack = new TimerStage<>(
-                rwdStages(configuration, idValidator, AttributeDef.Mode.DELETE,
-                        new DeleteRequestExecutionStage<>()
-                )
-        );
+        this.deleteStack =
+                new TimerStage<>(
+                        rwdStages(configuration, idValidator, AttributeDef.Mode.DELETE,
+                                new DeleteRequestExecutionStage<>()
+                        )
+                );
+        this.createStack =
+                new TimerStage<>(
+                        rwdcStages(configuration, AttributeDef.Mode.CREATE,
+                                new CreateRequestExecutionStage<>()
+                        )
+                );
     }
 
     /**
-     * stages used for READ and WRITE requests
+     * Stages used for READ and WRITE requests
      */
     private Stage<IdType, String> rwStages(Configuration configuration, IdValidator<IdType> idValidator, AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> inner) {
         return rwdStages(configuration, idValidator, mode,
@@ -78,16 +87,25 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
      * Stages used for READ, WRITE and DELETE requests
      */
     private Stage<IdType, String> rwdStages(Configuration configuration, IdValidator<IdType> idValidator, AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> inner) {
+        return rwdcStages(configuration, mode,
+                new IdsValidationStage<>(idValidator,
+                        new RequestHaltStage<>(haltOnIdValidationError(configuration),
+                                inner
+                        )
+                )
+        );
+    }
+
+    /**
+     * Stages used for READ, WRITE, DELETE and CREATE requests
+     */
+    private Stage<IdType, String> rwdcStages(Configuration configuration, AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> inner) {
         return new AttributeConversionStage<>(attributeStore,
                 new RequestHaltStage<>(haltOnAttributeConversionError(configuration),
                         new ModeValidationStage<>(mode,
                                 new RequestHaltStage<>(haltOnModeError(configuration),
                                         new LogDeprecatedStage<>(
-                                                new IdsValidationStage<>(idValidator,
-                                                        new RequestHaltStage<>(haltOnIdValidationError(configuration),
-                                                                inner
-                                                        )
-                                                )
+                                                inner
                                         )
                                 )
                         )
@@ -133,6 +151,15 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     public Response<IdType> update(Request<IdType> request) {
         return InternalResponse.unwrap(
                 updateStack.execute(
+                        InternalRequest.wrap(request)
+                )
+        );
+    }
+
+    @Override
+    public Response<IdType> create(Request<IdType> request) {
+        return InternalResponse.unwrap(
+                createStack.execute(
                         InternalRequest.wrap(request)
                 )
         );

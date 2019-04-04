@@ -32,6 +32,7 @@
                                     <value>READ</value>
                                     <value>WRITE</value>
                                     <value>DELETE</value>
+                                    <value>CREATE</value>
                                 </set>
                             </constructor-arg>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>

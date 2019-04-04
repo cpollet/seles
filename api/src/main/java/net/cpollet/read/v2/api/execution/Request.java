@@ -33,6 +33,10 @@ public class Request<IdType> {
         return new Request<>(ids, attributesValues.keySet(), attributesValues);
     }
 
+    public static <IdType> Request<IdType> create(Map<String, Object> attributesValues) {
+        return new Request<>(Collections.emptyList(), attributesValues.keySet(), attributesValues);
+    }
+
     public Collection<IdType> getIds() {
         return ids;
     }
