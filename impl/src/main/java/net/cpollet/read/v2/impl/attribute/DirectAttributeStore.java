@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class DirectAttributeStore<IdType extends Id> implements AttributeStore<IdType> {
     private final Map<String, AttributeDef<IdType>> attributes;
 
-    public DirectAttributeStore(List<AttributeDef<IdType>> attributes) {
+    public DirectAttributeStore(Collection<AttributeDef<IdType>> attributes) {
         this.attributes = Collections.unmodifiableMap(
                 attributes.stream()
                         .collect(Collectors.toMap(
