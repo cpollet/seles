@@ -65,7 +65,9 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
                 new FilteringStage<>(
                         new ValueConversionStage<>(AttributeDef::caster,
                                 new ValueConversionStage<>(AttributeDef::converter,
-                                        inner
+                                        new RequestHaltStage<>(haltOnInputValueConversionError(configuration),
+                                                inner
+                                        )
                                 )
                         )
                 )
