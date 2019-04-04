@@ -67,15 +67,6 @@ public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements
         );
     }
 
-    @Override
-    public Collection<String> update(Map<AttributeDef<IdType>, Object> attributeValues, Collection<IdType> ids) {
-        ids.forEach(
-                id -> attributeValues.forEach((a, v) -> LOGGER.info("{}:{} -> {}", id, a, v))
-        );
-
-        return Collections.emptyList();
-    }
-
     private Response<NestedIdType> nestedFetch(Collection<String> attributes, Collection<NestedIdType> nestedIds) {
         return executor.read(new Request<>(
                 nestedIds,
@@ -83,7 +74,8 @@ public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements
         ));
     }
 
-    public boolean supports(String attributeName) {
-        return attributeName.startsWith(prefix + ".");
+    @Override
+    public Collection<String> update(Map<AttributeDef<IdType>, Object> attributeValues, Collection<IdType> ids) {
+        throw new RuntimeException("not implemented");
     }
 }
