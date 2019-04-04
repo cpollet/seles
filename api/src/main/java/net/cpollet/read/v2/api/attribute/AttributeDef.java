@@ -17,11 +17,10 @@ public class AttributeDef<IdType extends Id> {
     private final ValueConverter<AttributeDef<IdType>> converter;
     private final ValueConverter<AttributeDef<IdType>> caster;
 
-
-
     public enum Mode {
         READ, WRITE, DELETE, CREATE;
     }
+
     public AttributeDef(
             String name,
             boolean filtered,
