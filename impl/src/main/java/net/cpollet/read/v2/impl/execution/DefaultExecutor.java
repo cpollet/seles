@@ -147,7 +147,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     public Response<IdType> read(Request<IdType> request) {
         return InternalResponse.unwrap(
                 readStack.execute(
-                        InternalRequest.wrap(request)
+                        InternalRequest.wrap(InternalRequest.RequestType.READ, request)
                 )
         );
     }
@@ -156,7 +156,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     public Response<IdType> update(Request<IdType> request) {
         return InternalResponse.unwrap(
                 updateStack.execute(
-                        InternalRequest.wrap(request)
+                        InternalRequest.wrap(InternalRequest.RequestType.UPDATE, request)
                 )
         );
     }
@@ -165,7 +165,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     public Response<IdType> create(Request<IdType> request) {
         return InternalResponse.unwrap(
                 createStack.execute(
-                        InternalRequest.wrap(request)
+                        InternalRequest.wrap(InternalRequest.RequestType.CREATE, request)
                 )
         );
     }
@@ -174,7 +174,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     public Response<IdType> delete(Request<IdType> request) {
         return InternalResponse.unwrap(
                 deleteStack.execute(
-                        InternalRequest.wrap(request)
+                        InternalRequest.wrap(InternalRequest.RequestType.DELETE, request)
                 )
         );
     }

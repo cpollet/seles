@@ -12,7 +12,8 @@ import java.util.Collections;
 public class InternalResponseHelper {
     /**
      * Translates the InternalResponse back to a Request
-     * @param store the store to use to map attributes
+     *
+     * @param store    the store to use to map attributes
      * @param response the InternalResponse to transform
      * @return the Response generated from the InternalResponse
      */
@@ -21,6 +22,7 @@ public class InternalResponseHelper {
                 new AttributeConversionStage<>(store, request -> response)
                         .execute(
                                 InternalRequest.wrap(
+                                        InternalRequest.RequestType.READ,
                                         Request.read(Collections.emptyList(), Collections.emptyList())
                                 )
                         )
