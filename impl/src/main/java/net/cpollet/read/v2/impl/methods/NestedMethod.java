@@ -5,6 +5,7 @@ import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.execution.Executor;
 import net.cpollet.read.v2.api.execution.Request;
 import net.cpollet.read.v2.api.execution.Response;
+import net.cpollet.read.v2.api.methods.CreateResult;
 import net.cpollet.read.v2.api.methods.FetchResult;
 import net.cpollet.read.v2.api.methods.Method;
 import org.slf4j.Logger;
@@ -79,6 +80,11 @@ public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements
 
     @Override
     public Collection<String> delete(List<AttributeDef<IdType>> attributes, Collection<IdType> ids) {
+        throw new RuntimeException("not implemented");
+    }
+
+    @Override
+    public CreateResult<IdType> create(Map<AttributeDef<IdType>, Object> values) {
         throw new RuntimeException("not implemented");
     }
 }

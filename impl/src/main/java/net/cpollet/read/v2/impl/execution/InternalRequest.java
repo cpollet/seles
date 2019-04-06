@@ -32,7 +32,7 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
     private final RequestType type;
 
     public enum RequestType {
-        READ, UPDATE; // FIXME what about DELETE? Pass this information from Executor, when calling wrap()... or from the Request...
+        READ, UPDATE; // FIXME what about DELETE, CREATE? Pass this information from Executor, when calling wrap()... or from the Request...
 
         public static <AttributeType> RequestType from(Collection<AttributeType> attributes, Map<AttributeType, Object> attributesValues) {
             if (attributesValues.isEmpty()) {
@@ -61,6 +61,12 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
         );
     }
 
+    public InternalRequest<IdType, AttributeType> withIds(Collection<IdType> idsToAdd) {
+        Set<IdType> newIds = new HashSet<>(ids);
+        newIds.addAll(idsToAdd);
+        return new InternalRequest<>(newIds, attributes, attributeValues, guardFlags);
+    }
+
     public InternalRequest<IdType, AttributeType> withoutIds(Collection<IdType> idsToRemove) {
         Set<IdType> newIds = new HashSet<>(ids);
         newIds.removeAll(idsToRemove);
@@ -68,9 +74,9 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
     }
 
     public InternalRequest<IdType, AttributeType> withAttributes(Collection<AttributeType> attributesToAdd) {
-        if (is(RequestType.UPDATE)) {
-            throw new IllegalStateException("Cannot add attributes to an UPDATE request");
-        }
+        // FIXME if (is(RequestType.UPDATE)) {
+        //    throw new IllegalStateException("Cannot add attributes to an UPDATE request");
+        // }
 
         Set<AttributeType> newAttributes = new HashSet<>(attributes);
         newAttributes.addAll(attributesToAdd);
@@ -141,9 +147,9 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
     }
 
     public Map<AttributeType, Object> values(Collection<AttributeType> attributes) {
-        if (!is(RequestType.UPDATE)) {
-            throw new IllegalStateException("Cannot get values from a non-UPDATE request");
-        }
+        // FIXME rewrite if (!is(RequestType.UPDATE)) {
+        //    throw new IllegalStateException("Cannot get values from a non-UPDATE request");
+        // }
 
         return attributeValues.entrySet().stream()
                 .filter(e -> attributes.contains(e.getKey()))

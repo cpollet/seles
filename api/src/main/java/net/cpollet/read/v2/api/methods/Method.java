@@ -13,4 +13,6 @@ public interface Method<IdType extends Id> {
     Collection<String> update(Map<AttributeDef<IdType>, Object> attributeValues, Collection<IdType> ids);
 
     Collection<String> delete(List<AttributeDef<IdType>> attributes, Collection<IdType> ids);
+
+    CreateResult<IdType> create(Map<AttributeDef<IdType>, Object> values);
 }

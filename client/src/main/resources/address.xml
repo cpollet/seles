@@ -44,7 +44,11 @@
         </constructor-arg>
     </bean>
 
-    <bean id="address.method.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod"/>
+    <bean id="address.method.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod">
+        <constructor-arg name="idTypeProvider">
+            <null/>
+        </constructor-arg>
+    </bean>
 
     <bean id="address.converter.default" class="net.cpollet.read.v2.client.conversion.DefaultValueConverter"/>
     <bean id="address.caster.default" class="net.cpollet.read.v2.client.conversion.DefaultValueCaster"/>

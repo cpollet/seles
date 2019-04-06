@@ -22,7 +22,7 @@ public class InternalRequestHelper {
 
         new AttributeConversionStage<>(store, request -> {
             holder.object = request;
-            return new InternalResponse<>(Collections.emptyMap());
+            return new InternalResponse<>();
         }).execute(
                 toStringInternalRequest(
                         store.attributes().stream()

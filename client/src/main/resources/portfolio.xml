@@ -7,6 +7,7 @@
     <bean id="portfolio.attributeStore" class="net.cpollet.read.v2.impl.attribute.NestedAttributeStore">
         <constructor-arg name="parentStore">
             <bean class="net.cpollet.read.v2.impl.attribute.DirectAttributeStore">
+                <constructor-arg name="idAttribute" value="id"/>
                 <constructor-arg name="attributes">
                     <list>
                         <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
@@ -42,10 +43,12 @@
                             <constructor-arg name="name" value="currency"/>
                             <constructor-arg name="deprecated" value="true"/>
                             <constructor-arg name="filtered" value="false"/>
-                            <constructor-arg name="method" ref="portfolio.method.standard"/>
+                            <constructor-arg name="method" ref="portfolio.method.standard2"/>
                             <constructor-arg name="modes">
                                 <set>
                                     <value>READ</value>
+                                    <value>WRITE</value>
+                                    <value>CREATE</value>
                                 </set>
                             </constructor-arg>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
@@ -74,6 +77,20 @@
                             <constructor-arg name="modes">
                                 <set>
                                     <value>READ</value>
+                                </set>
+                            </constructor-arg>
+                            <constructor-arg name="converter" ref="portfolio.converter.default"/>
+                            <constructor-arg name="caster" ref="portfolio.caster.default"/>
+                        </bean>
+                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                            <constructor-arg name="name" value="description"/>
+                            <constructor-arg name="deprecated" value="false"/>
+                            <constructor-arg name="filtered" value="false"/>
+                            <constructor-arg name="method" ref="portfolio.method.standard2"/>
+                            <constructor-arg name="modes">
+                                <set>
+                                    <value>READ</value>
+                                    <value>WRITE</value>
                                 </set>
                             </constructor-arg>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
@@ -117,7 +134,16 @@
         </constructor-arg>
     </bean>
 
-    <bean id="portfolio.method.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod"/>
+    <bean id="portfolio.method.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod">
+        <constructor-arg name="idTypeProvider">
+            <bean class="net.cpollet.read.v2.client.domain.StringToPortfolioId"/>
+        </constructor-arg>
+    </bean>
+    <bean id="portfolio.method.standard2" class="net.cpollet.read.v2.impl.methods.StandardMethod">
+        <constructor-arg name="idTypeProvider">
+            <bean class="net.cpollet.read.v2.client.domain.StringToPortfolioId"/>
+        </constructor-arg>
+    </bean>
 
     <bean id="portfolio.converter.default" class="net.cpollet.read.v2.client.conversion.DefaultValueConverter"/>
     <bean id="portfolio.caster.default" class="net.cpollet.read.v2.client.conversion.DefaultValueCaster"/>

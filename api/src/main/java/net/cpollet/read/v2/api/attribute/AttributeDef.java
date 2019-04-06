@@ -18,7 +18,10 @@ public class AttributeDef<IdType extends Id> {
     private final ValueConverter<AttributeDef<IdType>> caster;
 
     public enum Mode {
-        READ, WRITE, DELETE, CREATE;
+        READ,
+        WRITE,
+        DELETE,
+        CREATE
     }
 
     public AttributeDef(

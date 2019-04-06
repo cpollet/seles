@@ -20,7 +20,7 @@ public class RequestHaltStage<IdType extends Id, AttributeType> implements Stage
     @Override
     public InternalResponse<IdType, AttributeType> execute(InternalRequest<IdType, AttributeType> request) {
         if (guard.apply(request)) {
-            return new InternalResponse<>(Collections.emptyMap());
+            return new InternalResponse<>();
         }
 
         return next.execute(request);

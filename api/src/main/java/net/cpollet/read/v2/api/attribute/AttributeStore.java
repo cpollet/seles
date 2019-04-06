@@ -8,5 +8,7 @@ import java.util.Optional;
 public interface AttributeStore<IdType extends Id> {
     Optional<AttributeDef<IdType>> fetch(String attributeName);
 
+    Optional<AttributeDef<IdType>> idAttribute();
+
     Collection<AttributeDef<IdType>> attributes();
 }

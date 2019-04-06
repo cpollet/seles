@@ -24,7 +24,7 @@ public class DeleteRequestExecutionStage<IdType extends Id> implements Stage<IdT
                 )
         );
 
-        return new InternalResponse<IdType, AttributeDef<IdType>>(Collections.emptyMap())
+        return new InternalResponse<IdType, AttributeDef<IdType>>()
                 .withErrors(errors);
     }
 }

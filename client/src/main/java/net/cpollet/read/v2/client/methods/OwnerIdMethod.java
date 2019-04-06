@@ -1,6 +1,7 @@
 package net.cpollet.read.v2.client.methods;
 
 import net.cpollet.read.v2.api.attribute.AttributeDef;
+import net.cpollet.read.v2.api.methods.CreateResult;
 import net.cpollet.read.v2.api.methods.FetchResult;
 import net.cpollet.read.v2.api.methods.Method;
 import net.cpollet.read.v2.client.domain.PortfolioId;
@@ -49,5 +50,14 @@ public class OwnerIdMethod implements Method<PortfolioId> {
         );
 
         return Collections.emptyList();
+    }
+
+    @Override
+    public CreateResult<PortfolioId> create(Map<AttributeDef<PortfolioId>, Object> values) {
+        values.forEach(
+                (a, v) -> LOGGER.info("CREATE {} -> {}", a, v)
+        );
+
+        return new CreateResult<>(new PortfolioId("111111"));
     }
 }

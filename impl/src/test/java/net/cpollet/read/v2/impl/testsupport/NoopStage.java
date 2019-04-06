@@ -10,6 +10,6 @@ import java.util.Collections;
 public class NoopStage implements Stage<StringId, AttributeDef<StringId>> {
     @Override
     public InternalResponse<StringId, AttributeDef<StringId>> execute(InternalRequest<StringId, AttributeDef<StringId>> request) {
-        return new InternalResponse<>(Collections.emptyMap());
+        return new InternalResponse<>();
     }
 }

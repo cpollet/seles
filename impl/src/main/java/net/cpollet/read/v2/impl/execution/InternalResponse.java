@@ -35,6 +35,10 @@ public class InternalResponse<IdType extends Id, AttributeType> {
         this(values, Collections.emptyList(), Collections.emptyList(), 0L);
     }
 
+    public InternalResponse() {
+        this(Collections.emptyMap());
+    }
+
     static <IdType extends Id> Response<IdType> unwrap(InternalResponse<IdType, String> response) {
         return new Response<>(response.values, response.errors, response.messages, response.executionTime);
     }
@@ -87,6 +91,10 @@ public class InternalResponse<IdType extends Id, AttributeType> {
         return new InternalResponse<>(values, mergedErrors, messages, executionTime);
     }
 
+    public InternalResponse<IdType, AttributeType> mergeErrors(InternalResponse<IdType, AttributeType> other) {
+        return withErrors(other.errors);
+    }
+
     public InternalResponse<IdType, AttributeType> withMessages(Collection<String> messages) {
         if (messages.isEmpty()) {
             return this;
@@ -95,6 +103,10 @@ public class InternalResponse<IdType extends Id, AttributeType> {
         mergedMessages.addAll(this.messages);
         mergedMessages.addAll(messages);
         return new InternalResponse<>(values, errors, mergedMessages, executionTime);
+    }
+
+    public InternalResponse<IdType, AttributeType> mergeMessages(InternalResponse<IdType, AttributeType> other) {
+        return withMessages(other.messages);
     }
 
     public InternalResponse<IdType, AttributeType> withExecutionTime(long executionTime) {

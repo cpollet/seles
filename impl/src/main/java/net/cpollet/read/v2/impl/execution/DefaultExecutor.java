@@ -9,6 +9,7 @@ import net.cpollet.read.v2.api.execution.Request;
 import net.cpollet.read.v2.api.execution.Response;
 import net.cpollet.read.v2.impl.Guarded;
 import net.cpollet.read.v2.impl.stages.AttributeConversionStage;
+import net.cpollet.read.v2.impl.stages.CreateRequestExecutionStage;
 import net.cpollet.read.v2.impl.stages.DeleteRequestExecutionStage;
 import net.cpollet.read.v2.impl.stages.ExpandStarStage;
 import net.cpollet.read.v2.impl.stages.FilteringStage;
@@ -22,7 +23,6 @@ import net.cpollet.read.v2.impl.stages.TimerStage;
 import net.cpollet.read.v2.impl.stages.UpdateRequestExecutionStage;
 import net.cpollet.read.v2.impl.stages.ValueConversionStage;
 
-import java.util.Collections;
 import java.util.function.Function;
 
 public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
@@ -60,8 +60,13 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
                 );
         this.createStack =
                 new TimerStage<>(
-                        rwdcStages(configuration, AttributeDef.Mode.CREATE,
-                                new CreateRequestExecutionStage<>()
+                        rwdcStages(configuration, AttributeDef.Mode.WRITE,
+                                new CreateRequestExecutionStage<>(attributeStore,
+                                        new UpdateRequestExecutionStage<>(x -> new InternalResponse<>()),
+                                        new RequestHaltStage<>(haltOnUpdateError(configuration),
+                                                new ReadRequestExecutionStage<>()
+                                        )
+                                )
                         )
                 );
     }

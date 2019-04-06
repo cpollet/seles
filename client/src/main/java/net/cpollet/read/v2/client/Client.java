@@ -122,6 +122,8 @@ public class Client {
         Map<String, Object> attributesValues = new HashMap<>();
         attributesValues.put("status", 40);
         attributesValues.put("ownerId", 123123);
+        attributesValues.put("currency", "CHF");
+        attributesValues.put("description", "lol");
 
         System.out.println(
                 portfolioExecutor.create(

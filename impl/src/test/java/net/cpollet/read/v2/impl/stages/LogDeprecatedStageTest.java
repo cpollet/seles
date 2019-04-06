@@ -18,7 +18,7 @@ class LogDeprecatedStageTest {
     void insertsWarnMessage_whenAnAttributeIsDeprecated() {
         // GIVEN
         LogDeprecatedStage<StringId> stage = new LogDeprecatedStage<>(new NoopStage());
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Arrays.asList(
+        DirectAttributeStore<StringId> store = new DirectAttributeStore<>("", Arrays.asList(
                 new AttributeDef<>(
                         "non-deprecated", false, false, null, Collections.emptySet(), null, null
                 ),

@@ -90,7 +90,11 @@
         </constructor-arg>
     </bean>
 
-    <bean id="person.method.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod"/>
+    <bean id="person.method.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod">
+        <constructor-arg name="idTypeProvider">
+            <null/>
+        </constructor-arg>
+    </bean>
 
     <bean id="person.converter.default" class="net.cpollet.read.v2.client.conversion.DefaultValueConverter"/>
     <bean id="person.caster.default" class="net.cpollet.read.v2.client.conversion.DefaultValueCaster"/>

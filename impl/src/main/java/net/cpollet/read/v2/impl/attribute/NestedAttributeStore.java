@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class NestedAttributeStore<IdType extends Id> implements AttributeStore<IdType> {
     private final Map<String, AttributeDef<IdType>> store;
+    private final AttributeStore<IdType> parentStore;
 
     public NestedAttributeStore(AttributeStore<IdType> parentStore, List<NestedAttributes<Id>> attributes) {
         HashMap<String, AttributeDef<IdType>> tmpStore = new HashMap<>(
@@ -65,11 +66,17 @@ public class NestedAttributeStore<IdType extends Id> implements AttributeStore<I
         );
 
         this.store = Collections.unmodifiableMap(tmpStore);
+        this.parentStore = parentStore;
     }
 
     @Override
     public Optional<AttributeDef<IdType>> fetch(String attributeName) {
         return Optional.ofNullable(store.get(attributeName));
+    }
+
+    @Override
+    public Optional<AttributeDef<IdType>> idAttribute() {
+        return parentStore.idAttribute();
     }
 
     @Override
