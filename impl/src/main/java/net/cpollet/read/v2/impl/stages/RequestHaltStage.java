@@ -5,7 +5,6 @@ import net.cpollet.read.v2.impl.Guarded;
 import net.cpollet.read.v2.impl.execution.InternalRequest;
 import net.cpollet.read.v2.impl.execution.InternalResponse;
 
-import java.util.Collections;
 import java.util.function.Function;
 
 public class RequestHaltStage<IdType extends Id, AttributeType> implements Stage<IdType, AttributeType> {

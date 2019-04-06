@@ -5,8 +5,6 @@ import net.cpollet.read.v2.impl.execution.InternalRequest;
 import net.cpollet.read.v2.impl.execution.InternalResponse;
 import net.cpollet.read.v2.impl.stages.Stage;
 
-import java.util.Collections;
-
 public class NoopStage implements Stage<StringId, AttributeDef<StringId>> {
     @Override
     public InternalResponse<StringId, AttributeDef<StringId>> execute(InternalRequest<StringId, AttributeDef<StringId>> request) {

@@ -7,7 +7,6 @@ import net.cpollet.read.v2.impl.execution.InternalRequest;
 import net.cpollet.read.v2.impl.execution.InternalResponse;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class DeleteRequestExecutionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {

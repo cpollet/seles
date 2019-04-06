@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class InternalRequestHelper {
+    private InternalRequestHelper() {
+        // nothing
+    }
+
     /**
      * Builds a request that requests all attributes from the store on an empty set of IDs
      *

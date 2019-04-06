@@ -7,7 +7,7 @@ import java.util.Objects;
 public class AddressId implements Id<Integer> {
     private final Integer addressId;
 
-    public AddressId(Integer addressId) {
+     AddressId(Integer addressId) {
         this.addressId = addressId;
     }
 

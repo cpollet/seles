@@ -8,8 +8,6 @@ import net.cpollet.read.v2.api.execution.Response;
 import net.cpollet.read.v2.api.methods.CreateResult;
 import net.cpollet.read.v2.api.methods.FetchResult;
 import net.cpollet.read.v2.api.methods.Method;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Collections;

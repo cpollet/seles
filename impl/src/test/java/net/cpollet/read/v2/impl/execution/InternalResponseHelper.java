@@ -10,6 +10,10 @@ import net.cpollet.read.v2.impl.testsupport.StringId;
 import java.util.Collections;
 
 public class InternalResponseHelper {
+    private InternalResponseHelper() {
+        // nothing
+    }
+
     /**
      * Translates the InternalResponse back to a Request
      *

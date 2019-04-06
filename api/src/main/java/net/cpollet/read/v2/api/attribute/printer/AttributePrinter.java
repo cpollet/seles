@@ -1,7 +1,6 @@
 package net.cpollet.read.v2.api.attribute.printer;
 
 import net.cpollet.read.v2.api.attribute.AttributeDef;
-import net.cpollet.read.v2.api.domain.Id;
 
 import java.util.Set;
 
