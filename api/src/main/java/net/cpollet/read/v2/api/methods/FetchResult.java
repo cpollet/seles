@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FetchResult<IdType extends Id> {
+    private static final FetchResult EMPTY = new FetchResult();
+
     private final MergeAlgorithm mergeAlgorithm;
     private final Map<IdType, Map<AttributeDef<IdType>, Object>> result;
     private final Collection<String> errors;
@@ -28,8 +30,13 @@ public class FetchResult<IdType extends Id> {
         this(result, Collections.emptyList());
     }
 
-    public FetchResult() {
+    private FetchResult() {
         this(Collections.emptyMap(), Collections.emptyList());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <IdType extends Id> FetchResult<IdType> emptyResult() {
+        return (FetchResult<IdType>) EMPTY;
     }
 
     public Map<IdType, Map<AttributeDef<IdType>, Object>> result() {
