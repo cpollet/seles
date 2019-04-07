@@ -27,6 +27,6 @@ public class ReadRequestExecutionStage<IdType extends Id> implements Stage<IdTyp
     private FetchResult<IdType> fetch(Collection<IdType> ids, Map<Method<IdType>, List<AttributeDef<IdType>>> attributesGroupedByMethod) {
         return attributesGroupedByMethod.entrySet().stream()
                 .map(e -> e.getKey().fetch(e.getValue(), ids))
-                .reduce(new FetchResult<>(), FetchResult::append);
+                .reduce(new FetchResult<>(), FetchResult::merge);
     }
 }

@@ -10,12 +10,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FetchResult<IdType extends Id> {
+    private final MergeAlgorithm mergeAlgorithm;
     private final Map<IdType, Map<AttributeDef<IdType>, Object>> result;
     private final Collection<String> errors;
 
-    public FetchResult(Map<IdType, Map<AttributeDef<IdType>, Object>> result, Collection<String> errors) {
+    public FetchResult(MergeAlgorithm mergeAlgorithm, Map<IdType, Map<AttributeDef<IdType>, Object>> result, Collection<String> errors) {
+        this.mergeAlgorithm = mergeAlgorithm;
         this.result = Collections.unmodifiableMap(result);
         this.errors = Collections.unmodifiableCollection(errors);
+    }
+
+    public FetchResult(Map<IdType, Map<AttributeDef<IdType>, Object>> result, Collection<String> errors) {
+        this(new MergeAlgorithm(), result, errors);
     }
 
     public FetchResult(Map<IdType, Map<AttributeDef<IdType>, Object>> result) {
@@ -34,16 +40,22 @@ public class FetchResult<IdType extends Id> {
         return errors;
     }
 
-    public FetchResult<IdType> append(FetchResult<IdType> other) {
-        HashMap<IdType, Map<AttributeDef<IdType>, Object>> newResult = new HashMap<>(result);
-        other.result().forEach((key, value) -> {
-            newResult.putIfAbsent(key, new HashMap<>());
-            newResult.get(key).putAll(value);
-        });
+    public FetchResult<IdType> merge(FetchResult<IdType> other) {
+        return mergeAlgorithm.merge(this, other);
+    }
 
-        ArrayList<String> newErrors = new ArrayList<>(errors);
-        newErrors.addAll(other.errors());
+    public static class MergeAlgorithm {
+        public <IdType extends Id> FetchResult<IdType> merge(FetchResult<IdType> a, FetchResult<IdType> b) {
+            HashMap<IdType, Map<AttributeDef<IdType>, Object>> newResult = new HashMap<>(a.result());
+            b.result().forEach((key, value) -> {
+                newResult.putIfAbsent(key, new HashMap<>());
+                newResult.get(key).putAll(value);
+            });
 
-        return new FetchResult<>(newResult, newErrors);
+            ArrayList<String> newErrors = new ArrayList<>(a.errors());
+            newErrors.addAll(b.errors());
+
+            return new FetchResult<>(this, newResult, newErrors);
+        }
     }
 }
