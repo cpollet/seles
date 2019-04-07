@@ -5,9 +5,11 @@ import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.methods.CreateResult;
 import net.cpollet.read.v2.api.methods.FetchResult;
 import net.cpollet.read.v2.api.methods.Method;
+import net.cpollet.read.v2.api.methods.SearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -66,5 +68,16 @@ public class StandardMethod<IdType extends Id> implements Method<IdType> {
         );
 
         return new CreateResult<>(idTypeProvider.apply("100000"));
+    }
+
+    @Override
+    public SearchResult<IdType> search(Map<AttributeDef<IdType>, Object> values) {
+        values.forEach(
+                (a, v) -> LOGGER.info("SEARCH {} -> {}", a, v)
+        );
+
+        return new SearchResult<>(
+                Arrays.asList(idTypeProvider.apply("100000"), idTypeProvider.apply("222222"))
+        );
     }
 }

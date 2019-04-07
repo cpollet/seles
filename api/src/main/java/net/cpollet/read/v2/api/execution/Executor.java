@@ -13,4 +13,6 @@ public interface Executor<IdType extends Id> {
     Response<IdType> create(Request<IdType> request);
 
     Response<IdType> delete(Request<IdType> request);
+
+    Response<IdType> search(Request<IdType> request);
 }

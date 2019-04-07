@@ -4,6 +4,7 @@ import net.cpollet.read.v2.api.attribute.AttributeDef;
 import net.cpollet.read.v2.api.methods.CreateResult;
 import net.cpollet.read.v2.api.methods.FetchResult;
 import net.cpollet.read.v2.api.methods.Method;
+import net.cpollet.read.v2.api.methods.SearchResult;
 import net.cpollet.read.v2.client.domain.PersonId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,5 +59,16 @@ public class OwnedPortfolioIdMethod implements Method<PersonId> {
         );
 
         return new CreateResult<>(new PersonId(111111));
+    }
+
+    @Override
+    public SearchResult<PersonId> search(Map<AttributeDef<PersonId>, Object> values) {
+        values.forEach(
+                (a, v) -> LOGGER.info("SEARCH {} -> {}", a, v)
+        );
+
+        return new SearchResult<>(
+                Collections.singletonList(new PersonId(111111))
+        );
     }
 }

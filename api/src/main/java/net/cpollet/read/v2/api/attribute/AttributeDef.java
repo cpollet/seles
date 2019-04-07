@@ -21,7 +21,8 @@ public class AttributeDef<IdType extends Id> {
         READ,
         WRITE,
         DELETE,
-        CREATE
+        CREATE,
+        SEARCH
     }
 
     public AttributeDef(

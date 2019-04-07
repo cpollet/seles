@@ -34,6 +34,7 @@
                                     <value>WRITE</value>
                                     <value>DELETE</value>
                                     <value>CREATE</value>
+                                    <value>SEARCH</value>
                                 </set>
                             </constructor-arg>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
@@ -49,6 +50,7 @@
                                     <value>READ</value>
                                     <value>WRITE</value>
                                     <value>CREATE</value>
+                                    <value>SEARCH</value>
                                 </set>
                             </constructor-arg>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
@@ -77,6 +79,7 @@
                             <constructor-arg name="modes">
                                 <set>
                                     <value>READ</value>
+                                    <value>SEARCH</value>
                                 </set>
                             </constructor-arg>
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>

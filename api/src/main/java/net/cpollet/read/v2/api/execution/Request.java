@@ -39,6 +39,10 @@ public class Request<IdType extends Id> {
         return new Request<>(Collections.emptyList(), attributesValues.keySet(), attributesValues);
     }
 
+    public static <IdType extends Id> Request<IdType> search(Map<String, Object> attributesValues) {
+        return new Request<>(Collections.emptyList(), attributesValues.keySet(), attributesValues);
+    }
+
     public Collection<IdType> getIds() {
         return ids;
     }

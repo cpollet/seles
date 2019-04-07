@@ -15,4 +15,6 @@ public interface Method<IdType extends Id> {
     Collection<String> delete(List<AttributeDef<IdType>> attributes, Collection<IdType> ids);
 
     CreateResult<IdType> create(Map<AttributeDef<IdType>, Object> values);
+
+    SearchResult<IdType> search(Map<AttributeDef<IdType>, Object> values);
 }

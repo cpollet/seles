@@ -8,6 +8,7 @@ import net.cpollet.read.v2.api.execution.Response;
 import net.cpollet.read.v2.api.methods.CreateResult;
 import net.cpollet.read.v2.api.methods.FetchResult;
 import net.cpollet.read.v2.api.methods.Method;
+import net.cpollet.read.v2.api.methods.SearchResult;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -83,6 +84,11 @@ public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements
 
     @Override
     public CreateResult<IdType> create(Map<AttributeDef<IdType>, Object> values) {
+        throw new RuntimeException("not implemented");
+    }
+
+    @Override
+    public SearchResult<IdType> search(Map<AttributeDef<IdType>, Object> values) {
         throw new RuntimeException("not implemented");
     }
 }

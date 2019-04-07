@@ -18,6 +18,7 @@ import net.cpollet.read.v2.impl.stages.LogDeprecatedStage;
 import net.cpollet.read.v2.impl.stages.ModeValidationStage;
 import net.cpollet.read.v2.impl.stages.ReadRequestExecutionStage;
 import net.cpollet.read.v2.impl.stages.RequestHaltStage;
+import net.cpollet.read.v2.impl.stages.SearchRequestExecutionStage;
 import net.cpollet.read.v2.impl.stages.Stage;
 import net.cpollet.read.v2.impl.stages.TimerStage;
 import net.cpollet.read.v2.impl.stages.UpdateRequestExecutionStage;
@@ -30,6 +31,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     private final Stage<IdType, String> updateStack;
     private final Stage<IdType, String> deleteStack;
     private final Stage<IdType, String> createStack;
+    private final Stage<IdType, String> searchStack;
     private final AttributeStore<IdType> attributeStore;
 
     public DefaultExecutor(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator, Configuration configuration) {
@@ -67,6 +69,12 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
                                                 new ReadRequestExecutionStage<>()
                                         )
                                 )
+                        )
+                );
+        this.searchStack =
+                new TimerStage<>(
+                        rwStages(configuration, idValidator, AttributeDef.Mode.SEARCH,
+                                new SearchRequestExecutionStage<>()
                         )
                 );
     }
@@ -175,6 +183,15 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
         return InternalResponse.unwrap(
                 deleteStack.execute(
                         InternalRequest.wrap(InternalRequest.RequestType.DELETE, request)
+                )
+        );
+    }
+
+    @Override
+    public Response<IdType> search(Request<IdType> request) {
+        return InternalResponse.unwrap(
+                searchStack.execute(
+                        InternalRequest.wrap(InternalRequest.RequestType.SEARCH, request)
                 )
         );
     }

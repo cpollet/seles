@@ -25,6 +25,7 @@ public class Client {
         write(portfolioExecutor);
         delete(portfolioExecutor);
         create(portfolioExecutor);
+        search(portfolioExecutor);
     }
 
     private static void printMetadata(AttributeStore<PortfolioId> portfolioAttributeStore) {
@@ -128,6 +129,23 @@ public class Client {
         System.out.println(
                 portfolioExecutor.create(
                         Request.create(
+                                attributesValues
+                        )
+                )
+        );
+    }
+
+    private static void search(Executor<PortfolioId> portfolioExecutor) {
+        System.out.println("-- SEARCH ------");
+        Map<String, Object> attributesValues = new HashMap<>();
+        attributesValues.put("status", 30);
+        attributesValues.put("ownerId", 123456);
+        attributesValues.put("currency", "CHF");
+        attributesValues.put("description", "...");
+
+        System.out.println(
+                portfolioExecutor.search(
+                        Request.search(
                                 attributesValues
                         )
                 )

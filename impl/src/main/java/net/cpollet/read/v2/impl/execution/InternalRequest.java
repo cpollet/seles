@@ -32,7 +32,7 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
     private final RequestType type;
 
     public enum RequestType { // FIXME transform into different classes
-        READ, UPDATE, DELETE, CREATE
+        READ, UPDATE, DELETE, CREATE, SEARCH
     }
 
     private InternalRequest(RequestType type, Set<IdType> ids, Set<AttributeType> attributes, Map<AttributeType, Object> attributesValues, Set<Flag> guardFlags) {
@@ -139,8 +139,8 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
     }
 
     public Map<AttributeType, Object> values(Collection<AttributeType> attributes) {
-        if (!is(RequestType.UPDATE, RequestType.CREATE)) {
-            throw new IllegalStateException("Cannot get values from a non-UPDATE / non-CREATE request");
+        if (!is(RequestType.UPDATE, RequestType.CREATE, RequestType.SEARCH)) {
+            throw new IllegalStateException("Cannot get values from a non CREATE/UPDATE/SEARCH request");
         }
 
         return attributeValues.entrySet().stream()
