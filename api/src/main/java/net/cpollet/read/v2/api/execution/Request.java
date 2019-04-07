@@ -1,5 +1,7 @@
 package net.cpollet.read.v2.api.execution;
 
+import net.cpollet.read.v2.api.domain.Id;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -10,7 +12,7 @@ import java.util.Map;
  *
  * @param <IdType> the java type of the entity's primary key
  */
-public class Request<IdType> {
+public class Request<IdType extends Id> {
     private final Collection<IdType> ids;
     private final Collection<String> attributes;
     private final Map<String, Object> attributesValues;
@@ -21,19 +23,19 @@ public class Request<IdType> {
         this.attributesValues = Collections.unmodifiableMap(attributesValues);
     }
 
-    public static <IdType> Request<IdType> read(Collection<IdType> ids, Collection<String> attributes) {
+    public static <IdType extends Id> Request<IdType> read(Collection<IdType> ids, Collection<String> attributes) {
         return new Request<>(ids, attributes, Collections.emptyMap());
     }
 
-    public static <IdType> Request<IdType> delete(Collection<IdType> ids, Collection<String> attributes) {
+    public static <IdType extends Id> Request<IdType> delete(Collection<IdType> ids, Collection<String> attributes) {
         return new Request<>(ids, attributes, Collections.emptyMap());
     }
 
-    public static <IdType> Request<IdType> write(Collection<IdType> ids, Map<String, Object> attributesValues) {
+    public static <IdType extends Id> Request<IdType> write(Collection<IdType> ids, Map<String, Object> attributesValues) {
         return new Request<>(ids, attributesValues.keySet(), attributesValues);
     }
 
-    public static <IdType> Request<IdType> create(Map<String, Object> attributesValues) {
+    public static <IdType extends Id> Request<IdType> create(Map<String, Object> attributesValues) {
         return new Request<>(Collections.emptyList(), attributesValues.keySet(), attributesValues);
     }
 

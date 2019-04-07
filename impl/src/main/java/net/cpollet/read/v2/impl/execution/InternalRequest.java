@@ -68,7 +68,7 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
     public InternalRequest<IdType, AttributeType> withAttributes(Collection<AttributeType> attributesToAdd) {
         if (!is(RequestType.READ)) {
             throw new IllegalStateException("Cannot add attributes to a non READ request");
-         }
+        }
 
         Set<AttributeType> newAttributes = new HashSet<>(attributes);
         newAttributes.addAll(attributesToAdd);
