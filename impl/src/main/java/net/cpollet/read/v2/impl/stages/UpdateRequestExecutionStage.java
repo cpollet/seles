@@ -10,6 +10,9 @@ import net.cpollet.read.v2.impl.execution.InternalResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Executes a UPDATE {@link InternalRequest}.
+ */
 public class UpdateRequestExecutionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
     private final Stage<IdType, AttributeDef<IdType>> next;
 

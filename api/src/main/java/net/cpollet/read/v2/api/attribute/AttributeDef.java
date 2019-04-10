@@ -62,6 +62,7 @@ public class AttributeDef<IdType extends Id> {
         return deprecated;
     }
 
+    // FIXME [filter] change to return an instance of interface AccessLevel and rename to accessLevel()
     public boolean filtered() {
         return filtered;
     }

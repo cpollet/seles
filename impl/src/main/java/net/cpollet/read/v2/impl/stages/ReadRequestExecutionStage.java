@@ -12,6 +12,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes a READ {@link InternalRequest}.
+ */
 public class ReadRequestExecutionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
     @Override
     public InternalResponse<IdType, AttributeDef<IdType>> execute(final InternalRequest<IdType, AttributeDef<IdType>> request) {

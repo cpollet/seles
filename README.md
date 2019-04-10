@@ -1,9 +1,9 @@
  - CRUD
-   - C ok - fix nested
-   - R ok
-   - U ok - fix nested
-   - D ok - fix nested
-   - S ok - fix nexted
+   - Create ok - fix nested
+   - Read ok
+   - Update ok - fix nested
+   - Delete ok - fix nested
+   - Search ok - fix nexted
  - inject stages from client
  - audit / security
  - rights stage

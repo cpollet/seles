@@ -9,6 +9,11 @@ import net.cpollet.read.v2.impl.execution.InternalResponse;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * Validates that the {@link AttributeDef} are valid for the current {@link InternalRequest}, i.e. for instance that a
+ * read {@link InternalRequest} only contains {@link AttributeDef} supporting the read {@link AttributeDef.Mode}. It
+ * removes the attributes that are not valid and add an errors for each of them in the {@link InternalResponse}.
+ */
 public class ModeValidationStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
     private final Stage<IdType, AttributeDef<IdType>> next;
     private final AttributeDef.Mode mode;

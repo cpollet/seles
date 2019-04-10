@@ -10,6 +10,9 @@ import net.cpollet.read.v2.impl.execution.InternalResponse;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+/**
+ * Executes a SEARCH {@link InternalRequest}.
+ */
 public class SearchRequestExecutionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
     @Override
     public InternalResponse<IdType, AttributeDef<IdType>> execute(InternalRequest<IdType, AttributeDef<IdType>> request) {

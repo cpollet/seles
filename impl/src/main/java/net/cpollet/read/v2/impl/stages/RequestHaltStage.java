@@ -7,6 +7,12 @@ import net.cpollet.read.v2.impl.execution.InternalResponse;
 
 import java.util.function.Function;
 
+/**
+ * Halts the processing of the {@link InternalRequest} and returns an empty {@link InternalResponse} when the guard
+ * function returns true.
+ *
+ * @see Guarded
+ */
 public class RequestHaltStage<IdType extends Id, AttributeType> implements Stage<IdType, AttributeType> {
     private final Stage<IdType, AttributeType> next;
     private final Function<Guarded, Boolean> guard;

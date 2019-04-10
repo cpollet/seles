@@ -12,6 +12,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Transforms an {@link InternalRequest}&lt;IdType, String&gt; to an
+ * {@link InternalRequest}&lt;IdType, {@link AttributeDef}&lt;IdType&gt;&gt; and does the reverse
+ * transformation from a {@link InternalResponse}.
+ */
 public class AttributeConversionStage<IdType extends Id> implements Stage<IdType, String> {
     private final Stage<IdType, AttributeDef<IdType>> next;
     private final AttributeStore<IdType> attributesStore;

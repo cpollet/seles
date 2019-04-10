@@ -16,6 +16,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Executes a CREATE {@link InternalRequest} and returns the created entity's ID.
+ */
 public class CreateRequestExecutionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
     private final Stage<IdType, AttributeDef<IdType>> next;
     private final Stage<IdType, AttributeDef<IdType>> update;

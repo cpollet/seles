@@ -9,6 +9,9 @@ import net.cpollet.read.v2.impl.execution.InternalResponse;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+/**
+ * Replaces the wildcard attribute '*' with all the attributes of the context in which it's used.
+ */
 public class ExpandStarStage<IdType extends Id> implements Stage<IdType, String> {
     private final Stage<IdType, String> next;
     private final AttributeStore<IdType> attributeStore;

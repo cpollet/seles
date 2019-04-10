@@ -12,6 +12,11 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Converts {@link InternalRequest} attributes values from external representation to internal representation and
+ * converts {@link InternalResponse} attribute values from internal representation to external representation.
+ * Multiple {@link ValueConversionStage} may be used, to decouple type casting from value mapping for instance
+ */
 public class ValueConversionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
     private final Stage<IdType, AttributeDef<IdType>> next;
     private final Function<AttributeDef<IdType>, ValueConverter<AttributeDef<IdType>>> converterSupplier;

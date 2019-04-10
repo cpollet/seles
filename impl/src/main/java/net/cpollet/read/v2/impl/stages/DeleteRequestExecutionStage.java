@@ -9,6 +9,9 @@ import net.cpollet.read.v2.impl.execution.InternalResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Executes a DELETE {@link InternalRequest}.
+ */
 public class DeleteRequestExecutionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
     @Override
     public InternalResponse<IdType, AttributeDef<IdType>> execute(InternalRequest<IdType, AttributeDef<IdType>> request) {

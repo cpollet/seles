@@ -10,6 +10,11 @@ import net.cpollet.read.v2.impl.execution.InternalResponse;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * Validates the IDs of the {@link InternalRequest} with the help of a {@link IdValidator} instance, removes the IDs
+ * from the {@link InternalRequest} for the next {@link Stage} and puts errors in the {@link InternalResponse} for each
+ * invalid id.
+ */
 public class IdsValidationStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
     private final Stage<IdType, AttributeDef<IdType>> next;
     private final IdValidator<IdType> idValidator;

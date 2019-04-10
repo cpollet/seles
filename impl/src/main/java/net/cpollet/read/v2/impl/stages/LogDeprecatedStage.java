@@ -1,12 +1,16 @@
 package net.cpollet.read.v2.impl.stages;
 
-import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.api.attribute.AttributeDef;
+import net.cpollet.read.v2.api.domain.Id;
 import net.cpollet.read.v2.impl.execution.InternalRequest;
 import net.cpollet.read.v2.impl.execution.InternalResponse;
 
 import java.util.stream.Collectors;
 
+/**
+ * Puts warning in the {@link InternalResponse} for each deprecated {@link AttributeDef} used in the
+ * {@link InternalRequest}.
+ */
 public class LogDeprecatedStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
     private final Stage<IdType, AttributeDef<IdType>> next;
 

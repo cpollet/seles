@@ -9,6 +9,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Removed the filtered {@link AttributeDef} list ({@link AttributeDef#filtered()} from the {@link InternalRequest}
+ * passed to the lower {@link Stage} and put '*****' as a value for them in the {@link InternalResponse}.
+ *
+ * @todo [filter] provide an implementation of filtering algorithm
+ */
 public class FilteringStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
     private final Stage<IdType, AttributeDef<IdType>> next;
 

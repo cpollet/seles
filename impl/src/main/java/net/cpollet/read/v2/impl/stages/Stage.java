@@ -5,12 +5,14 @@ import net.cpollet.read.v2.impl.execution.InternalRequest;
 import net.cpollet.read.v2.impl.execution.InternalResponse;
 
 /**
- * Implements a request processing stage. Classes implementing this interface must not store any request and/or response
- * relative data.
+ * Implements a {@link InternalRequest} processing stage.
  *
- * @param <IdType>
- * @param <AttributeType>
+ * Classes implementing this interface must not store any request and/or response relative data.
  */
 public interface Stage<IdType extends Id, AttributeType> {
+    /**
+     * Ultimately transforms the {@link InternalRequest} to an {@link InternalResponse}. When delegating the request
+     * execution to a lower stage, it is expected to to create a new modified instance of the request.
+     */
     InternalResponse<IdType, AttributeType> execute(InternalRequest<IdType, AttributeType> request);
 }
