@@ -1,5 +1,6 @@
 package net.cpollet.read.v2.impl.execution;
 
+import net.cpollet.read.v2.api.attribute.AccessLevelPredicate;
 import net.cpollet.read.v2.api.attribute.AttributeDef;
 import net.cpollet.read.v2.api.attribute.AttributeStore;
 import net.cpollet.read.v2.api.domain.Id;
@@ -25,7 +26,6 @@ import net.cpollet.read.v2.impl.stages.UpdateRequestExecutionStage;
 import net.cpollet.read.v2.impl.stages.ValueConversionStage;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     private final Stage<IdType, String> readStack;
@@ -35,7 +35,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     private final Stage<IdType, String> searchStack;
     private final AttributeStore<IdType> attributeStore;
 
-    public DefaultExecutor(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator, Predicate<AttributeDef<IdType>> filteringPredicate, Configuration configuration) {
+    public DefaultExecutor(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator, AccessLevelPredicate<IdType> filteringPredicate, Configuration configuration) {
         this.attributeStore = attributeStore;
         this.readStack =
                 new TimerStage<>(
@@ -83,7 +83,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     /**
      * Stages used for READ and WRITE requests
      */
-    private Stage<IdType, String> rwStages(Configuration configuration, IdValidator<IdType> idValidator, Predicate<AttributeDef<IdType>> filteringPredicate, AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> inner) {
+    private Stage<IdType, String> rwStages(Configuration configuration, IdValidator<IdType> idValidator, AccessLevelPredicate<IdType> filteringPredicate, AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> inner) {
         return rwdStages(configuration, idValidator, mode,
                 new FilteringStage<>(
                         filteringPredicate,
