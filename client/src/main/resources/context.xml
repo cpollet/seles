@@ -4,6 +4,8 @@
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="accessLevel.filtering.predicate" class="net.cpollet.read.v2.client.domain.AccessLevelPredicate"/>
+
     <import resource="address.xml"/>
     <import resource="person.xml"/>
     <import resource="portfolio.xml"/>

@@ -25,6 +25,7 @@ import net.cpollet.read.v2.impl.stages.UpdateRequestExecutionStage;
 import net.cpollet.read.v2.impl.stages.ValueConversionStage;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     private final Stage<IdType, String> readStack;
@@ -34,19 +35,19 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     private final Stage<IdType, String> searchStack;
     private final AttributeStore<IdType> attributeStore;
 
-    public DefaultExecutor(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator, Configuration configuration) {
+    public DefaultExecutor(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator, Predicate<AttributeDef<IdType>> filteringPredicate, Configuration configuration) {
         this.attributeStore = attributeStore;
         this.readStack =
                 new TimerStage<>(
                         new ExpandStarStage<>(attributeStore,
-                                rwStages(configuration, idValidator, AttributeDef.Mode.READ,
+                                rwStages(configuration, idValidator, filteringPredicate, AttributeDef.Mode.READ,
                                         new ReadRequestExecutionStage<>()
                                 )
                         )
                 );
         this.updateStack =
                 new TimerStage<>(
-                        rwStages(configuration, idValidator, AttributeDef.Mode.WRITE,
+                        rwStages(configuration, idValidator, filteringPredicate, AttributeDef.Mode.WRITE,
                                 new UpdateRequestExecutionStage<>(
                                         new RequestHaltStage<>(haltOnUpdateError(configuration),
                                                 new ReadRequestExecutionStage<>()
@@ -73,7 +74,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
                 );
         this.searchStack =
                 new TimerStage<>(
-                        rwStages(configuration, idValidator, AttributeDef.Mode.SEARCH,
+                        rwStages(configuration, idValidator, filteringPredicate, AttributeDef.Mode.SEARCH,
                                 new SearchRequestExecutionStage<>()
                         )
                 );
@@ -82,9 +83,10 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     /**
      * Stages used for READ and WRITE requests
      */
-    private Stage<IdType, String> rwStages(Configuration configuration, IdValidator<IdType> idValidator, AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> inner) {
+    private Stage<IdType, String> rwStages(Configuration configuration, IdValidator<IdType> idValidator, Predicate<AttributeDef<IdType>> filteringPredicate, AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> inner) {
         return rwdStages(configuration, idValidator, mode,
                 new FilteringStage<>(
+                        filteringPredicate,
                         new ValueConversionStage<>(AttributeDef::caster,
                                 new ValueConversionStage<>(AttributeDef::converter,
                                         new RequestHaltStage<>(haltOnInputValueConversionError(configuration),

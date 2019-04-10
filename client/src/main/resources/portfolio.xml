@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <bean id="portfolio.attributeStore" class="net.cpollet.read.v2.impl.attribute.NestedAttributeStore">
         <constructor-arg name="parentStore">
@@ -13,7 +12,9 @@
                         <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="id"/>
                             <constructor-arg name="deprecated" value="false"/>
-                            <constructor-arg name="filtered" value="false"/>
+                            <constructor-arg name="accessLevel">
+                                <util:constant static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PUBLIC"/>
+                            </constructor-arg>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
                             <constructor-arg name="modes">
                                 <set>
@@ -26,7 +27,9 @@
                         <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="status"/>
                             <constructor-arg name="deprecated" value="false"/>
-                            <constructor-arg name="filtered" value="false"/>
+                            <constructor-arg name="accessLevel">
+                                <util:constant static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PUBLIC"/>
+                            </constructor-arg>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
                             <constructor-arg name="modes">
                                 <set>
@@ -43,7 +46,9 @@
                         <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="currency"/>
                             <constructor-arg name="deprecated" value="true"/>
-                            <constructor-arg name="filtered" value="false"/>
+                            <constructor-arg name="accessLevel">
+                                <util:constant static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PUBLIC"/>
+                            </constructor-arg>
                             <constructor-arg name="method" ref="portfolio.method.standard2"/>
                             <constructor-arg name="modes">
                                 <set>
@@ -59,7 +64,10 @@
                         <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="hidden"/>
                             <constructor-arg name="deprecated" value="false"/>
-                            <constructor-arg name="filtered" value="true"/>
+                            <constructor-arg name="accessLevel">
+                                <util:constant
+                                        static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PRIVATE"/>
+                            </constructor-arg>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
                             <constructor-arg name="modes">
                                 <set>
@@ -72,7 +80,10 @@
                         <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="ownerId"/>
                             <constructor-arg name="deprecated" value="false"/>
-                            <constructor-arg name="filtered" value="false"/>
+                            <constructor-arg name="accessLevel">
+                                <util:constant
+                                        static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PUBLIC"/>
+                            </constructor-arg>
                             <constructor-arg name="method">
                                 <bean class="net.cpollet.read.v2.client.methods.OwnerIdMethod"/>
                             </constructor-arg>
@@ -88,7 +99,10 @@
                         <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="description"/>
                             <constructor-arg name="deprecated" value="false"/>
-                            <constructor-arg name="filtered" value="false"/>
+                            <constructor-arg name="accessLevel">
+                                <util:constant
+                                        static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PUBLIC"/>
+                            </constructor-arg>
                             <constructor-arg name="method" ref="portfolio.method.standard2"/>
                             <constructor-arg name="modes">
                                 <set>
@@ -126,6 +140,7 @@
                 </constructor-arg>
             </bean>
         </constructor-arg>
+        <constructor-arg name="filteringPredicate" ref="accessLevel.filtering.predicate"/>
         <constructor-arg name="configuration">
             <bean class="net.cpollet.read.v2.impl.execution.DefaultExecutor.Configuration">
                 <constructor-arg name="haltOnAttributeConversionError" value="false"/>

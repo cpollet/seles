@@ -4,6 +4,7 @@ import net.cpollet.read.v2.api.attribute.AttributeDef;
 import net.cpollet.read.v2.impl.attribute.DirectAttributeStore;
 import net.cpollet.read.v2.impl.execution.InternalRequestHelper;
 import net.cpollet.read.v2.impl.testsupport.StringId;
+import net.cpollet.read.v2.impl.testsupport.VoidAccessLevel;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -16,10 +17,10 @@ class ExpandStarStageTest {
         // GIVEN
         DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Arrays.asList(
                 new AttributeDef<>(
-                        "attribute_1", false, false, null, Collections.emptySet(), null, null
+                        "attribute_1", VoidAccessLevel.INSTANCE, false, null, Collections.emptySet(), null, null
                 ),
                 new AttributeDef<>(
-                        "attribute_2", false, true, null, Collections.emptySet(), null, null
+                        "attribute_2", VoidAccessLevel.INSTANCE, true, null, Collections.emptySet(), null, null
                 )
         ));
         ExpandStarStage<StringId> stage = new ExpandStarStage<>(store, request -> {
@@ -40,10 +41,10 @@ class ExpandStarStageTest {
         // GIVEN
         DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Arrays.asList(
                 new AttributeDef<>(
-                        "attribute_1", false, false, null, Collections.emptySet(), null, null
+                        "attribute_1", VoidAccessLevel.INSTANCE, false, null, Collections.emptySet(), null, null
                 ),
                 new AttributeDef<>(
-                        "attribute_2", false, true, null, Collections.emptySet(), null, null
+                        "attribute_2", VoidAccessLevel.INSTANCE, true, null, Collections.emptySet(), null, null
                 )
         ));
         ExpandStarStage<StringId> stage = new ExpandStarStage<>(store, request -> {
@@ -64,10 +65,10 @@ class ExpandStarStageTest {
         // GIVEN
         DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Arrays.asList(
                 new AttributeDef<>(
-                        "attribute_1", false, false, null, Collections.emptySet(), null, null
+                        "attribute_1", VoidAccessLevel.INSTANCE, false, null, Collections.emptySet(), null, null
                 ),
                 new AttributeDef<>(
-                        "attribute_2", false, true, null, Collections.emptySet(), null, null
+                        "attribute_2", VoidAccessLevel.INSTANCE, true, null, Collections.emptySet(), null, null
                 )
         ));
         ExpandStarStage<StringId> stage = new ExpandStarStage<>(store, request -> {

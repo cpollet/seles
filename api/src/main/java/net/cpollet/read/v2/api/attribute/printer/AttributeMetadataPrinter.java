@@ -1,5 +1,6 @@
 package net.cpollet.read.v2.api.attribute.printer;
 
+import net.cpollet.read.v2.api.attribute.AccessLevel;
 import net.cpollet.read.v2.api.attribute.AttributeDef;
 
 import java.util.HashMap;
@@ -25,8 +26,8 @@ public class AttributeMetadataPrinter implements AttributePrinter<Map<String, Ob
     }
 
     @Override
-    public AttributePrinter<Map<String, Object>> filtered(boolean filtered) {
-        document.put("filtered", filtered);
+    public AttributePrinter<Map<String, Object>> accessLevel(AccessLevel accessLevel) {
+        document.put("accessLevel", accessLevel.toString());
         return this;
     }
 

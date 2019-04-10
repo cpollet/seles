@@ -1,5 +1,6 @@
 package net.cpollet.read.v2.api.attribute.printer;
 
+import net.cpollet.read.v2.api.attribute.AccessLevel;
 import net.cpollet.read.v2.api.attribute.AttributeDef;
 
 import java.util.Set;
@@ -9,7 +10,7 @@ public interface AttributePrinter<T> {
 
     AttributePrinter<T> name(String name);
 
-    AttributePrinter<T> filtered(boolean filtered);
+    AttributePrinter<T> accessLevel(AccessLevel accessLevel);
 
     AttributePrinter<T> deprecated(boolean deprecated);
 

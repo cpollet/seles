@@ -7,6 +7,7 @@ import net.cpollet.read.v2.impl.execution.InternalRequestHelper;
 import net.cpollet.read.v2.impl.execution.InternalResponseHelper;
 import net.cpollet.read.v2.impl.testsupport.NoopStage;
 import net.cpollet.read.v2.impl.testsupport.StringId;
+import net.cpollet.read.v2.impl.testsupport.VoidAccessLevel;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -20,10 +21,10 @@ class LogDeprecatedStageTest {
         LogDeprecatedStage<StringId> stage = new LogDeprecatedStage<>(new NoopStage());
         DirectAttributeStore<StringId> store = new DirectAttributeStore<>("", Arrays.asList(
                 new AttributeDef<>(
-                        "non-deprecated", false, false, null, Collections.emptySet(), null, null
+                        "non-deprecated", VoidAccessLevel.INSTANCE, false, null, Collections.emptySet(), null, null
                 ),
                 new AttributeDef<>(
-                        "deprecated", false, true, null, Collections.emptySet(), null, null
+                        "deprecated", VoidAccessLevel.INSTANCE, true, null, Collections.emptySet(), null, null
                 )
         ));
 

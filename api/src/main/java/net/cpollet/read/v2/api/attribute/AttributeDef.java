@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class AttributeDef<IdType extends Id> {
     private final String name;
-    private final boolean filtered;
+    private final AccessLevel accessLevel;
     private final boolean deprecated;
     private final Method<IdType> method;
     private final Set<Mode> modes;
@@ -27,14 +27,14 @@ public class AttributeDef<IdType extends Id> {
 
     public AttributeDef(
             String name,
-            boolean filtered,
+            AccessLevel accessLevel,
             boolean deprecated,
             Method<IdType> method,
             Set<Mode> modes,
             ValueConverter<AttributeDef<IdType>> converter,
             ValueConverter<AttributeDef<IdType>> caster) {
         this.name = name;
-        this.filtered = filtered;
+        this.accessLevel = accessLevel;
         this.deprecated = deprecated;
         this.method = method;
         this.modes = modes;
@@ -62,9 +62,8 @@ public class AttributeDef<IdType extends Id> {
         return deprecated;
     }
 
-    // FIXME [filter] change to return an instance of interface AccessLevel and rename to accessLevel()
-    public boolean filtered() {
-        return filtered;
+    public AccessLevel accessLevel() {
+        return accessLevel;
     }
 
     public ValueConverter<AttributeDef<IdType>> converter() {
@@ -78,7 +77,7 @@ public class AttributeDef<IdType extends Id> {
     public <T> T print(AttributePrinter<T> printer) {
         return printer
                 .name(name)
-                .filtered(filtered)
+                .accessLevel(accessLevel)
                 .deprecated(deprecated)
                 .modes(modes)
                 .print();

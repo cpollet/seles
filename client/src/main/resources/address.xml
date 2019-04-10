@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <bean id="address.attributeStore" class="net.cpollet.read.v2.impl.attribute.DirectAttributeStore">
         <constructor-arg name="attributes">
@@ -10,7 +9,10 @@
                 <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
                     <constructor-arg name="name" value="street"/>
                     <constructor-arg name="deprecated" value="false"/>
-                    <constructor-arg name="filtered" value="false"/>
+                    <constructor-arg name="accessLevel">
+                        <util:constant
+                                static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PUBLIC"/>
+                    </constructor-arg>
                     <constructor-arg name="method" ref="address.method.standard"/>
                     <constructor-arg name="modes">
                         <set>
@@ -33,6 +35,7 @@
                 </constructor-arg>
             </bean>
         </constructor-arg>
+        <constructor-arg name="filteringPredicate" ref="accessLevel.filtering.predicate"/>
         <constructor-arg name="configuration">
             <bean class="net.cpollet.read.v2.impl.execution.DefaultExecutor.Configuration">
                 <constructor-arg name="haltOnAttributeConversionError" value="false"/>

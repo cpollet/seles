@@ -51,7 +51,7 @@ public class NestedAttributeStore<IdType extends Id> implements AttributeStore<I
                                         attributeName,
                                         new AttributeDef<>(
                                                 attributeName,
-                                                na.filtered(),
+                                                na.accessLevel(),
                                                 na.deprecated(),
                                                 method,
                                                 na.modes(),
