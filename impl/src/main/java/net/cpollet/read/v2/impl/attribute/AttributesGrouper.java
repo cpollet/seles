@@ -14,14 +14,14 @@ import java.util.function.Function;
 /**
  * Groups a collection of attributes by method. The result is a map from method to a collection of attributes using this method
  *
- * @param <IdType>
+ * @param <T>
  */
-public class AttributesGrouper<IdType extends Id> implements Function<Collection<AttributeDef<IdType>>, Map<Method<IdType>, List<AttributeDef<IdType>>>> {
+public class AttributesGrouper<T extends Id> implements Function<Collection<AttributeDef<T>>, Map<Method<T>, List<AttributeDef<T>>>> {
     @Override
-    public Map<Method<IdType>, List<AttributeDef<IdType>>> apply(Collection<AttributeDef<IdType>> attributeDefs) {
-        Map<Method<IdType>, List<AttributeDef<IdType>>> attributesGroupedByMethod = new HashMap<>();
+    public Map<Method<T>, List<AttributeDef<T>>> apply(Collection<AttributeDef<T>> attributeDefs) {
+        Map<Method<T>, List<AttributeDef<T>>> attributesGroupedByMethod = new HashMap<>();
 
-        for (AttributeDef<IdType> attribute : attributeDefs) {
+        for (AttributeDef<T> attribute : attributeDefs) {
             attributesGroupedByMethod.putIfAbsent(attribute.method(), new ArrayList<>());
             attributesGroupedByMethod.get(attribute.method()).add(attribute);
         }

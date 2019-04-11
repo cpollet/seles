@@ -8,15 +8,15 @@ import net.cpollet.read.v2.impl.execution.InternalResponse;
  * Compute execution time between the beginning of execution, until the lower {@link Stage} returns and puts the value
  * (in milliseconds) in the {@link InternalResponse}.
  */
-public class TimerStage<IdType extends Id> implements Stage<IdType, String> {
-    private final Stage<IdType, String> next;
+public class TimerStage<T extends Id> implements Stage<T, String> {
+    private final Stage<T, String> next;
 
-    public TimerStage(Stage<IdType, String> next) {
+    public TimerStage(Stage<T, String> next) {
         this.next = next;
     }
 
     @Override
-    public InternalResponse<IdType, String> execute(InternalRequest<IdType, String> request) {
+    public InternalResponse<T, String> execute(InternalRequest<T, String> request) {
         long start = System.currentTimeMillis();
         return next.execute(request)
                 .withExecutionTime(

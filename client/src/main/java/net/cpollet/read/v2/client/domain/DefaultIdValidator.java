@@ -9,9 +9,9 @@ import java.util.Collections;
 /**
  * An IdValidator that validates every Id passed
  */
-public class DefaultIdValidator<IdType extends Id> implements IdValidator<IdType> {
+public class DefaultIdValidator<T extends Id> implements IdValidator<T> {
     @Override
-    public Collection<IdType> invalidIds(Collection<IdType> ids) {
+    public Collection<T> invalidIds(Collection<T> ids) {
         return Collections.emptySet();
     }
 }

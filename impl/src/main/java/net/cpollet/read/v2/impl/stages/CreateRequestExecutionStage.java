@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 /**
  * Executes a CREATE {@link InternalRequest} and returns the created entity's ID.
  */
-public class CreateRequestExecutionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
-    private final Stage<IdType, AttributeDef<IdType>> next;
-    private final Stage<IdType, AttributeDef<IdType>> update;
-    private final AttributeDef<IdType> idAttribute;
-    private final Set<AttributeDef<IdType>> requiredAttributes;
+public class CreateRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+    private final Stage<T, AttributeDef<T>> next;
+    private final Stage<T, AttributeDef<T>> update;
+    private final AttributeDef<T> idAttribute;
+    private final Set<AttributeDef<T>> requiredAttributes;
 
-    public CreateRequestExecutionStage(AttributeStore<IdType> store, Stage<IdType, AttributeDef<IdType>> update, Stage<IdType, AttributeDef<IdType>> next) {
+    public CreateRequestExecutionStage(AttributeStore<T> store, Stage<T, AttributeDef<T>> update, Stage<T, AttributeDef<T>> next) {
         this.next = next;
         this.update = update;
         this.idAttribute = store.idAttribute().orElse(null);
@@ -37,18 +37,18 @@ public class CreateRequestExecutionStage<IdType extends Id> implements Stage<IdT
     }
 
     @Override
-    public InternalResponse<IdType, AttributeDef<IdType>> execute(InternalRequest<IdType, AttributeDef<IdType>> request) {
+    public InternalResponse<T, AttributeDef<T>> execute(InternalRequest<T, AttributeDef<T>> request) {
         if (idAttribute == null) {
-            return new InternalResponse<IdType, AttributeDef<IdType>>()
+            return new InternalResponse<T, AttributeDef<T>>()
                     .withErrors(Collections.singleton("creation not supported, no id-attribute provided"));
         }
 
-        Set<AttributeDef<IdType>> missingAttributes = requiredAttributes.stream()
+        Set<AttributeDef<T>> missingAttributes = requiredAttributes.stream()
                 .filter(a -> !request.attributes().contains(a))
                 .collect(Collectors.toSet());
 
         if (!missingAttributes.isEmpty()) {
-            return new InternalResponse<IdType, AttributeDef<IdType>>()
+            return new InternalResponse<T, AttributeDef<T>>()
                     .withErrors(
                             missingAttributes.stream()
                                     .map(a -> String.format("[%s] is required for creation", a))
@@ -56,23 +56,23 @@ public class CreateRequestExecutionStage<IdType extends Id> implements Stage<IdT
                     );
         }
 
-        Map<Method<IdType>, List<AttributeDef<IdType>>> attributesGroupedByMethod = request.attributes(new AttributesGrouper<>());
+        Map<Method<T>, List<AttributeDef<T>>> attributesGroupedByMethod = request.attributes(new AttributesGrouper<>());
 
         // we create the "main" entity instance with its attributes (i.e. the ones that are using the same method as the id attribute)
-        CreateResult<IdType> createResult = idAttribute.method().create(
+        CreateResult<T> createResult = idAttribute.method().create(
                 request.values(
                         attributesGroupedByMethod.get(idAttribute.method())
                 )
         );
 
         if (!createResult.id().isPresent()) {
-            return new InternalResponse<IdType, AttributeDef<IdType>>()
+            return new InternalResponse<T, AttributeDef<T>>()
                     .withErrors(createResult.errors());
         }
-        IdType id = createResult.id().get();
+        T id = createResult.id().get();
 
         // we continue with the remaining attributes, which actually becomes an update...
-        InternalResponse<IdType, AttributeDef<IdType>> updateResponse = update.execute(
+        InternalResponse<T, AttributeDef<T>> updateResponse = update.execute(
                 request.withIds(Collections.singletonList(id))
                         .withoutAttributes(attributesGroupedByMethod.get(idAttribute.method()))
         );

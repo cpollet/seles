@@ -15,26 +15,27 @@ import java.util.stream.Collectors;
 /**
  * Converts {@link InternalRequest} attributes values from external representation to internal representation and
  * converts {@link InternalResponse} attribute values from internal representation to external representation.
+ *
  * Multiple {@link ValueConversionStage} may be used, to decouple type casting from value mapping for instance
  */
-public class ValueConversionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
-    private final Stage<IdType, AttributeDef<IdType>> next;
-    private final Function<AttributeDef<IdType>, ValueConverter<AttributeDef<IdType>>> converterSupplier;
+public class ValueConversionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+    private final Stage<T, AttributeDef<T>> next;
+    private final Function<AttributeDef<T>, ValueConverter<AttributeDef<T>>> converterSupplier;
 
-    public ValueConversionStage(Function<AttributeDef<IdType>, ValueConverter<AttributeDef<IdType>>> converterSupplier, Stage<IdType, AttributeDef<IdType>> next) {
+    public ValueConversionStage(Function<AttributeDef<T>, ValueConverter<AttributeDef<T>>> converterSupplier, Stage<T, AttributeDef<T>> next) {
         this.next = next;
         this.converterSupplier = converterSupplier;
     }
 
     @Override
-    public InternalResponse<IdType, AttributeDef<IdType>> execute(InternalRequest<IdType, AttributeDef<IdType>> request) {
-        Map<AttributeDef<IdType>, ValueConverter<AttributeDef<IdType>>> converters = request.attributes().stream()
+    public InternalResponse<T, AttributeDef<T>> execute(InternalRequest<T, AttributeDef<T>> request) {
+        Map<AttributeDef<T>, ValueConverter<AttributeDef<T>>> converters = request.attributes().stream()
                 .collect(Collectors.toMap(
                         a -> a,
                         converterSupplier
                 ));
 
-        ConversionResult<InternalRequest<IdType, AttributeDef<IdType>>> conversionResult = request.convertValues(converters);
+        ConversionResult<InternalRequest<T, AttributeDef<T>>> conversionResult = request.convertValues(converters);
 
         return next
                 .execute(conversionResult

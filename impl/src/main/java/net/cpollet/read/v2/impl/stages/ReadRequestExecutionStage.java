@@ -15,10 +15,10 @@ import java.util.Map;
 /**
  * Executes a READ {@link InternalRequest}.
  */
-public class ReadRequestExecutionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
+public class ReadRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
     @Override
-    public InternalResponse<IdType, AttributeDef<IdType>> execute(final InternalRequest<IdType, AttributeDef<IdType>> request) {
-        FetchResult<IdType> fetchResult = fetch(
+    public InternalResponse<T, AttributeDef<T>> execute(final InternalRequest<T, AttributeDef<T>> request) {
+        FetchResult<T> fetchResult = fetch(
                 request.ids(),
                 request.attributes(new AttributesGrouper<>())
         );
@@ -27,7 +27,7 @@ public class ReadRequestExecutionStage<IdType extends Id> implements Stage<IdTyp
                 .withErrors(fetchResult.errors());
     }
 
-    private FetchResult<IdType> fetch(Collection<IdType> ids, Map<Method<IdType>, List<AttributeDef<IdType>>> attributesGroupedByMethod) {
+    private FetchResult<T> fetch(Collection<T> ids, Map<Method<T>, List<AttributeDef<T>>> attributesGroupedByMethod) {
         return attributesGroupedByMethod.entrySet().stream()
                 .map(e -> e.getKey().fetch(e.getValue(), ids))
                 .reduce(FetchResult.emptyResult(), FetchResult::merge);

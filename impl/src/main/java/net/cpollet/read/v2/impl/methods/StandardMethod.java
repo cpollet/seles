@@ -17,17 +17,17 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class StandardMethod<IdType extends Id> implements Method<IdType> {
+public class StandardMethod<T extends Id> implements Method<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(StandardMethod.class);
 
-    private final Function<Object, IdType> idTypeProvider;
+    private final Function<Object, T> idTypeProvider;
 
-    public StandardMethod(Function<Object, IdType> idTypeProvider) {
+    public StandardMethod(Function<Object, T> idTypeProvider) {
         this.idTypeProvider = idTypeProvider;
     }
 
     @Override
-    public FetchResult<IdType> fetch(List<AttributeDef<IdType>> attributes, Collection<IdType> ids) {
+    public FetchResult<T> fetch(List<AttributeDef<T>> attributes, Collection<T> ids) {
         return new FetchResult<>(
                 ids.stream()
                         .collect(Collectors.toMap(
@@ -44,7 +44,7 @@ public class StandardMethod<IdType extends Id> implements Method<IdType> {
     }
 
     @Override
-    public Collection<String> update(Map<AttributeDef<IdType>, Object> attributeValues, Collection<IdType> ids) {
+    public Collection<String> update(Map<AttributeDef<T>, Object> attributeValues, Collection<T> ids) {
         ids.forEach(
                 id -> attributeValues.forEach((a, v) -> LOGGER.info("UPDATE {}:{} -> {}", id, a, v))
         );
@@ -53,7 +53,7 @@ public class StandardMethod<IdType extends Id> implements Method<IdType> {
     }
 
     @Override
-    public Collection<String> delete(List<AttributeDef<IdType>> attributes, Collection<IdType> ids) {
+    public Collection<String> delete(List<AttributeDef<T>> attributes, Collection<T> ids) {
         ids.forEach(
                 id -> attributes.forEach(a -> LOGGER.info("DELETE {}:{}", id, a))
         );
@@ -62,7 +62,7 @@ public class StandardMethod<IdType extends Id> implements Method<IdType> {
     }
 
     @Override
-    public CreateResult<IdType> create(Map<AttributeDef<IdType>, Object> values) {
+    public CreateResult<T> create(Map<AttributeDef<T>, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("CREATE {} -> {}", a, v)
         );
@@ -71,7 +71,7 @@ public class StandardMethod<IdType extends Id> implements Method<IdType> {
     }
 
     @Override
-    public SearchResult<IdType> search(Map<AttributeDef<IdType>, Object> values) {
+    public SearchResult<T> search(Map<AttributeDef<T>, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("SEARCH {} -> {}", a, v)
         );

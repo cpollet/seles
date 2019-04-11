@@ -17,13 +17,13 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements Method<IdType> {
+public class NestedMethod<T extends Id, U extends Id> implements Method<T> {
     private final String prefix;
-    private final AttributeDef<IdType> attribute;
-    private final Executor<NestedIdType> executor;
-    private final Function<Object, NestedIdType> idProvider;
+    private final AttributeDef<T> attribute;
+    private final Executor<U> executor;
+    private final Function<Object, U> idProvider;
 
-    public NestedMethod(String prefix, AttributeDef<IdType> attribute, Executor<NestedIdType> executor, Function<Object, NestedIdType> idProvider) {
+    public NestedMethod(String prefix, AttributeDef<T> attribute, Executor<U> executor, Function<Object, U> idProvider) {
         this.prefix = prefix;
         this.attribute = attribute;
         this.executor = executor;
@@ -31,23 +31,23 @@ public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements
     }
 
     @Override
-    public FetchResult<IdType> fetch(List<AttributeDef<IdType>> attributes, Collection<IdType> ids) {
-        Map<NestedIdType, IdType> nestedIdsToIds = attribute.method().fetch(Collections.singletonList(attribute), ids)
+    public FetchResult<T> fetch(List<AttributeDef<T>> attributes, Collection<T> ids) {
+        Map<U, T> nestedIdsToIds = attribute.method().fetch(Collections.singletonList(attribute), ids)
                 .result().entrySet().stream()
                 .collect(Collectors.toMap(
                         e -> idProvider.apply(e.getValue().get(attribute)),
                         Map.Entry::getKey
                 ));
 
-        Map<String, AttributeDef<IdType>> attributeNamesToAttributeDefs = attributes.stream()
+        Map<String, AttributeDef<T>> attributeNamesToAttributeDefs = attributes.stream()
                 .collect(Collectors.toMap(
                         a -> removePrefix(a.name()),
                         a -> a
                 ));
 
-        Response<NestedIdType> response = nestedFetch(attributeNamesToAttributeDefs.keySet(), nestedIdsToIds.keySet());
+        Response<U> response = nestedFetch(attributeNamesToAttributeDefs.keySet(), nestedIdsToIds.keySet());
 
-        Map<IdType, Map<AttributeDef<IdType>, Object>> result = response.values().entrySet().stream()
+        Map<T, Map<AttributeDef<T>, Object>> result = response.values().entrySet().stream()
                 .collect(Collectors.toMap(
                         e -> nestedIdsToIds.get(e.getKey()),
                         e -> e.getValue().entrySet().stream()
@@ -69,7 +69,7 @@ public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements
         return string.substring(prefix.length() + 1);
     }
 
-    private Response<NestedIdType> nestedFetch(Collection<String> attributes, Collection<NestedIdType> nestedIds) {
+    private Response<U> nestedFetch(Collection<String> attributes, Collection<U> nestedIds) {
         return executor.read(Request.read(
                 nestedIds,
                 attributes
@@ -77,22 +77,22 @@ public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements
     }
 
     @Override
-    public Collection<String> update(Map<AttributeDef<IdType>, Object> attributeValues, Collection<IdType> ids) {
+    public Collection<String> update(Map<AttributeDef<T>, Object> attributeValues, Collection<T> ids) {
         throw new RuntimeException("not implemented");
     }
 
     @Override
-    public Collection<String> delete(List<AttributeDef<IdType>> attributes, Collection<IdType> ids) {
+    public Collection<String> delete(List<AttributeDef<T>> attributes, Collection<T> ids) {
         throw new RuntimeException("not implemented");
     }
 
     @Override
-    public CreateResult<IdType> create(Map<AttributeDef<IdType>, Object> values) {
+    public CreateResult<T> create(Map<AttributeDef<T>, Object> values) {
         throw new RuntimeException("not implemented");
     }
 
     @Override
-    public SearchResult<IdType> search(Map<AttributeDef<IdType>, Object> values) {
+    public SearchResult<T> search(Map<AttributeDef<T>, Object> values) {
         throw new RuntimeException("not implemented");
     }
 }

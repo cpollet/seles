@@ -8,24 +8,24 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SearchResult<IdType extends Id> {
+public class SearchResult<T extends Id> {
     private static final SearchResult EMPTY = new SearchResult();
 
     private final MergeAlgorithm mergeAlgorithm;
-    private final Set<IdType> ids;
+    private final Set<T> ids;
     private final Collection<String> errors;
 
-    public SearchResult(MergeAlgorithm mergeAlgorithm, Collection<IdType> ids, Collection<String> errors) {
+    public SearchResult(MergeAlgorithm mergeAlgorithm, Collection<T> ids, Collection<String> errors) {
         this.mergeAlgorithm = mergeAlgorithm;
         this.ids = Collections.unmodifiableSet(new HashSet<>(ids));
         this.errors = Collections.unmodifiableCollection(errors);
     }
 
-    public SearchResult(Collection<IdType> ids, Collection<String> errors) {
+    public SearchResult(Collection<T> ids, Collection<String> errors) {
         this(new MergeAlgorithm(), ids, errors);
     }
 
-    public SearchResult(Collection<IdType> ids) {
+    public SearchResult(Collection<T> ids) {
         this(ids, Collections.emptyList());
     }
 
@@ -34,11 +34,11 @@ public class SearchResult<IdType extends Id> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <IdType extends Id> SearchResult<IdType> emptyResult() {
-        return (SearchResult<IdType>) EMPTY;
+    public static <T extends Id> SearchResult<T> emptyResult() {
+        return (SearchResult<T>) EMPTY;
     }
 
-    public Collection<IdType> ids() {
+    public Collection<T> ids() {
         return ids;
     }
 
@@ -46,19 +46,19 @@ public class SearchResult<IdType extends Id> {
         return errors;
     }
 
-    public SearchResult<IdType> merge(SearchResult<IdType> other) {
+    public SearchResult<T> merge(SearchResult<T> other) {
         return mergeAlgorithm.merge(this, other);
     }
 
     public static class MergeAlgorithm {
-        public <IdType extends Id> SearchResult<IdType> merge(SearchResult<IdType> a, SearchResult<IdType> b) {
+        public <T extends Id> SearchResult<T> merge(SearchResult<T> a, SearchResult<T> b) {
             if (a == EMPTY) {
                 return b;
             }
             if (b == EMPTY) {
                 return a;
             }
-            Collection<IdType> ids = new HashSet<>(a.ids());
+            Collection<T> ids = new HashSet<>(a.ids());
             ids.retainAll(b.ids());
 
             Collection<String> errors = new ArrayList<>(a.errors());

@@ -9,10 +9,10 @@ import net.cpollet.read.v2.impl.execution.InternalResponse;
  *
  * Classes implementing this interface must not store any request and/or response relative data.
  */
-public interface Stage<IdType extends Id, AttributeType> {
+public interface Stage<T extends Id, A> {
     /**
      * Ultimately transforms the {@link InternalRequest} to an {@link InternalResponse}. When delegating the request
      * execution to a lower stage, it is expected to to create a new modified instance of the request.
      */
-    InternalResponse<IdType, AttributeType> execute(InternalRequest<IdType, AttributeType> request);
+    InternalResponse<T, A> execute(InternalRequest<T, A> request);
 }

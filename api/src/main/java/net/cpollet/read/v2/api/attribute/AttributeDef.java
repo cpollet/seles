@@ -8,14 +8,14 @@ import net.cpollet.read.v2.api.methods.Method;
 import java.util.Objects;
 import java.util.Set;
 
-public class AttributeDef<IdType extends Id> {
+public class AttributeDef<T extends Id> {
     private final String name;
     private final AccessLevel accessLevel;
     private final boolean deprecated;
-    private final Method<IdType> method;
+    private final Method<T> method;
     private final Set<Mode> modes;
-    private final ValueConverter<AttributeDef<IdType>> converter;
-    private final ValueConverter<AttributeDef<IdType>> caster;
+    private final ValueConverter<AttributeDef<T>> converter;
+    private final ValueConverter<AttributeDef<T>> caster;
 
     public enum Mode {
         READ,
@@ -29,10 +29,10 @@ public class AttributeDef<IdType extends Id> {
             String name,
             AccessLevel accessLevel,
             boolean deprecated,
-            Method<IdType> method,
+            Method<T> method,
             Set<Mode> modes,
-            ValueConverter<AttributeDef<IdType>> converter,
-            ValueConverter<AttributeDef<IdType>> caster) {
+            ValueConverter<AttributeDef<T>> converter,
+            ValueConverter<AttributeDef<T>> caster) {
         this.name = name;
         this.accessLevel = accessLevel;
         this.deprecated = deprecated;
@@ -46,7 +46,7 @@ public class AttributeDef<IdType extends Id> {
         return name;
     }
 
-    public Method<IdType> method() {
+    public Method<T> method() {
         return method;
     }
 
@@ -66,11 +66,11 @@ public class AttributeDef<IdType extends Id> {
         return accessLevel;
     }
 
-    public ValueConverter<AttributeDef<IdType>> converter() {
+    public ValueConverter<AttributeDef<T>> converter() {
         return converter;
     }
 
-    public ValueConverter<AttributeDef<IdType>> caster() {
+    public ValueConverter<AttributeDef<T>> caster() {
         return caster;
     }
 

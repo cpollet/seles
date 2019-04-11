@@ -11,15 +11,15 @@ import java.util.stream.Collectors;
  * Puts warning in the {@link InternalResponse} for each deprecated {@link AttributeDef} used in the
  * {@link InternalRequest}.
  */
-public class LogDeprecatedStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
-    private final Stage<IdType, AttributeDef<IdType>> next;
+public class LogDeprecatedStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+    private final Stage<T, AttributeDef<T>> next;
 
-    public LogDeprecatedStage(Stage<IdType, AttributeDef<IdType>> next) {
+    public LogDeprecatedStage(Stage<T, AttributeDef<T>> next) {
         this.next = next;
     }
 
     @Override
-    public InternalResponse<IdType, AttributeDef<IdType>> execute(InternalRequest<IdType, AttributeDef<IdType>> request) {
+    public InternalResponse<T, AttributeDef<T>> execute(InternalRequest<T, AttributeDef<T>> request) {
         return next.execute(request)
                 .withMessages(
                         request.attributes().stream()

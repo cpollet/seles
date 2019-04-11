@@ -27,15 +27,15 @@ import net.cpollet.read.v2.impl.stages.ValueConversionStage;
 
 import java.util.function.Function;
 
-public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
-    private final Stage<IdType, String> readStack;
-    private final Stage<IdType, String> updateStack;
-    private final Stage<IdType, String> deleteStack;
-    private final Stage<IdType, String> createStack;
-    private final Stage<IdType, String> searchStack;
-    private final AttributeStore<IdType> attributeStore;
+public class DefaultExecutor<T extends Id> implements Executor<T> {
+    private final Stage<T, String> readStack;
+    private final Stage<T, String> updateStack;
+    private final Stage<T, String> deleteStack;
+    private final Stage<T, String> createStack;
+    private final Stage<T, String> searchStack;
+    private final AttributeStore<T> attributeStore;
 
-    public DefaultExecutor(AttributeStore<IdType> attributeStore, IdValidator<IdType> idValidator, AccessLevelPredicate<IdType> filteringPredicate, Configuration configuration) {
+    public DefaultExecutor(AttributeStore<T> attributeStore, IdValidator<T> idValidator, AccessLevelPredicate<T> filteringPredicate, Configuration configuration) {
         this.attributeStore = attributeStore;
         this.readStack =
                 new TimerStage<>(
@@ -83,7 +83,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     /**
      * Stages used for READ and WRITE requests
      */
-    private Stage<IdType, String> rwStages(Configuration configuration, IdValidator<IdType> idValidator, AccessLevelPredicate<IdType> filteringPredicate, AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> inner) {
+    private Stage<T, String> rwStages(Configuration configuration, IdValidator<T> idValidator, AccessLevelPredicate<T> filteringPredicate, AttributeDef.Mode mode, Stage<T, AttributeDef<T>> inner) {
         return rwdStages(configuration, idValidator, mode,
                 new FilteringStage<>(
                         filteringPredicate,
@@ -101,7 +101,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     /**
      * Stages used for READ, WRITE and DELETE requests
      */
-    private Stage<IdType, String> rwdStages(Configuration configuration, IdValidator<IdType> idValidator, AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> inner) {
+    private Stage<T, String> rwdStages(Configuration configuration, IdValidator<T> idValidator, AttributeDef.Mode mode, Stage<T, AttributeDef<T>> inner) {
         return rwdcStages(configuration, mode,
                 new IdsValidationStage<>(idValidator,
                         new RequestHaltStage<>(haltOnIdValidationError(configuration),
@@ -114,7 +114,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     /**
      * Stages used for READ, WRITE, DELETE and CREATE requests
      */
-    private Stage<IdType, String> rwdcStages(Configuration configuration, AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> inner) {
+    private Stage<T, String> rwdcStages(Configuration configuration, AttributeDef.Mode mode, Stage<T, AttributeDef<T>> inner) {
         return new AttributeConversionStage<>(attributeStore,
                 new RequestHaltStage<>(haltOnAttributeConversionError(configuration),
                         new ModeValidationStage<>(mode,
@@ -149,12 +149,12 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     }
 
     @Override
-    public AttributeStore<IdType> attributeStore() {
+    public AttributeStore<T> attributeStore() {
         return attributeStore;
     }
 
     @Override
-    public Response<IdType> read(Request<IdType> request) {
+    public Response<T> read(Request<T> request) {
         return InternalResponse.unwrap(
                 readStack.execute(
                         InternalRequest.wrap(InternalRequest.RequestType.READ, request)
@@ -163,7 +163,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     }
 
     @Override
-    public Response<IdType> update(Request<IdType> request) {
+    public Response<T> update(Request<T> request) {
         return InternalResponse.unwrap(
                 updateStack.execute(
                         InternalRequest.wrap(InternalRequest.RequestType.UPDATE, request)
@@ -172,7 +172,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     }
 
     @Override
-    public Response<IdType> create(Request<IdType> request) {
+    public Response<T> create(Request<T> request) {
         return InternalResponse.unwrap(
                 createStack.execute(
                         InternalRequest.wrap(InternalRequest.RequestType.CREATE, request)
@@ -181,7 +181,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     }
 
     @Override
-    public Response<IdType> delete(Request<IdType> request) {
+    public Response<T> delete(Request<T> request) {
         return InternalResponse.unwrap(
                 deleteStack.execute(
                         InternalRequest.wrap(InternalRequest.RequestType.DELETE, request)
@@ -190,7 +190,7 @@ public class DefaultExecutor<IdType extends Id> implements Executor<IdType> {
     }
 
     @Override
-    public Response<IdType> search(Request<IdType> request) {
+    public Response<T> search(Request<T> request) {
         return InternalResponse.unwrap(
                 searchStack.execute(
                         InternalRequest.wrap(InternalRequest.RequestType.SEARCH, request)

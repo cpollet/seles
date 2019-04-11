@@ -15,17 +15,17 @@ import java.util.stream.Collectors;
  * from the {@link InternalRequest} for the next {@link Stage} and puts errors in the {@link InternalResponse} for each
  * invalid id.
  */
-public class IdsValidationStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
-    private final Stage<IdType, AttributeDef<IdType>> next;
-    private final IdValidator<IdType> idValidator;
+public class IdsValidationStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+    private final Stage<T, AttributeDef<T>> next;
+    private final IdValidator<T> idValidator;
 
-    public IdsValidationStage(IdValidator<IdType> idValidator, Stage<IdType, AttributeDef<IdType>> next) {
+    public IdsValidationStage(IdValidator<T> idValidator, Stage<T, AttributeDef<T>> next) {
         this.next = next;
         this.idValidator = idValidator;
     }
 
-    public InternalResponse<IdType, AttributeDef<IdType>> execute(final InternalRequest<IdType, AttributeDef<IdType>> request) {
-        Collection<IdType> invalidIds = idValidator.invalidIds(request.ids());
+    public InternalResponse<T, AttributeDef<T>> execute(final InternalRequest<T, AttributeDef<T>> request) {
+        Collection<T> invalidIds = idValidator.invalidIds(request.ids());
 
         return next
                 .execute(

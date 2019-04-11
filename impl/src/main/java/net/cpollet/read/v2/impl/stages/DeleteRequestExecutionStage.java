@@ -12,9 +12,9 @@ import java.util.List;
 /**
  * Executes a DELETE {@link InternalRequest}.
  */
-public class DeleteRequestExecutionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
+public class DeleteRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
     @Override
-    public InternalResponse<IdType, AttributeDef<IdType>> execute(InternalRequest<IdType, AttributeDef<IdType>> request) {
+    public InternalResponse<T, AttributeDef<T>> execute(InternalRequest<T, AttributeDef<T>> request) {
         List<String> errors = new ArrayList<>();
 
         request.attributes(new AttributesGrouper<>()).forEach(
@@ -26,7 +26,7 @@ public class DeleteRequestExecutionStage<IdType extends Id> implements Stage<IdT
                 )
         );
 
-        return new InternalResponse<IdType, AttributeDef<IdType>>()
+        return new InternalResponse<T, AttributeDef<T>>()
                 .withErrors(errors);
     }
 }

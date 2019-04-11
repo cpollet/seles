@@ -13,17 +13,17 @@ import java.util.function.Function;
  *
  * @see Guarded
  */
-public class RequestHaltStage<IdType extends Id, AttributeType> implements Stage<IdType, AttributeType> {
-    private final Stage<IdType, AttributeType> next;
+public class RequestHaltStage<T extends Id, A> implements Stage<T, A> {
+    private final Stage<T, A> next;
     private final Function<Guarded, Boolean> guard;
 
-    public RequestHaltStage(Function<Guarded, Boolean> guard, Stage<IdType, AttributeType> next) {
+    public RequestHaltStage(Function<Guarded, Boolean> guard, Stage<T, A> next) {
         this.next = next;
         this.guard = guard;
     }
 
     @Override
-    public InternalResponse<IdType, AttributeType> execute(InternalRequest<IdType, AttributeType> request) {
+    public InternalResponse<T, A> execute(InternalRequest<T, A> request) {
         if (guard.apply(request)) {
             return new InternalResponse<>();
         }

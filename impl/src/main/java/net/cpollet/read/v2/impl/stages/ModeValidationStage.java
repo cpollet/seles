@@ -14,18 +14,18 @@ import java.util.stream.Collectors;
  * read {@link InternalRequest} only contains {@link AttributeDef} supporting the read {@link AttributeDef.Mode}. It
  * removes the attributes that are not valid and add an errors for each of them in the {@link InternalResponse}.
  */
-public class ModeValidationStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
-    private final Stage<IdType, AttributeDef<IdType>> next;
+public class ModeValidationStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+    private final Stage<T, AttributeDef<T>> next;
     private final AttributeDef.Mode mode;
 
-    public ModeValidationStage(AttributeDef.Mode mode, Stage<IdType, AttributeDef<IdType>> next) {
+    public ModeValidationStage(AttributeDef.Mode mode, Stage<T, AttributeDef<T>> next) {
         this.next = next;
         this.mode = mode;
     }
 
     @Override
-    public InternalResponse<IdType, AttributeDef<IdType>> execute(InternalRequest<IdType, AttributeDef<IdType>> request) {
-        Collection<AttributeDef<IdType>> invalidModes = request.attributes(
+    public InternalResponse<T, AttributeDef<T>> execute(InternalRequest<T, AttributeDef<T>> request) {
+        Collection<AttributeDef<T>> invalidModes = request.attributes(
                 as -> as.stream()
                         .filter(a -> !a.supports(mode))
                         .collect(Collectors.toList())

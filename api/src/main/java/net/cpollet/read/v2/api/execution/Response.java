@@ -7,13 +7,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Response<IdType> {
-    private final Map<IdType, Map<String, Object>> values;
+public class Response<T> {
+    private final Map<T, Map<String, Object>> values;
     private final Collection<String> errors;
     private final Collection<String> messages;
     private final long executionTime;
 
-    public Response(Map<IdType, Map<String, Object>> values, Collection<String> errors, Collection<String> messages, long executionTime) {
+    public Response(Map<T, Map<String, Object>> values, Collection<String> errors, Collection<String> messages, long executionTime) {
         this.values = Collections.unmodifiableMap(values);
         this.errors = Collections.unmodifiableCollection(errors);
         this.messages = Collections.unmodifiableCollection(messages);
@@ -24,7 +24,7 @@ public class Response<IdType> {
         return !errors.isEmpty();
     }
 
-    public Map<IdType, Map<String, Object>> values() {
+    public Map<T, Map<String, Object>> values() {
         return values;
     }
 

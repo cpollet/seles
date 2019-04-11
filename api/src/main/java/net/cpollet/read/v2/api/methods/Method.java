@@ -7,14 +7,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public interface Method<IdType extends Id> {
-    FetchResult<IdType> fetch(List<AttributeDef<IdType>> attributes, Collection<IdType> ids);
+public interface Method<T extends Id> {
+    FetchResult<T> fetch(List<AttributeDef<T>> attributes, Collection<T> ids);
 
-    Collection<String> update(Map<AttributeDef<IdType>, Object> attributeValues, Collection<IdType> ids);
+    Collection<String> update(Map<AttributeDef<T>, Object> attributeValues, Collection<T> ids);
 
-    Collection<String> delete(List<AttributeDef<IdType>> attributes, Collection<IdType> ids);
+    Collection<String> delete(List<AttributeDef<T>> attributes, Collection<T> ids);
 
-    CreateResult<IdType> create(Map<AttributeDef<IdType>, Object> values);
+    CreateResult<T> create(Map<AttributeDef<T>, Object> values);
 
-    SearchResult<IdType> search(Map<AttributeDef<IdType>, Object> values);
+    SearchResult<T> search(Map<AttributeDef<T>, Object> values);
 }

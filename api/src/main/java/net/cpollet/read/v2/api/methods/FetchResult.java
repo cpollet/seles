@@ -9,24 +9,24 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FetchResult<IdType extends Id> {
+public class FetchResult<T extends Id> {
     private static final FetchResult EMPTY = new FetchResult();
 
     private final MergeAlgorithm mergeAlgorithm;
-    private final Map<IdType, Map<AttributeDef<IdType>, Object>> result;
+    private final Map<T, Map<AttributeDef<T>, Object>> result;
     private final Collection<String> errors;
 
-    public FetchResult(MergeAlgorithm mergeAlgorithm, Map<IdType, Map<AttributeDef<IdType>, Object>> result, Collection<String> errors) {
+    public FetchResult(MergeAlgorithm mergeAlgorithm, Map<T, Map<AttributeDef<T>, Object>> result, Collection<String> errors) {
         this.mergeAlgorithm = mergeAlgorithm;
         this.result = Collections.unmodifiableMap(result);
         this.errors = Collections.unmodifiableCollection(errors);
     }
 
-    public FetchResult(Map<IdType, Map<AttributeDef<IdType>, Object>> result, Collection<String> errors) {
+    public FetchResult(Map<T, Map<AttributeDef<T>, Object>> result, Collection<String> errors) {
         this(new MergeAlgorithm(), result, errors);
     }
 
-    public FetchResult(Map<IdType, Map<AttributeDef<IdType>, Object>> result) {
+    public FetchResult(Map<T, Map<AttributeDef<T>, Object>> result) {
         this(result, Collections.emptyList());
     }
 
@@ -35,11 +35,11 @@ public class FetchResult<IdType extends Id> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <IdType extends Id> FetchResult<IdType> emptyResult() {
-        return (FetchResult<IdType>) EMPTY;
+    public static <T extends Id> FetchResult<T> emptyResult() {
+        return (FetchResult<T>) EMPTY;
     }
 
-    public Map<IdType, Map<AttributeDef<IdType>, Object>> result() {
+    public Map<T, Map<AttributeDef<T>, Object>> result() {
         return result;
     }
 
@@ -47,13 +47,13 @@ public class FetchResult<IdType extends Id> {
         return errors;
     }
 
-    public FetchResult<IdType> merge(FetchResult<IdType> other) {
+    public FetchResult<T> merge(FetchResult<T> other) {
         return mergeAlgorithm.merge(this, other);
     }
 
     public static class MergeAlgorithm {
-        public <IdType extends Id> FetchResult<IdType> merge(FetchResult<IdType> a, FetchResult<IdType> b) {
-            HashMap<IdType, Map<AttributeDef<IdType>, Object>> newResult = new HashMap<>(a.result());
+        public <T extends Id> FetchResult<T> merge(FetchResult<T> a, FetchResult<T> b) {
+            HashMap<T, Map<AttributeDef<T>, Object>> newResult = new HashMap<>(a.result());
             b.result().forEach((key, value) -> {
                 newResult.putIfAbsent(key, new HashMap<>());
                 newResult.get(key).putAll(value);

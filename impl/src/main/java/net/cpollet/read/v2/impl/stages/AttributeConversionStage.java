@@ -13,22 +13,22 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Transforms an {@link InternalRequest}&lt;IdType, String&gt; to an
- * {@link InternalRequest}&lt;IdType, {@link AttributeDef}&lt;IdType&gt;&gt; and does the reverse
+ * Transforms an {@link InternalRequest}&lt;T, String&gt; to an
+ * {@link InternalRequest}&lt;T, {@link AttributeDef}&lt;T&gt;&gt; and does the reverse
  * transformation from a {@link InternalResponse}.
  */
-public class AttributeConversionStage<IdType extends Id> implements Stage<IdType, String> {
-    private final Stage<IdType, AttributeDef<IdType>> next;
-    private final AttributeStore<IdType> attributesStore;
+public class AttributeConversionStage<T extends Id> implements Stage<T, String> {
+    private final Stage<T, AttributeDef<T>> next;
+    private final AttributeStore<T> attributesStore;
 
-    public AttributeConversionStage(AttributeStore<IdType> attributesStore, Stage<IdType, AttributeDef<IdType>> next) {
+    public AttributeConversionStage(AttributeStore<T> attributesStore, Stage<T, AttributeDef<T>> next) {
         this.next = next;
         this.attributesStore = attributesStore;
     }
 
     @Override
-    public InternalResponse<IdType, String> execute(final InternalRequest<IdType, String> request) {
-        BiMap<AttributeDef<IdType>, String> validAttributesMap = new BiMap<>(
+    public InternalResponse<T, String> execute(final InternalRequest<T, String> request) {
+        BiMap<AttributeDef<T>, String> validAttributesMap = new BiMap<>(
                 request.attributes().stream()
                         .map(attributesStore::fetch)
                         .filter(Optional::isPresent)

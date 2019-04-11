@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class DirectAttributeStore<IdType extends Id> implements AttributeStore<IdType> {
-    private final Map<String, AttributeDef<IdType>> attributes;
-    private final AttributeDef<IdType> idAttribute;
+public class DirectAttributeStore<T extends Id> implements AttributeStore<T> {
+    private final Map<String, AttributeDef<T>> attributes;
+    private final AttributeDef<T> idAttribute;
 
-    public DirectAttributeStore(String idAttribute, Collection<AttributeDef<IdType>> attributes) {
+    public DirectAttributeStore(String idAttribute, Collection<AttributeDef<T>> attributes) {
         this.attributes = Collections.unmodifiableMap(
                 attributes.stream()
                         .collect(Collectors.toMap(
@@ -25,22 +25,22 @@ public class DirectAttributeStore<IdType extends Id> implements AttributeStore<I
         this.idAttribute = attributes.isEmpty() ? null : this.attributes.get(idAttribute);
     }
 
-    public DirectAttributeStore(Collection<AttributeDef<IdType>> attributes) {
+    public DirectAttributeStore(Collection<AttributeDef<T>> attributes) {
         this("", attributes);
     }
 
     @Override
-    public Optional<AttributeDef<IdType>> fetch(String attributeName) {
+    public Optional<AttributeDef<T>> fetch(String attributeName) {
         return Optional.ofNullable(attributes.get(attributeName));
     }
 
     @Override
-    public Optional<AttributeDef<IdType>> idAttribute() {
+    public Optional<AttributeDef<T>> idAttribute() {
         return Optional.ofNullable(idAttribute);
     }
 
     @Override
-    public Collection<AttributeDef<IdType>> attributes() {
+    public Collection<AttributeDef<T>> attributes() {
         return attributes.values();
     }
 }

@@ -6,16 +6,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
-public class CreateResult<IdType extends Id> {
-    private final IdType id;
+public class CreateResult<T extends Id> {
+    private final T id;
     private final Collection<String> errors;
 
-    private CreateResult(IdType id, Collection<String> errors) {
+    private CreateResult(T id, Collection<String> errors) {
         this.id = id;
         this.errors = Collections.unmodifiableCollection(errors);
     }
 
-    public CreateResult(IdType id) {
+    public CreateResult(T id) {
         this(id, Collections.emptySet());
     }
 
@@ -23,7 +23,7 @@ public class CreateResult<IdType extends Id> {
         this(null, errors);
     }
 
-    public Optional<IdType> id() {
+    public Optional<T> id() {
         return Optional.ofNullable(id);
     }
 

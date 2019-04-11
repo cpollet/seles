@@ -13,14 +13,14 @@ import java.util.stream.Collectors;
 /**
  * Executes a SEARCH {@link InternalRequest}.
  */
-public class SearchRequestExecutionStage<IdType extends Id> implements Stage<IdType, AttributeDef<IdType>> {
+public class SearchRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
     @Override
-    public InternalResponse<IdType, AttributeDef<IdType>> execute(InternalRequest<IdType, AttributeDef<IdType>> request) {
-        SearchResult<IdType> searchResult = request.attributes(new AttributesGrouper<>()).entrySet().stream()
+    public InternalResponse<T, AttributeDef<T>> execute(InternalRequest<T, AttributeDef<T>> request) {
+        SearchResult<T> searchResult = request.attributes(new AttributesGrouper<>()).entrySet().stream()
                 .map(e -> e.getKey().search(request.values(e.getValue())))
                 .reduce(SearchResult.emptyResult(), SearchResult::merge);
 
-        return new InternalResponse<IdType, AttributeDef<IdType>>(
+        return new InternalResponse<T, AttributeDef<T>>(
                 searchResult.ids().stream()
                         .collect(Collectors.toMap(
                                 i -> i,

@@ -16,12 +16,12 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class NestedAttributeStore<IdType extends Id> implements AttributeStore<IdType> {
-    private final Map<String, AttributeDef<IdType>> store;
-    private final AttributeStore<IdType> parentStore;
+public class NestedAttributeStore<T extends Id> implements AttributeStore<T> {
+    private final Map<String, AttributeDef<T>> store;
+    private final AttributeStore<T> parentStore;
 
-    public NestedAttributeStore(AttributeStore<IdType> parentStore, List<NestedAttributes<Id>> attributes) {
-        HashMap<String, AttributeDef<IdType>> tmpStore = new HashMap<>(
+    public NestedAttributeStore(AttributeStore<T> parentStore, List<NestedAttributes<Id>> attributes) {
+        HashMap<String, AttributeDef<T>> tmpStore = new HashMap<>(
                 parentStore.attributes().stream()
                         .collect(
                                 Collectors.toMap(
@@ -33,7 +33,7 @@ public class NestedAttributeStore<IdType extends Id> implements AttributeStore<I
 
         attributes.forEach(
                 a -> {
-                    NestedMethod<IdType, Id> method = new NestedMethod<>(
+                    NestedMethod<T, Id> method = new NestedMethod<>(
                             a.prefix,
                             parentStore.fetch(a.attribute).orElseThrow(IllegalArgumentException::new),
                             a.executor,
@@ -70,28 +70,28 @@ public class NestedAttributeStore<IdType extends Id> implements AttributeStore<I
     }
 
     @Override
-    public Optional<AttributeDef<IdType>> fetch(String attributeName) {
+    public Optional<AttributeDef<T>> fetch(String attributeName) {
         return Optional.ofNullable(store.get(attributeName));
     }
 
     @Override
-    public Optional<AttributeDef<IdType>> idAttribute() {
+    public Optional<AttributeDef<T>> idAttribute() {
         return parentStore.idAttribute();
     }
 
     @Override
 
-    public Collection<AttributeDef<IdType>> attributes() {
+    public Collection<AttributeDef<T>> attributes() {
         return store.values();
     }
 
-    public static class NestedAttributes<NestedIdType extends Id> {
+    public static class NestedAttributes<U extends Id> {
         private final String prefix;
         private final String attribute;
-        private final Executor<NestedIdType> executor;
-        private final Function<Object, NestedIdType> idProvider;
+        private final Executor<U> executor;
+        private final Function<Object, U> idProvider;
 
-        public NestedAttributes(String prefix, String attribute, Executor<NestedIdType> executor, Function<Object, NestedIdType> idProvider) {
+        public NestedAttributes(String prefix, String attribute, Executor<U> executor, Function<Object, U> idProvider) {
             this.prefix = prefix;
             this.attribute = attribute;
             this.executor = executor;

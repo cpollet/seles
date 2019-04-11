@@ -5,12 +5,12 @@ import net.cpollet.read.v2.api.conversion.ConversionException;
 import net.cpollet.read.v2.api.conversion.ValueConverter;
 import net.cpollet.read.v2.api.domain.Id;
 
-public class NoopValueConverter<IdType extends Id> implements ValueConverter<AttributeDef<IdType>> {
+public class NoopValueConverter<T extends Id> implements ValueConverter<AttributeDef<T>> {
     private static final NoopValueConverter<Id> instance = new NoopValueConverter<>();
 
     @SuppressWarnings("unchecked")
-    public static <IdType> ValueConverter<IdType> instance() {
-        return (ValueConverter<IdType>) instance;
+    public static <T> ValueConverter<T> instance() {
+        return (ValueConverter<T>) instance;
     }
 
     private NoopValueConverter() {
@@ -18,12 +18,12 @@ public class NoopValueConverter<IdType extends Id> implements ValueConverter<Att
     }
 
     @Override
-    public Object toExternalValue(AttributeDef<IdType> attribute, Object value) throws ConversionException {
+    public Object toExternalValue(AttributeDef<T> attribute, Object value) throws ConversionException {
         return value;
     }
 
     @Override
-    public Object toInternalValue(AttributeDef<IdType> attribute, Object value) throws ConversionException {
+    public Object toInternalValue(AttributeDef<T> attribute, Object value) throws ConversionException {
         return value;
     }
 }

@@ -22,20 +22,20 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class InternalRequest<IdType, AttributeType> implements Guarded<InternalRequest<IdType, AttributeType>> {
+public class InternalRequest<T extends Id, A> implements Guarded<InternalRequest<T, A>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(InternalRequest.class);
 
     private final Set<Flag> guardFlags;
-    private final Set<IdType> ids;
-    private final Set<AttributeType> attributes;
-    private final Map<AttributeType, Object> attributeValues;
+    private final Set<T> ids;
+    private final Set<A> attributes;
+    private final Map<A, Object> attributeValues;
     private final RequestType type;
 
     public enum RequestType { // FIXME transform into different classes
         READ, UPDATE, DELETE, CREATE, SEARCH
     }
 
-    private InternalRequest(RequestType type, Set<IdType> ids, Set<AttributeType> attributes, Map<AttributeType, Object> attributesValues, Set<Flag> guardFlags) {
+    private InternalRequest(RequestType type, Set<T> ids, Set<A> attributes, Map<A, Object> attributesValues, Set<Flag> guardFlags) {
         this.ids = Collections.unmodifiableSet(ids);
         this.attributes = Collections.unmodifiableSet(attributes);
         this.attributeValues = Collections.unmodifiableMap(attributesValues);
@@ -43,7 +43,7 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
         this.guardFlags = Collections.unmodifiableSet(guardFlags);
     }
 
-    static <IdType extends Id> InternalRequest<IdType, String> wrap(RequestType type, Request<IdType> request) {
+    static <T extends Id> InternalRequest<T, String> wrap(RequestType type, Request<T> request) {
         return new InternalRequest<>(
                 type,
                 new HashSet<>(request.getIds()),
@@ -53,44 +53,44 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
         );
     }
 
-    public InternalRequest<IdType, AttributeType> withIds(Collection<IdType> idsToAdd) {
-        Set<IdType> newIds = new HashSet<>(ids);
+    public InternalRequest<T, A> withIds(Collection<T> idsToAdd) {
+        Set<T> newIds = new HashSet<>(ids);
         newIds.addAll(idsToAdd);
         return new InternalRequest<>(type, newIds, attributes, attributeValues, guardFlags);
     }
 
-    public InternalRequest<IdType, AttributeType> withoutIds(Collection<IdType> idsToRemove) {
-        Set<IdType> newIds = new HashSet<>(ids);
+    public InternalRequest<T, A> withoutIds(Collection<T> idsToRemove) {
+        Set<T> newIds = new HashSet<>(ids);
         newIds.removeAll(idsToRemove);
         return new InternalRequest<>(type, newIds, attributes, attributeValues, guardFlags);
     }
 
-    public InternalRequest<IdType, AttributeType> withAttributes(Collection<AttributeType> attributesToAdd) {
+    public InternalRequest<T, A> withAttributes(Collection<A> attributesToAdd) {
         if (!is(RequestType.READ)) {
             throw new IllegalStateException("Cannot add attributes to a non READ request");
         }
 
-        Set<AttributeType> newAttributes = new HashSet<>(attributes);
+        Set<A> newAttributes = new HashSet<>(attributes);
         newAttributes.addAll(attributesToAdd);
         return new InternalRequest<>(type, ids, newAttributes, attributeValues, guardFlags);
     }
 
-    public InternalRequest<IdType, AttributeType> withoutAttributes(Collection<AttributeType> attributesToRemove) {
-        Set<AttributeType> newAttributes = new HashSet<>(attributes);
+    public InternalRequest<T, A> withoutAttributes(Collection<A> attributesToRemove) {
+        Set<A> newAttributes = new HashSet<>(attributes);
         newAttributes.removeAll(attributesToRemove);
 
-        Map<AttributeType, Object> newAttributesValues = new HashMap<>(attributeValues);
+        Map<A, Object> newAttributesValues = new HashMap<>(attributeValues);
         attributesToRemove.forEach(newAttributesValues::remove);
 
         return new InternalRequest<>(type, ids, newAttributes, newAttributesValues, guardFlags);
     }
 
-    public <AttributeTypeTo> InternalRequest<IdType, AttributeTypeTo> mapAttributes(BiMap<AttributeTypeTo, AttributeType> conversionMap) {
-        Set<AttributeTypeTo> newAttributes = attributes.stream()
+    public <B> InternalRequest<T, B> mapAttributes(BiMap<B, A> conversionMap) {
+        Set<B> newAttributes = attributes.stream()
                 .map(conversionMap::getLeft)
                 .collect(Collectors.toSet());
 
-        Map<AttributeTypeTo, Object> newAttributeValues = attributeValues.keySet().stream()
+        Map<B, Object> newAttributeValues = attributeValues.keySet().stream()
                 .collect(Collectors.toMap(
                         conversionMap::getLeft,
                         attributeValues::get
@@ -99,12 +99,12 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
         return new InternalRequest<>(type, ids, newAttributes, newAttributeValues, guardFlags);
     }
 
-    public ConversionResult<InternalRequest<IdType, AttributeType>> convertValues(Map<AttributeType, ValueConverter<AttributeType>> converters) {
+    public ConversionResult<InternalRequest<T, A>> convertValues(Map<A, ValueConverter<A>> converters) {
         if (!is(RequestType.UPDATE, RequestType.CREATE)) {
             return new ConversionResult<>(this);
         }
 
-        Map<AttributeType, Object> convertedAttributeValues = new HashMap<>(attributeValues.size());
+        Map<A, Object> convertedAttributeValues = new HashMap<>(attributeValues.size());
         List<String> conversionErrors = new ArrayList<>();
 
         attributeValues.forEach((attribute, value) -> {
@@ -126,19 +126,19 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
         return Arrays.asList(types).contains(type);
     }
 
-    public Collection<IdType> ids() {
+    public Collection<T> ids() {
         return ids;
     }
 
-    public Collection<AttributeType> attributes() {
+    public Collection<A> attributes() {
         return attributes;
     }
 
-    public <R> R attributes(Function<Collection<AttributeType>, R> function) {
+    public <R> R attributes(Function<Collection<A>, R> function) {
         return function.apply(attributes);
     }
 
-    public Map<AttributeType, Object> values(Collection<AttributeType> attributes) {
+    public Map<A, Object> values(Collection<A> attributes) {
         if (!is(RequestType.UPDATE, RequestType.CREATE, RequestType.SEARCH)) {
             throw new IllegalStateException("Cannot get values from a non CREATE/UPDATE/SEARCH request");
         }
@@ -157,7 +157,7 @@ public class InternalRequest<IdType, AttributeType> implements Guarded<InternalR
     }
 
     @Override
-    public InternalRequest<IdType, AttributeType> addGuardedFlagIf(boolean condition, Flag flag) {
+    public InternalRequest<T, A> addGuardedFlagIf(boolean condition, Flag flag) {
         if (!condition) {
             return this;
         }

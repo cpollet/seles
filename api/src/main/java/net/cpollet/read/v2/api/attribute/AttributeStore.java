@@ -5,10 +5,10 @@ import net.cpollet.read.v2.api.domain.Id;
 import java.util.Collection;
 import java.util.Optional;
 
-public interface AttributeStore<IdType extends Id> {
-    Optional<AttributeDef<IdType>> fetch(String attributeName);
+public interface AttributeStore<T extends Id> {
+    Optional<AttributeDef<T>> fetch(String attributeName);
 
-    Optional<AttributeDef<IdType>> idAttribute();
+    Optional<AttributeDef<T>> idAttribute();
 
-    Collection<AttributeDef<IdType>> attributes();
+    Collection<AttributeDef<T>> attributes();
 }
