@@ -41,7 +41,7 @@ public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements
 
         Map<String, AttributeDef<IdType>> attributeNamesToAttributeDefs = attributes.stream()
                 .collect(Collectors.toMap(
-                        a -> a.name().substring(prefix.length() + 1),
+                        a -> removePrefix(a.name()),
                         a -> a
                 ));
 
@@ -63,6 +63,10 @@ public class NestedMethod<IdType extends Id, NestedIdType extends Id> implements
                         .map(e -> String.format("[%s].%s", prefix, e))
                         .collect(Collectors.toSet())
         );
+    }
+
+    private String removePrefix(String string) {
+        return string.substring(prefix.length() + 1);
     }
 
     private Response<NestedIdType> nestedFetch(Collection<String> attributes, Collection<NestedIdType> nestedIds) {
