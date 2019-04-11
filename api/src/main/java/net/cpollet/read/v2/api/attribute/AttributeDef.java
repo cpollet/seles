@@ -74,7 +74,7 @@ public class AttributeDef<T extends Id> {
         return caster;
     }
 
-    public <T> T print(AttributePrinter<T> printer) {
+    public <P> P print(AttributePrinter<P> printer) {
         return printer
                 .name(name)
                 .accessLevel(accessLevel)
