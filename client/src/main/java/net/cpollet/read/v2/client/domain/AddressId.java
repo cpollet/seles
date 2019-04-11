@@ -5,20 +5,20 @@ import net.cpollet.read.v2.api.domain.Id;
 import java.util.Objects;
 
 public class AddressId implements Id<Integer> {
-    private final Integer addressId;
+    private final Integer id;
 
-     AddressId(Integer addressId) {
-        this.addressId = addressId;
+     AddressId(Integer id) {
+        this.id = id;
     }
 
     @Override
     public Integer get() {
-        return addressId;
+        return id;
     }
 
     @Override
     public String toString() {
-        return addressId.toString();
+        return id.toString();
     }
 
     @Override
@@ -26,11 +26,11 @@ public class AddressId implements Id<Integer> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AddressId that = (AddressId) o;
-        return Objects.equals(addressId, that.addressId);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(addressId);
+        return Objects.hash(id);
     }
 }

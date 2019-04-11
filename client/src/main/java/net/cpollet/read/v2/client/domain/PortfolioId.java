@@ -5,20 +5,20 @@ import net.cpollet.read.v2.api.domain.Id;
 import java.util.Objects;
 
 public class PortfolioId implements Id<String> {
-    private final String portfolioId;
+    private final String id;
 
-    public PortfolioId(String portfolioId) {
-        this.portfolioId = portfolioId;
+    public PortfolioId(String id) {
+        this.id = id;
     }
 
     @Override
     public String get() {
-        return portfolioId;
+        return id;
     }
 
     @Override
     public String toString() {
-        return portfolioId;
+        return id;
     }
 
     @Override
@@ -26,11 +26,11 @@ public class PortfolioId implements Id<String> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PortfolioId that = (PortfolioId) o;
-        return Objects.equals(portfolioId, that.portfolioId);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(portfolioId);
+        return Objects.hash(id);
     }
 }

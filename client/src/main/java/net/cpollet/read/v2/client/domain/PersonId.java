@@ -5,20 +5,20 @@ import net.cpollet.read.v2.api.domain.Id;
 import java.util.Objects;
 
 public class PersonId implements Id<Integer> {
-    private final Integer personId;
+    private final Integer id;
 
-    public PersonId(int personId) {
-        this.personId = personId;
+    public PersonId(int id) {
+        this.id = id;
     }
 
     @Override
     public Integer get() {
-        return personId;
+        return id;
     }
 
     @Override
     public String toString() {
-        return personId.toString();
+        return id.toString();
     }
 
     @Override
@@ -26,11 +26,11 @@ public class PersonId implements Id<Integer> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PersonId that = (PersonId) o;
-        return Objects.equals(personId, that.personId);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(personId);
+        return Objects.hash(id);
     }
 }
