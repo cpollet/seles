@@ -22,6 +22,13 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a request, as used and transformed from {@link net.cpollet.read.v2.impl.stages.Stage} to
+ * {@link net.cpollet.read.v2.impl.stages.Stage} instances. Instances are immutable.
+ *
+ * @param <T> the type of the entity's ID, an implementation of {@link Id}
+ * @param <A> the type of the attribute; usually {@link String} or {@link net.cpollet.read.v2.api.attribute.AttributeDef}
+ */
 public class InternalRequest<T extends Id, A> implements Guarded<InternalRequest<T, A>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(InternalRequest.class);
 
@@ -85,6 +92,16 @@ public class InternalRequest<T extends Id, A> implements Guarded<InternalRequest
         return new InternalRequest<>(type, ids, newAttributes, newAttributesValues, guardFlags);
     }
 
+    /**
+     * Transforms a request with attributes of type A to a request with attributes of type B. Usually, this means
+     * transforming a request with attributes names ({@link String}) to attribute descriptors
+     * ({@link net.cpollet.read.v2.api.attribute.AttributeDef}).
+     *
+     * @param conversionMap the map used to converts from A to B and vice versa.
+     * @param <B>           destination attribute type
+     * @return the request, with attributes mapped from type A to type B
+     * @see InternalResponse#mapAttributes(BiMap) for the reverse operation
+     */
     public <B> InternalRequest<T, B> mapAttributes(BiMap<B, A> conversionMap) {
         Set<B> newAttributes = attributes.stream()
                 .map(conversionMap::getLeft)

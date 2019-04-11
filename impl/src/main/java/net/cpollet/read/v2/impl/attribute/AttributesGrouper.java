@@ -12,7 +12,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Groups a collection of attributes by method. The result is a map from method to a collection of attributes using this method
+ * Groups a collection of {@link AttributeDef} by {@link Method}. The result is a map from method to a collection of
+ * attributes using this method.
  *
  * @param <T>
  */

@@ -81,7 +81,7 @@ public class DefaultExecutor<T extends Id> implements Executor<T> {
     }
 
     /**
-     * Stages used for READ and WRITE requests
+     * Stages used for READ and WRITE requests.
      */
     private Stage<T, String> rwStages(Configuration configuration, IdValidator<T> idValidator, AccessLevelPredicate<T> filteringPredicate, AttributeDef.Mode mode, Stage<T, AttributeDef<T>> inner) {
         return rwdStages(configuration, idValidator, mode,
@@ -99,7 +99,7 @@ public class DefaultExecutor<T extends Id> implements Executor<T> {
     }
 
     /**
-     * Stages used for READ, WRITE and DELETE requests
+     * Stages used for READ, WRITE and DELETE requests.
      */
     private Stage<T, String> rwdStages(Configuration configuration, IdValidator<T> idValidator, AttributeDef.Mode mode, Stage<T, AttributeDef<T>> inner) {
         return rwdcStages(configuration, mode,
@@ -112,7 +112,7 @@ public class DefaultExecutor<T extends Id> implements Executor<T> {
     }
 
     /**
-     * Stages used for READ, WRITE, DELETE and CREATE requests
+     * Stages used for READ, WRITE, DELETE and CREATE requests.
      */
     private Stage<T, String> rwdcStages(Configuration configuration, AttributeDef.Mode mode, Stage<T, AttributeDef<T>> inner) {
         return new AttributeConversionStage<>(attributeStore,

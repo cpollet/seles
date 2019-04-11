@@ -7,7 +7,7 @@ import net.cpollet.read.v2.impl.execution.InternalResponse;
 /**
  * Implements a {@link InternalRequest} processing stage.
  *
- * Classes implementing this interface must not store any request and/or response relative data.
+ * Classes implementing this interface must be stateless.
  */
 public interface Stage<T extends Id, A> {
     /**

@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * An IdValidator that validates every Id passed
+ * An IdValidator that validates every Id passed.
  */
 public class DefaultIdValidator<T extends Id> implements IdValidator<T> {
     @Override
