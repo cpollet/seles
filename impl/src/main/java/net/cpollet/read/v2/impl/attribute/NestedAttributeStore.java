@@ -80,7 +80,6 @@ public class NestedAttributeStore<T extends Id> implements AttributeStore<T> {
     }
 
     @Override
-
     public Collection<AttributeDef<T>> attributes() {
         return store.values();
     }

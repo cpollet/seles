@@ -141,8 +141,8 @@
             </bean>
         </constructor-arg>
         <constructor-arg name="filteringPredicate" ref="accessLevel.filtering.predicate"/>
-        <constructor-arg name="configuration">
-            <bean class="net.cpollet.read.v2.impl.execution.DefaultExecutor.Configuration">
+        <constructor-arg name="guard">
+            <bean class="net.cpollet.read.v2.impl.execution.DefaultExecutorGuard">
                 <constructor-arg name="haltOnAttributeConversionError" value="false"/>
                 <constructor-arg name="haltOnIdValidationError" value="false"/>
                 <constructor-arg name="haltOnInputValueConversionError" value="false"/>

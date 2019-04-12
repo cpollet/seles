@@ -70,7 +70,7 @@ public class InternalResponse<T extends Id, A> {
         return new InternalResponse<>(convertedMap, errors, messages, executionTime);
     }
 
-    private <B> Map<B, Object> convertAttributes(Map<A, Object> map, BiMap<A, B> conversionMap) {
+    private  <B> Map<B, Object> convertAttributes(Map<A, Object> map, BiMap<A, B> conversionMap) {
         return map.entrySet().stream()
                 .collect(Collectors.toMap(
                         e -> conversionMap.getRight(e.getKey()),
