@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * {@link InternalRequest}&lt;T, {@link AttributeDef}&lt;T&gt;&gt; and does the reverse
  * transformation from a {@link InternalResponse}.
  */
-public class AttributeConversionStage<T extends Id> implements Stage<T, String> {
+public final class AttributeConversionStage<T extends Id> implements Stage<T, String> {
     private final Stage<T, AttributeDef<T>> next;
     private final AttributeStore<T> attributesStore;
 

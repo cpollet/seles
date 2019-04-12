@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Executes a UPDATE {@link InternalRequest}.
  */
-public class UpdateRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+public final class UpdateRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
     private final Stage<T, AttributeDef<T>> next;
 
     public UpdateRequestExecutionStage(Stage<T, AttributeDef<T>> next) {

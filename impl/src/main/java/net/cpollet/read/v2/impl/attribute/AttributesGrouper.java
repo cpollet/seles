@@ -17,7 +17,7 @@ import java.util.function.Function;
  *
  * @param <T>
  */
-public class AttributesGrouper<T extends Id> implements Function<Collection<AttributeDef<T>>, Map<Method<T>, List<AttributeDef<T>>>> {
+public final class AttributesGrouper<T extends Id> implements Function<Collection<AttributeDef<T>>, Map<Method<T>, List<AttributeDef<T>>>> {
     @Override
     public Map<Method<T>, List<AttributeDef<T>>> apply(Collection<AttributeDef<T>> attributeDefs) {
         Map<Method<T>, List<AttributeDef<T>>> attributesGroupedByMethod = new HashMap<>();

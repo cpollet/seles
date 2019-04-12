@@ -1,6 +1,6 @@
 package net.cpollet.read.v2.impl.execution;
 
-public class DefaultExecutorGuard {
+public final class DefaultExecutorGuard {
     private final boolean haltOnAttributeConversionError;
     private final boolean haltOnIdValidationError;
     private final boolean haltOnInputValueConversionError;

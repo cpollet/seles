@@ -8,7 +8,7 @@ import net.cpollet.read.v2.api.methods.Method;
 import java.util.Objects;
 import java.util.Set;
 
-public class AttributeDef<T extends Id> {
+public final class AttributeDef<T extends Id> {
     private final String name;
     private final AccessLevel accessLevel;
     private final boolean deprecated;

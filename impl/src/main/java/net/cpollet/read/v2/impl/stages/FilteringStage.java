@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * and passes the newly created request object to the lower {@link Stage}. Puts '*****' as a value in the
  * {@link InternalResponse} for each removed attribute.
  */
-public class FilteringStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+public final class FilteringStage<T extends Id> implements Stage<T, AttributeDef<T>> {
     private final Stage<T, AttributeDef<T>> next;
     private final AccessLevelPredicate<T> predicate;
 

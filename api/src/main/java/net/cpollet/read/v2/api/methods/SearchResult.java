@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SearchResult<T extends Id> {
+public final class SearchResult<T extends Id> {
     private static final SearchResult EMPTY = new SearchResult();
 
     private final MergeAlgorithm mergeAlgorithm;

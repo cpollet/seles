@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class AttributeMetadataPrinter implements AttributePrinter<Map<String, Object>> {
+public final class AttributeMetadataPrinter implements AttributePrinter<Map<String, Object>> {
     private final Map<String, Object> document;
 
     public AttributeMetadataPrinter() {

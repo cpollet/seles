@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Response<T> {
+public final class Response<T> {
     private final Map<T, Map<String, Object>> values;
     private final Collection<String> errors;
     private final Collection<String> messages;

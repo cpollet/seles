@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Executes a SEARCH {@link InternalRequest}.
  */
-public class SearchRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+public final class SearchRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
     @Override
     public InternalResponse<T, AttributeDef<T>> execute(InternalRequest<T, AttributeDef<T>> request) {
         SearchResult<T> searchResult = request.attributes(new AttributesGrouper<>()).entrySet().stream()

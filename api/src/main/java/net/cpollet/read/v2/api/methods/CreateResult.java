@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
-public class CreateResult<T extends Id> {
+public final class CreateResult<T extends Id> {
     private final T id;
     private final Collection<String> errors;
 

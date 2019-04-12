@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class NestedMethod<T extends Id, U extends Id> implements Method<T> {
+public final class NestedMethod<T extends Id, U extends Id> implements Method<T> {
     private final String prefix;
     private final AttributeDef<T> attribute;
     private final Executor<U> executor;

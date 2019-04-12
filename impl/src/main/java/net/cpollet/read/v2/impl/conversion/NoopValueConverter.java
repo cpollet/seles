@@ -5,7 +5,7 @@ import net.cpollet.read.v2.api.conversion.ConversionException;
 import net.cpollet.read.v2.api.conversion.ValueConverter;
 import net.cpollet.read.v2.api.domain.Id;
 
-public class NoopValueConverter<T extends Id> implements ValueConverter<AttributeDef<T>> {
+public final class NoopValueConverter<T extends Id> implements ValueConverter<AttributeDef<T>> {
     private static final NoopValueConverter<Id> instance = new NoopValueConverter<>();
 
     @SuppressWarnings("unchecked")

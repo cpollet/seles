@@ -13,7 +13,7 @@ import java.util.function.Function;
  *
  * @see Guarded
  */
-public class RequestHaltStage<T extends Id, A> implements Stage<T, A> {
+public final class RequestHaltStage<T extends Id, A> implements Stage<T, A> {
     private final Stage<T, A> next;
     private final Function<Guarded, Boolean> guard;
 

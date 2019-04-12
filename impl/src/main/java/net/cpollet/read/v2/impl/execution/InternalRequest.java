@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * @param <T> the type of the entity's ID, an implementation of {@link Id}
  * @param <A> the type of the attribute; usually {@link String} or {@link net.cpollet.read.v2.api.attribute.AttributeDef}
  */
-public class InternalRequest<T extends Id, A> implements Guarded<InternalRequest<T, A>> {
+public final class InternalRequest<T extends Id, A> implements Guarded<InternalRequest<T, A>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(InternalRequest.class);
 
     private final Set<Flag> guardFlags;

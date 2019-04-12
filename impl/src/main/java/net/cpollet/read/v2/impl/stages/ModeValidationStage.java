@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * read {@link InternalRequest} only contains {@link AttributeDef} supporting the read {@link AttributeDef.Mode}. It
  * removes the attributes that are not valid and add an errors for each of them in the {@link InternalResponse}.
  */
-public class ModeValidationStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+public final class ModeValidationStage<T extends Id> implements Stage<T, AttributeDef<T>> {
     private final Stage<T, AttributeDef<T>> next;
     private final AttributeDef.Mode mode;
 

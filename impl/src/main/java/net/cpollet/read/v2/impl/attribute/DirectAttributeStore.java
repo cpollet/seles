@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class DirectAttributeStore<T extends Id> implements AttributeStore<T> {
+public final class DirectAttributeStore<T extends Id> implements AttributeStore<T> {
     private final Map<String, AttributeDef<T>> attributes;
     private final AttributeDef<T> idAttribute;
 

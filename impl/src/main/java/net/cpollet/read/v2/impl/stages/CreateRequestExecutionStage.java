@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Executes a CREATE {@link InternalRequest} and returns the created entity's ID.
  */
-public class CreateRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+public final class CreateRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
     private final Stage<T, AttributeDef<T>> next;
     private final Stage<T, AttributeDef<T>> update;
     private final AttributeDef<T> idAttribute;

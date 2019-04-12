@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @param <T> the java type of the entity's primary key
  */
-public class Request<T extends Id> {
+public final class Request<T extends Id> {
     private final Collection<T> ids;
     private final Collection<String> attributes;
     private final Map<String, Object> attributesValues;

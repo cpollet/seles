@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FetchResult<T extends Id> {
+public final class FetchResult<T extends Id> {
     private static final FetchResult EMPTY = new FetchResult();
 
     private final MergeAlgorithm mergeAlgorithm;

@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CachedIdValidator<T extends Id> implements IdValidator<T>, Cache {
+public final class CachedIdValidator<T extends Id> implements IdValidator<T>, Cache {
     private final IdValidator<T> nested;
     private final Set<T> validIds;
 

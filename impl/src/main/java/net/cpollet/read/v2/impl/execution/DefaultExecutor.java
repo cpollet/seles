@@ -27,7 +27,7 @@ import net.cpollet.read.v2.impl.stages.UpdateRequestExecutionStage;
 import net.cpollet.read.v2.impl.stages.ValueConversionStage;
 
 // FIXME deserves a refactoring
-public class DefaultExecutor<T extends Id> implements Executor<T> {
+public final class DefaultExecutor<T extends Id> implements Executor<T> {
     private final AttributeStore<T> attributeStore;
     private final IdValidator<T> idValidator;
     private final AccessLevelPredicate<T> filteringPredicate;

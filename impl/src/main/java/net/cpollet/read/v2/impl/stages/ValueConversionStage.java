@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  *
  * Multiple {@link ValueConversionStage} may be used, to decouple type casting from value mapping for instance
  */
-public class ValueConversionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+public final class ValueConversionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
     private final Stage<T, AttributeDef<T>> next;
     private final Function<AttributeDef<T>, ValueConverter<AttributeDef<T>>> converterSupplier;
 

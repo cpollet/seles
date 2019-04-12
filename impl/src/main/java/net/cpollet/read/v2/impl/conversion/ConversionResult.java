@@ -3,7 +3,7 @@ package net.cpollet.read.v2.impl.conversion;
 import java.util.Collection;
 import java.util.Collections;
 
-public class ConversionResult<T> {
+public final class ConversionResult<T> {
     private final T result;
     private final Collection<String> errors;
 

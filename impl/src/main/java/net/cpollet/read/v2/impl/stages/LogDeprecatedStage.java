@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * Puts warning in the {@link InternalResponse} for each deprecated {@link AttributeDef} used in the
  * {@link InternalRequest}.
  */
-public class LogDeprecatedStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+public final class LogDeprecatedStage<T extends Id> implements Stage<T, AttributeDef<T>> {
     private final Stage<T, AttributeDef<T>> next;
 
     public LogDeprecatedStage(Stage<T, AttributeDef<T>> next) {

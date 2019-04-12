@@ -11,7 +11,7 @@ import net.cpollet.read.v2.impl.execution.InternalResponse;
  * @param <A> the attributes types (usually either {@link String} or
  *            {@link net.cpollet.read.v2.api.attribute.AttributeDef}
  */
-public class EmptyResponseStage<T extends Id, A> implements Stage<T, A> {
+public final class EmptyResponseStage<T extends Id, A> implements Stage<T, A> {
     @Override
     public InternalResponse<T, A> execute(InternalRequest<T, A> request) {
         return new InternalResponse<>();

@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Executes a READ {@link InternalRequest}.
  */
-public class ReadRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+public final class ReadRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
     @Override
     public InternalResponse<T, AttributeDef<T>> execute(final InternalRequest<T, AttributeDef<T>> request) {
         FetchResult<T> fetchResult = fetch(

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @param <T> the type of the entity's ID, an implementation of {@link Id}
  * @param <A> the type of the attribute; usually {@link String} or {@link net.cpollet.read.v2.api.attribute.AttributeDef}
  */
-public class InternalResponse<T extends Id, A> {
+public final class InternalResponse<T extends Id, A> {
     private static final Logger LOGGER = LoggerFactory.getLogger(InternalRequest.class);
 
     private final Map<T, Map<A, Object>> values;

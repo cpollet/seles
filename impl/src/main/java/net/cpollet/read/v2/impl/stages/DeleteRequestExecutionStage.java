@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Executes a DELETE {@link InternalRequest}.
  */
-public class DeleteRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+public final class DeleteRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
     @Override
     public InternalResponse<T, AttributeDef<T>> execute(InternalRequest<T, AttributeDef<T>> request) {
         List<String> errors = new ArrayList<>();

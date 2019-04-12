@@ -3,7 +3,7 @@ package net.cpollet.read.v2.impl.data;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BiMap<L, R> {
+public final class BiMap<L, R> {
     private final Map<L, R> leftToRight;
     private final Map<R, L> rightToLeft;
 

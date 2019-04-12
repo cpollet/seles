@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Replaces the wildcard attribute '*' with all the attributes of the context in which it's used.
  */
-public class ExpandStarStage<T extends Id> implements Stage<T, String> {
+public final class ExpandStarStage<T extends Id> implements Stage<T, String> {
     private final Stage<T, String> next;
     private final AttributeStore<T> attributeStore;
 

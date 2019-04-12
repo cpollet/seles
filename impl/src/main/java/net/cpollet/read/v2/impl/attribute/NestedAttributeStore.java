@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class NestedAttributeStore<T extends Id> implements AttributeStore<T> {
+public final class NestedAttributeStore<T extends Id> implements AttributeStore<T> {
     private final Map<String, AttributeDef<T>> store;
     private final AttributeStore<T> parentStore;
 

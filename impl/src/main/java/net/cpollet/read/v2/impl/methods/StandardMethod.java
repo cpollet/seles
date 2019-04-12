@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class StandardMethod<T extends Id> implements Method<T> {
+public final class StandardMethod<T extends Id> implements Method<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(StandardMethod.class);
 
     private final Function<Object, T> idTypeProvider;
