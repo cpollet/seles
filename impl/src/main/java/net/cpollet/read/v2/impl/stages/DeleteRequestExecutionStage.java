@@ -20,6 +20,7 @@ public class DeleteRequestExecutionStage<T extends Id> implements Stage<T, Attri
         request.attributes(new AttributesGrouper<>()).forEach(
                 (method, attributes) -> errors.addAll(
                         method.delete(
+                                request.principal(),
                                 attributes,
                                 request.ids()
                         )

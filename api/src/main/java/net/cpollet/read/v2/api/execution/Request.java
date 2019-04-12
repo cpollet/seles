@@ -2,6 +2,7 @@ package net.cpollet.read.v2.api.execution;
 
 import net.cpollet.read.v2.api.domain.Id;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -16,31 +17,33 @@ public class Request<T extends Id> {
     private final Collection<T> ids;
     private final Collection<String> attributes;
     private final Map<String, Object> attributesValues;
+    private final Principal principal; // FIXME make immutable
 
-    private Request(Collection<T> ids, Collection<String> attributes, Map<String, Object> attributesValues) {
+    private Request(Principal principal, Collection<T> ids, Collection<String> attributes, Map<String, Object> attributesValues) {
+        this.principal = principal;
         this.ids = Collections.unmodifiableCollection(ids);
         this.attributes = Collections.unmodifiableCollection(attributes);
         this.attributesValues = Collections.unmodifiableMap(attributesValues);
     }
 
-    public static <T extends Id> Request<T> read(Collection<T> ids, Collection<String> attributes) {
-        return new Request<>(ids, attributes, Collections.emptyMap());
+    public static <T extends Id> Request<T> read(Principal principal, Collection<T> ids, Collection<String> attributes) {
+        return new Request<>(principal, ids, attributes, Collections.emptyMap());
     }
 
-    public static <T extends Id> Request<T> delete(Collection<T> ids, Collection<String> attributes) {
-        return new Request<>(ids, attributes, Collections.emptyMap());
+    public static <T extends Id> Request<T> delete(Principal principal, Collection<T> ids, Collection<String> attributes) {
+        return new Request<>(principal, ids, attributes, Collections.emptyMap());
     }
 
-    public static <T extends Id> Request<T> write(Collection<T> ids, Map<String, Object> attributesValues) {
-        return new Request<>(ids, attributesValues.keySet(), attributesValues);
+    public static <T extends Id> Request<T> write(Principal principal, Collection<T> ids, Map<String, Object> attributesValues) {
+        return new Request<>(principal, ids, attributesValues.keySet(), attributesValues);
     }
 
-    public static <T extends Id> Request<T> create(Map<String, Object> attributesValues) {
-        return new Request<>(Collections.emptyList(), attributesValues.keySet(), attributesValues);
+    public static <T extends Id> Request<T> create(Principal principal, Map<String, Object> attributesValues) {
+        return new Request<>(principal, Collections.emptyList(), attributesValues.keySet(), attributesValues);
     }
 
-    public static <T extends Id> Request<T> search(Map<String, Object> attributesValues) {
-        return new Request<>(Collections.emptyList(), attributesValues.keySet(), attributesValues);
+    public static <T extends Id> Request<T> search(Principal principal, Map<String, Object> attributesValues) {
+        return new Request<>(principal, Collections.emptyList(), attributesValues.keySet(), attributesValues);
     }
 
     public Collection<T> getIds() {
@@ -53,5 +56,9 @@ public class Request<T extends Id> {
 
     public Map<String, Object> getAttributesValues() {
         return attributesValues;
+    }
+
+    public Principal principal() {
+        return principal;
     }
 }

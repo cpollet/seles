@@ -9,6 +9,7 @@ import net.cpollet.read.v2.client.domain.PersonId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +20,7 @@ public class AddressIdMethod implements Method<PersonId> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AddressIdMethod.class);
 
     @Override
-    public FetchResult<PersonId> fetch(List<AttributeDef<PersonId>> attributes, Collection<PersonId> ids) {
+    public FetchResult<PersonId> fetch(Principal principal, List<AttributeDef<PersonId>> attributes, Collection<PersonId> ids) {
         return new FetchResult<>(
                 ids.stream()
                         .collect(Collectors.toMap(
@@ -36,7 +37,7 @@ public class AddressIdMethod implements Method<PersonId> {
     }
 
     @Override
-    public Collection<String> update(Map<AttributeDef<PersonId>, Object> attributeValues, Collection<PersonId> ids) {
+    public Collection<String> update(Principal principal, Map<AttributeDef<PersonId>, Object> attributeValues, Collection<PersonId> ids) {
         ids.forEach(
                 id -> attributeValues.forEach((a, v) -> LOGGER.info("UPDATE {}:{} -> {}", id, a, v))
         );
@@ -45,7 +46,7 @@ public class AddressIdMethod implements Method<PersonId> {
     }
 
     @Override
-    public Collection<String> delete(List<AttributeDef<PersonId>> attributes, Collection<PersonId> ids) {
+    public Collection<String> delete(Principal principal, List<AttributeDef<PersonId>> attributes, Collection<PersonId> ids) {
         ids.forEach(
                 id -> attributes.forEach(a -> LOGGER.info("DELETE {}:{}", id, a))
         );
@@ -54,7 +55,7 @@ public class AddressIdMethod implements Method<PersonId> {
     }
 
     @Override
-    public CreateResult<PersonId> create(Map<AttributeDef<PersonId>, Object> values) {
+    public CreateResult<PersonId> create(Principal principal, Map<AttributeDef<PersonId>, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("CREATE {} -> {}", a, v)
         );
@@ -63,7 +64,7 @@ public class AddressIdMethod implements Method<PersonId> {
     }
 
     @Override
-    public SearchResult<PersonId> search(Map<AttributeDef<PersonId>, Object> values) {
+    public SearchResult<PersonId> search(Principal principal, Map<AttributeDef<PersonId>, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("SEARCH {} -> {}", a, v)
         );

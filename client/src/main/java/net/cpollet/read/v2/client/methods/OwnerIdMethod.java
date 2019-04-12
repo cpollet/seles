@@ -9,6 +9,7 @@ import net.cpollet.read.v2.client.domain.PortfolioId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +20,7 @@ public class OwnerIdMethod implements Method<PortfolioId> {
     private static final Logger LOGGER = LoggerFactory.getLogger(OwnerIdMethod.class);
 
     @Override
-    public FetchResult<PortfolioId> fetch(List<AttributeDef<PortfolioId>> attributes, Collection<PortfolioId> ids) {
+    public FetchResult<PortfolioId> fetch(Principal principal, List<AttributeDef<PortfolioId>> attributes, Collection<PortfolioId> ids) {
         return new FetchResult<>(
                 ids.stream()
                         .collect(Collectors.toMap(
@@ -36,7 +37,7 @@ public class OwnerIdMethod implements Method<PortfolioId> {
     }
 
     @Override
-    public Collection<String> update(Map<AttributeDef<PortfolioId>, Object> attributeValues, Collection<PortfolioId> ids) {
+    public Collection<String> update(Principal principal, Map<AttributeDef<PortfolioId>, Object> attributeValues, Collection<PortfolioId> ids) {
         ids.forEach(
                 id -> attributeValues.forEach((a, v) -> LOGGER.info("UPDATE {}:{} -> {}", id, a, v))
         );
@@ -45,7 +46,7 @@ public class OwnerIdMethod implements Method<PortfolioId> {
     }
 
     @Override
-    public Collection<String> delete(List<AttributeDef<PortfolioId>> attributes, Collection<PortfolioId> ids) {
+    public Collection<String> delete(Principal principal, List<AttributeDef<PortfolioId>> attributes, Collection<PortfolioId> ids) {
         ids.forEach(
                 id -> attributes.forEach(a -> LOGGER.info("DELETE {}:{}", id, a))
         );
@@ -54,7 +55,7 @@ public class OwnerIdMethod implements Method<PortfolioId> {
     }
 
     @Override
-    public CreateResult<PortfolioId> create(Map<AttributeDef<PortfolioId>, Object> values) {
+    public CreateResult<PortfolioId> create(Principal principal, Map<AttributeDef<PortfolioId>, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("CREATE {} -> {}", a, v)
         );
@@ -63,7 +64,7 @@ public class OwnerIdMethod implements Method<PortfolioId> {
     }
 
     @Override
-    public SearchResult<PortfolioId> search(Map<AttributeDef<PortfolioId>, Object> values) {
+    public SearchResult<PortfolioId> search(Principal principal, Map<AttributeDef<PortfolioId>, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("SEARCH {} -> {}", a, v)
         );

@@ -5,6 +5,7 @@ import net.cpollet.read.v2.api.attribute.AttributeStore;
 import net.cpollet.read.v2.api.attribute.printer.AttributeMetadataPrinter;
 import net.cpollet.read.v2.api.execution.Executor;
 import net.cpollet.read.v2.api.execution.Request;
+import net.cpollet.read.v2.client.domain.DefaultPrincipal;
 import net.cpollet.read.v2.client.domain.PortfolioId;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -47,6 +48,7 @@ public class Client {
         System.out.println(
                 portfolioExecutor.read(
                         Request.read(
+                                new DefaultPrincipal("name"),
                                 Arrays.asList(
                                         new PortfolioId("100000"),
                                         new PortfolioId("200000"),
@@ -69,6 +71,7 @@ public class Client {
         System.out.println(
                 portfolioExecutor.read(
                         Request.read(
+                                new DefaultPrincipal("name"),
                                 Collections.singletonList(new PortfolioId("200000")),
                                 Collections.singletonList("*")
                         )
@@ -88,6 +91,7 @@ public class Client {
         System.out.println(
                 portfolioExecutor.update(
                         Request.write(
+                                new DefaultPrincipal("name"),
                                 Arrays.asList(
                                         new PortfolioId("100000"),
                                         new PortfolioId("200000"),
@@ -104,6 +108,7 @@ public class Client {
         System.out.println(
                 portfolioExecutor.delete(
                         Request.delete(
+                                new DefaultPrincipal("name"),
                                 Arrays.asList(
                                         new PortfolioId("100000"),
                                         new PortfolioId("200000"),
@@ -129,6 +134,7 @@ public class Client {
         System.out.println(
                 portfolioExecutor.create(
                         Request.create(
+                                new DefaultPrincipal("name"),
                                 attributesValues
                         )
                 )
@@ -146,6 +152,7 @@ public class Client {
         System.out.println(
                 portfolioExecutor.search(
                         Request.search(
+                                new DefaultPrincipal("name"),
                                 attributesValues
                         )
                 )

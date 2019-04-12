@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 /**
  * Removes {@link AttributeDef} from the {@link InternalRequest} according to the ({@link AttributeDef#accessLevel()}
- * and passes the newly created request object to the lower {@link Stage}.  Puts '*****' as a value in the
+ * and passes the newly created request object to the lower {@link Stage}. Puts '*****' as a value in the
  * {@link InternalResponse} for each removed attribute.
  */
 public class FilteringStage<T extends Id> implements Stage<T, AttributeDef<T>> {
@@ -27,7 +27,7 @@ public class FilteringStage<T extends Id> implements Stage<T, AttributeDef<T>> {
     @Override
     public InternalResponse<T, AttributeDef<T>> execute(InternalRequest<T, AttributeDef<T>> request) {
         Set<AttributeDef<T>> filteredAttributes = request.attributes().stream()
-                .filter(predicate::test)
+                .filter(attribute -> predicate.test(request.principal(), attribute))
                 .collect(Collectors.toSet());
 
         Map<T, Map<AttributeDef<T>, String>> filteredValues = request.ids().stream()

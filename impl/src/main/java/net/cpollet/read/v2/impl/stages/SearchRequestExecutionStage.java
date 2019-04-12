@@ -17,7 +17,7 @@ public class SearchRequestExecutionStage<T extends Id> implements Stage<T, Attri
     @Override
     public InternalResponse<T, AttributeDef<T>> execute(InternalRequest<T, AttributeDef<T>> request) {
         SearchResult<T> searchResult = request.attributes(new AttributesGrouper<>()).entrySet().stream()
-                .map(e -> e.getKey().search(request.values(e.getValue())))
+                .map(e -> e.getKey().search(request.principal(), request.values(e.getValue())))
                 .reduce(SearchResult.emptyResult(), SearchResult::merge);
 
         return new InternalResponse<T, AttributeDef<T>>(

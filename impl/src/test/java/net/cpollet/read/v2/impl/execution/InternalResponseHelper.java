@@ -6,6 +6,7 @@ import net.cpollet.read.v2.api.execution.Request;
 import net.cpollet.read.v2.api.execution.Response;
 import net.cpollet.read.v2.impl.stages.AttributeConversionStage;
 import net.cpollet.read.v2.impl.testsupport.StringId;
+import net.cpollet.read.v2.impl.testsupport.VoidPrincipal;
 
 import java.util.Collections;
 
@@ -27,7 +28,11 @@ public class InternalResponseHelper {
                         .execute(
                                 InternalRequest.wrap(
                                         InternalRequest.RequestType.READ,
-                                        Request.read(Collections.emptyList(), Collections.emptyList())
+                                        Request.read(
+                                                new VoidPrincipal(),
+                                                Collections.emptyList(),
+                                                Collections.emptyList()
+                                        )
                                 )
                         )
         );

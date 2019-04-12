@@ -10,6 +10,7 @@ import net.cpollet.read.v2.impl.data.BiMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,22 +38,26 @@ public class InternalRequest<T extends Id, A> implements Guarded<InternalRequest
     private final Set<A> attributes;
     private final Map<A, Object> attributeValues;
     private final RequestType type;
+    private final Principal principal;
+
 
     public enum RequestType { // FIXME transform into different classes
-        READ, UPDATE, DELETE, CREATE, SEARCH
+        READ, UPDATE, DELETE, CREATE, SEARCH;
     }
 
-    private InternalRequest(RequestType type, Set<T> ids, Set<A> attributes, Map<A, Object> attributesValues, Set<Flag> guardFlags) {
+    private InternalRequest(RequestType type, Principal principal, Set<T> ids, Set<A> attributes, Map<A, Object> attributesValues, Set<Flag> guardFlags) {
+        this.type = type;
+        this.principal = principal;
         this.ids = Collections.unmodifiableSet(ids);
         this.attributes = Collections.unmodifiableSet(attributes);
         this.attributeValues = Collections.unmodifiableMap(attributesValues);
-        this.type = type;
         this.guardFlags = Collections.unmodifiableSet(guardFlags);
     }
 
     static <T extends Id> InternalRequest<T, String> wrap(RequestType type, Request<T> request) {
         return new InternalRequest<>(
                 type,
+                request.principal(),
                 new HashSet<>(request.getIds()),
                 new HashSet<>(request.getAttributes()),
                 request.getAttributesValues(),
@@ -63,13 +68,13 @@ public class InternalRequest<T extends Id, A> implements Guarded<InternalRequest
     public InternalRequest<T, A> withIds(Collection<T> idsToAdd) {
         Set<T> newIds = new HashSet<>(ids);
         newIds.addAll(idsToAdd);
-        return new InternalRequest<>(type, newIds, attributes, attributeValues, guardFlags);
+        return new InternalRequest<>(type, principal, newIds, attributes, attributeValues, guardFlags);
     }
 
     public InternalRequest<T, A> withoutIds(Collection<T> idsToRemove) {
         Set<T> newIds = new HashSet<>(ids);
         newIds.removeAll(idsToRemove);
-        return new InternalRequest<>(type, newIds, attributes, attributeValues, guardFlags);
+        return new InternalRequest<>(type, principal, newIds, attributes, attributeValues, guardFlags);
     }
 
     public InternalRequest<T, A> withAttributes(Collection<A> attributesToAdd) {
@@ -79,7 +84,7 @@ public class InternalRequest<T extends Id, A> implements Guarded<InternalRequest
 
         Set<A> newAttributes = new HashSet<>(attributes);
         newAttributes.addAll(attributesToAdd);
-        return new InternalRequest<>(type, ids, newAttributes, attributeValues, guardFlags);
+        return new InternalRequest<>(type, principal, ids, newAttributes, attributeValues, guardFlags);
     }
 
     public InternalRequest<T, A> withoutAttributes(Collection<A> attributesToRemove) {
@@ -89,7 +94,7 @@ public class InternalRequest<T extends Id, A> implements Guarded<InternalRequest
         Map<A, Object> newAttributesValues = new HashMap<>(attributeValues);
         attributesToRemove.forEach(newAttributesValues::remove);
 
-        return new InternalRequest<>(type, ids, newAttributes, newAttributesValues, guardFlags);
+        return new InternalRequest<>(type, principal, ids, newAttributes, newAttributesValues, guardFlags);
     }
 
     /**
@@ -113,7 +118,7 @@ public class InternalRequest<T extends Id, A> implements Guarded<InternalRequest
                         attributeValues::get
                 ));
 
-        return new InternalRequest<>(type, ids, newAttributes, newAttributeValues, guardFlags);
+        return new InternalRequest<>(type, principal, ids, newAttributes, newAttributeValues, guardFlags);
     }
 
     public ConversionResult<InternalRequest<T, A>> convertValues(Map<A, ValueConverter<A>> converters) {
@@ -134,13 +139,17 @@ public class InternalRequest<T extends Id, A> implements Guarded<InternalRequest
         });
 
         return new ConversionResult<>(
-                new InternalRequest<>(type, ids, attributes, convertedAttributeValues, guardFlags),
+                new InternalRequest<>(type, principal, ids, attributes, convertedAttributeValues, guardFlags),
                 conversionErrors
         );
     }
 
     public boolean is(RequestType... types) {
         return Arrays.asList(types).contains(type);
+    }
+
+    public Principal principal() {
+        return principal;
     }
 
     public Collection<T> ids() {
@@ -181,6 +190,6 @@ public class InternalRequest<T extends Id, A> implements Guarded<InternalRequest
 
         Set<Flag> newGuardFlags = new HashSet<>(guardFlags);
         newGuardFlags.add(flag);
-        return new InternalRequest<>(type, ids, attributes, attributeValues, newGuardFlags);
+        return new InternalRequest<>(type, principal, ids, attributes, attributeValues, newGuardFlags);
     }
 }

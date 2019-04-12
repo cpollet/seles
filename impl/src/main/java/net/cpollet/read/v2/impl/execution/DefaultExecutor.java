@@ -85,7 +85,7 @@ public class DefaultExecutor<T extends Id> implements Executor<T> {
      */
     private Stage<T, String> rwStages(Configuration configuration, IdValidator<T> idValidator, AccessLevelPredicate<T> filteringPredicate, AttributeDef.Mode mode, Stage<T, AttributeDef<T>> inner) {
         return rwdStages(configuration, idValidator, mode,
-                new FilteringStage<>(
+                new FilteringStage<>(// TODO should be in a wider range of requests
                         filteringPredicate,
                         new ValueConversionStage<>(AttributeDef::caster,
                                 new ValueConversionStage<>(AttributeDef::converter,

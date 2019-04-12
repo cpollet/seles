@@ -61,6 +61,7 @@ public class CreateRequestExecutionStage<T extends Id> implements Stage<T, Attri
 
         // we create the "main" entity instance with its attributes (i.e. the ones that are using the same method as the id attribute)
         CreateResult<T> createResult = idAttribute.method().create(
+                request.principal(),
                 request.values(
                         attributesGroupedByMethod.get(idAttribute.method())
                 )

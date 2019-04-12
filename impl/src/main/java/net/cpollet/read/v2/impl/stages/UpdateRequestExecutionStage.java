@@ -27,6 +27,7 @@ public class UpdateRequestExecutionStage<T extends Id> implements Stage<T, Attri
         request.attributes(new AttributesGrouper<>()).forEach(
                 (method, attributes) -> errors.addAll(
                         method.update(
+                                request.principal(),
                                 request.values(attributes),
                                 request.ids()
                         )

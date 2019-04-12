@@ -9,6 +9,7 @@ import net.cpollet.read.v2.api.methods.SearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,7 +28,7 @@ public class StandardMethod<T extends Id> implements Method<T> {
     }
 
     @Override
-    public FetchResult<T> fetch(List<AttributeDef<T>> attributes, Collection<T> ids) {
+    public FetchResult<T> fetch(Principal principal, List<AttributeDef<T>> attributes, Collection<T> ids) {
         return new FetchResult<>(
                 ids.stream()
                         .collect(Collectors.toMap(
@@ -44,7 +45,7 @@ public class StandardMethod<T extends Id> implements Method<T> {
     }
 
     @Override
-    public Collection<String> update(Map<AttributeDef<T>, Object> attributeValues, Collection<T> ids) {
+    public Collection<String> update(Principal principal, Map<AttributeDef<T>, Object> attributeValues, Collection<T> ids) {
         ids.forEach(
                 id -> attributeValues.forEach((a, v) -> LOGGER.info("UPDATE {}:{} -> {}", id, a, v))
         );
@@ -53,7 +54,7 @@ public class StandardMethod<T extends Id> implements Method<T> {
     }
 
     @Override
-    public Collection<String> delete(List<AttributeDef<T>> attributes, Collection<T> ids) {
+    public Collection<String> delete(Principal principal, List<AttributeDef<T>> attributes, Collection<T> ids) {
         ids.forEach(
                 id -> attributes.forEach(a -> LOGGER.info("DELETE {}:{}", id, a))
         );
@@ -62,7 +63,7 @@ public class StandardMethod<T extends Id> implements Method<T> {
     }
 
     @Override
-    public CreateResult<T> create(Map<AttributeDef<T>, Object> values) {
+    public CreateResult<T> create(Principal principal, Map<AttributeDef<T>, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("CREATE {} -> {}", a, v)
         );
@@ -71,7 +72,7 @@ public class StandardMethod<T extends Id> implements Method<T> {
     }
 
     @Override
-    public SearchResult<T> search(Map<AttributeDef<T>, Object> values) {
+    public SearchResult<T> search(Principal principal, Map<AttributeDef<T>, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("SEARCH {} -> {}", a, v)
         );
