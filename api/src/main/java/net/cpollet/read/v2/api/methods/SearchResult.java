@@ -51,7 +51,7 @@ public final class SearchResult<T extends Id> {
     }
 
     public static class MergeAlgorithm {
-        public <T extends Id> SearchResult<T> merge(SearchResult<T> a, SearchResult<T> b) {
+        <T extends Id> SearchResult<T> merge(SearchResult<T> a, SearchResult<T> b) {
             if (a == EMPTY) {
                 return b;
             }

@@ -52,7 +52,7 @@ public final class FetchResult<T extends Id> {
     }
 
     public static class MergeAlgorithm {
-        public <T extends Id> FetchResult<T> merge(FetchResult<T> a, FetchResult<T> b) {
+        <T extends Id> FetchResult<T> merge(FetchResult<T> a, FetchResult<T> b) {
             HashMap<T, Map<AttributeDef<T>, Object>> newResult = new HashMap<>(a.result());
             b.result().forEach((key, value) -> {
                 newResult.putIfAbsent(key, new HashMap<>());

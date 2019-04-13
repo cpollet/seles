@@ -40,7 +40,6 @@ public final class InternalRequest<T extends Id, A> implements Guarded<InternalR
     private final RequestType type;
     private final Principal principal;
 
-
     public enum RequestType { // FIXME transform into different classes
         READ, UPDATE, DELETE, CREATE, SEARCH;
     }
