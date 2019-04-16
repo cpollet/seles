@@ -4,3 +4,11 @@ jdk:
 cache:
   directories:
     - $HOME/.m2
+addons:
+  sonarcloud:
+    organization: "cpollet-github"
+    token:
+      secure: $SONARQUBE_TOKEN
+script:
+  - mvn install
+  - mvn -f pom-sonar.xml sonar:sonar
