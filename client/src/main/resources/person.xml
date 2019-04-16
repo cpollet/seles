@@ -3,17 +3,17 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <bean id="person.attributeStore" class="net.cpollet.read.v2.impl.attribute.NestedAttributeStore">
+    <bean id="person.attributeStore" class="net.cpollet.seles.impl.attribute.NestedAttributeStore">
         <constructor-arg name="parentStore">
-            <bean class="net.cpollet.read.v2.impl.attribute.DirectAttributeStore">
+            <bean class="net.cpollet.seles.impl.attribute.DirectAttributeStore">
                 <constructor-arg name="attributes">
                     <list>
-                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                        <bean class="net.cpollet.seles.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="email"/>
                             <constructor-arg name="deprecated" value="false"/>
                             <constructor-arg name="accessLevel">
                                 <util:constant
-                                        static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PRIVATE"/>
+                                        static-field="net.cpollet.seles.client.domain.AccessLevelImpl.PRIVATE"/>
                             </constructor-arg>
                             <constructor-arg name="method" ref="person.method.standard"/>
                             <constructor-arg name="modes">
@@ -24,15 +24,15 @@
                             <constructor-arg name="converter" ref="person.converter.default"/>
                             <constructor-arg name="caster" ref="person.caster.default"/>
                         </bean>
-                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                        <bean class="net.cpollet.seles.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="addressId"/>
                             <constructor-arg name="deprecated" value="false"/>
                             <constructor-arg name="accessLevel">
                                 <util:constant
-                                        static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PRIVATE"/>
+                                        static-field="net.cpollet.seles.client.domain.AccessLevelImpl.PRIVATE"/>
                             </constructor-arg>
                             <constructor-arg name="method">
-                                <bean class="net.cpollet.read.v2.client.methods.AddressIdMethod"/>
+                                <bean class="net.cpollet.seles.client.methods.AddressIdMethod"/>
                             </constructor-arg>
                             <constructor-arg name="modes">
                                 <set>
@@ -42,15 +42,15 @@
                             <constructor-arg name="converter" ref="person.converter.default"/>
                             <constructor-arg name="caster" ref="person.caster.default"/>
                         </bean>
-                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                        <bean class="net.cpollet.seles.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="portfolioId"/>
                             <constructor-arg name="deprecated" value="false"/>
                             <constructor-arg name="accessLevel">
                                 <util:constant
-                                        static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PUBLIC"/>
+                                        static-field="net.cpollet.seles.client.domain.AccessLevelImpl.PUBLIC"/>
                             </constructor-arg>
                             <constructor-arg name="method">
-                                <bean class="net.cpollet.read.v2.client.methods.OwnedPortfolioIdMethod"/>
+                                <bean class="net.cpollet.seles.client.methods.OwnedPortfolioIdMethod"/>
                             </constructor-arg>
                             <constructor-arg name="modes">
                                 <set>
@@ -66,30 +66,30 @@
         </constructor-arg>
         <constructor-arg name="attributes">
             <list>
-                <bean class="net.cpollet.read.v2.impl.attribute.NestedAttributeStore.NestedAttributes">
+                <bean class="net.cpollet.seles.impl.attribute.NestedAttributeStore.NestedAttributes">
                     <constructor-arg name="prefix" value="address"/>
                     <constructor-arg name="attribute" value="addressId"/>
                     <constructor-arg name="executor" ref="address.executor"/>
                     <constructor-arg name="idProvider">
-                        <bean class="net.cpollet.read.v2.client.domain.AddressIdToAddressId"/>
+                        <bean class="net.cpollet.seles.client.domain.AddressIdToAddressId"/>
                     </constructor-arg>
                 </bean>
             </list>
         </constructor-arg>
     </bean>
 
-    <bean id="person.executor" class="net.cpollet.read.v2.impl.execution.DefaultExecutor">
+    <bean id="person.executor" class="net.cpollet.seles.impl.execution.DefaultExecutor">
         <constructor-arg name="attributeStore" ref="person.attributeStore"/>
         <constructor-arg name="idValidator">
-            <bean class="net.cpollet.read.v2.impl.domain.CachedIdValidator">
+            <bean class="net.cpollet.seles.impl.domain.CachedIdValidator">
                 <constructor-arg name="nested">
-                    <bean class="net.cpollet.read.v2.client.domain.DefaultIdValidator"/>
+                    <bean class="net.cpollet.seles.client.domain.DefaultIdValidator"/>
                 </constructor-arg>
             </bean>
         </constructor-arg>
         <constructor-arg name="filteringPredicate" ref="accessLevel.filtering.predicate"/>
         <constructor-arg name="guard">
-            <bean class="net.cpollet.read.v2.impl.execution.DefaultExecutorGuard">
+            <bean class="net.cpollet.seles.impl.execution.DefaultExecutorGuard">
                 <constructor-arg name="haltOnAttributeConversionError" value="false"/>
                 <constructor-arg name="haltOnIdValidationError" value="false"/>
                 <constructor-arg name="haltOnInputValueConversionError" value="false"/>
@@ -99,12 +99,12 @@
         </constructor-arg>
     </bean>
 
-    <bean id="person.method.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod">
+    <bean id="person.method.standard" class="net.cpollet.seles.impl.methods.StandardMethod">
         <constructor-arg name="idTypeProvider">
             <null/>
         </constructor-arg>
     </bean>
 
-    <bean id="person.converter.default" class="net.cpollet.read.v2.client.conversion.DefaultValueConverter"/>
-    <bean id="person.caster.default" class="net.cpollet.read.v2.client.conversion.DefaultValueCaster"/>
+    <bean id="person.converter.default" class="net.cpollet.seles.client.conversion.DefaultValueConverter"/>
+    <bean id="person.caster.default" class="net.cpollet.seles.client.conversion.DefaultValueCaster"/>
 </beans>

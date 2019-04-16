@@ -62,7 +62,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>net.cpollet.read.v2.client.Client</mainClass>
+                            <mainClass>net.cpollet.seles.client.Client</mainClass>
                         </configuration>
                     </execution>
                 </executions>

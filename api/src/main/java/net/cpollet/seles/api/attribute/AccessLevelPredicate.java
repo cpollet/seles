@@ -1,0 +1,9 @@
+package net.cpollet.seles.api.attribute;
+
+import net.cpollet.seles.api.domain.Id;
+
+import java.security.Principal;
+
+public interface AccessLevelPredicate<T extends Id> {
+    boolean test(Principal principal, AttributeDef<T> attribute);
+}

@@ -3,17 +3,17 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <bean id="portfolio.attributeStore" class="net.cpollet.read.v2.impl.attribute.NestedAttributeStore">
+    <bean id="portfolio.attributeStore" class="net.cpollet.seles.impl.attribute.NestedAttributeStore">
         <constructor-arg name="parentStore">
-            <bean class="net.cpollet.read.v2.impl.attribute.DirectAttributeStore">
+            <bean class="net.cpollet.seles.impl.attribute.DirectAttributeStore">
                 <constructor-arg name="idAttribute" value="id"/>
                 <constructor-arg name="attributes">
                     <list>
-                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                        <bean class="net.cpollet.seles.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="id"/>
                             <constructor-arg name="deprecated" value="false"/>
                             <constructor-arg name="accessLevel">
-                                <util:constant static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PUBLIC"/>
+                                <util:constant static-field="net.cpollet.seles.client.domain.AccessLevelImpl.PUBLIC"/>
                             </constructor-arg>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
                             <constructor-arg name="modes">
@@ -24,11 +24,11 @@
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
                         </bean>
-                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                        <bean class="net.cpollet.seles.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="status"/>
                             <constructor-arg name="deprecated" value="false"/>
                             <constructor-arg name="accessLevel">
-                                <util:constant static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PUBLIC"/>
+                                <util:constant static-field="net.cpollet.seles.client.domain.AccessLevelImpl.PUBLIC"/>
                             </constructor-arg>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
                             <constructor-arg name="modes">
@@ -43,11 +43,11 @@
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
                         </bean>
-                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                        <bean class="net.cpollet.seles.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="currency"/>
                             <constructor-arg name="deprecated" value="true"/>
                             <constructor-arg name="accessLevel">
-                                <util:constant static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PUBLIC"/>
+                                <util:constant static-field="net.cpollet.seles.client.domain.AccessLevelImpl.PUBLIC"/>
                             </constructor-arg>
                             <constructor-arg name="method" ref="portfolio.method.standard2"/>
                             <constructor-arg name="modes">
@@ -61,12 +61,12 @@
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
                         </bean>
-                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                        <bean class="net.cpollet.seles.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="hidden"/>
                             <constructor-arg name="deprecated" value="false"/>
                             <constructor-arg name="accessLevel">
                                 <util:constant
-                                        static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PRIVATE"/>
+                                        static-field="net.cpollet.seles.client.domain.AccessLevelImpl.PRIVATE"/>
                             </constructor-arg>
                             <constructor-arg name="method" ref="portfolio.method.standard"/>
                             <constructor-arg name="modes">
@@ -77,15 +77,15 @@
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
                         </bean>
-                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                        <bean class="net.cpollet.seles.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="ownerId"/>
                             <constructor-arg name="deprecated" value="false"/>
                             <constructor-arg name="accessLevel">
                                 <util:constant
-                                        static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PUBLIC"/>
+                                        static-field="net.cpollet.seles.client.domain.AccessLevelImpl.PUBLIC"/>
                             </constructor-arg>
                             <constructor-arg name="method">
-                                <bean class="net.cpollet.read.v2.client.methods.OwnerIdMethod"/>
+                                <bean class="net.cpollet.seles.client.methods.OwnerIdMethod"/>
                             </constructor-arg>
                             <constructor-arg name="modes">
                                 <set>
@@ -96,12 +96,12 @@
                             <constructor-arg name="converter" ref="portfolio.converter.default"/>
                             <constructor-arg name="caster" ref="portfolio.caster.default"/>
                         </bean>
-                        <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                        <bean class="net.cpollet.seles.api.attribute.AttributeDef">
                             <constructor-arg name="name" value="description"/>
                             <constructor-arg name="deprecated" value="false"/>
                             <constructor-arg name="accessLevel">
                                 <util:constant
-                                        static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PUBLIC"/>
+                                        static-field="net.cpollet.seles.client.domain.AccessLevelImpl.PUBLIC"/>
                             </constructor-arg>
                             <constructor-arg name="method" ref="portfolio.method.standard2"/>
                             <constructor-arg name="modes">
@@ -119,30 +119,30 @@
         </constructor-arg>
         <constructor-arg name="attributes">
             <list>
-                <bean class="net.cpollet.read.v2.impl.attribute.NestedAttributeStore.NestedAttributes">
+                <bean class="net.cpollet.seles.impl.attribute.NestedAttributeStore.NestedAttributes">
                     <constructor-arg name="prefix" value="owner"/>
                     <constructor-arg name="attribute" value="ownerId"/>
                     <constructor-arg name="executor" ref="person.executor"/>
                     <constructor-arg name="idProvider">
-                        <bean class="net.cpollet.read.v2.client.domain.OwnerIdToPersonId"/>
+                        <bean class="net.cpollet.seles.client.domain.OwnerIdToPersonId"/>
                     </constructor-arg>
                 </bean>
             </list>
         </constructor-arg>
     </bean>
 
-    <bean id="portfolio.executor" class="net.cpollet.read.v2.impl.execution.DefaultExecutor">
+    <bean id="portfolio.executor" class="net.cpollet.seles.impl.execution.DefaultExecutor">
         <constructor-arg name="attributeStore" ref="portfolio.attributeStore"/>
         <constructor-arg name="idValidator">
-            <bean class="net.cpollet.read.v2.impl.domain.CachedIdValidator">
+            <bean class="net.cpollet.seles.impl.domain.CachedIdValidator">
                 <constructor-arg name="nested">
-                    <bean class="net.cpollet.read.v2.client.domain.PortfolioIdValidator"/>
+                    <bean class="net.cpollet.seles.client.domain.PortfolioIdValidator"/>
                 </constructor-arg>
             </bean>
         </constructor-arg>
         <constructor-arg name="filteringPredicate" ref="accessLevel.filtering.predicate"/>
         <constructor-arg name="guard">
-            <bean class="net.cpollet.read.v2.impl.execution.DefaultExecutorGuard">
+            <bean class="net.cpollet.seles.impl.execution.DefaultExecutorGuard">
                 <constructor-arg name="haltOnAttributeConversionError" value="false"/>
                 <constructor-arg name="haltOnIdValidationError" value="false"/>
                 <constructor-arg name="haltOnInputValueConversionError" value="false"/>
@@ -152,17 +152,17 @@
         </constructor-arg>
     </bean>
 
-    <bean id="portfolio.method.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod">
+    <bean id="portfolio.method.standard" class="net.cpollet.seles.impl.methods.StandardMethod">
         <constructor-arg name="idTypeProvider">
-            <bean class="net.cpollet.read.v2.client.domain.StringToPortfolioId"/>
+            <bean class="net.cpollet.seles.client.domain.StringToPortfolioId"/>
         </constructor-arg>
     </bean>
-    <bean id="portfolio.method.standard2" class="net.cpollet.read.v2.impl.methods.StandardMethod">
+    <bean id="portfolio.method.standard2" class="net.cpollet.seles.impl.methods.StandardMethod">
         <constructor-arg name="idTypeProvider">
-            <bean class="net.cpollet.read.v2.client.domain.StringToPortfolioId"/>
+            <bean class="net.cpollet.seles.client.domain.StringToPortfolioId"/>
         </constructor-arg>
     </bean>
 
-    <bean id="portfolio.converter.default" class="net.cpollet.read.v2.client.conversion.DefaultValueConverter"/>
-    <bean id="portfolio.caster.default" class="net.cpollet.read.v2.client.conversion.DefaultValueCaster"/>
+    <bean id="portfolio.converter.default" class="net.cpollet.seles.client.conversion.DefaultValueConverter"/>
+    <bean id="portfolio.caster.default" class="net.cpollet.seles.client.conversion.DefaultValueCaster"/>
 </beans>

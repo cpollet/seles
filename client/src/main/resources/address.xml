@@ -3,15 +3,15 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <bean id="address.attributeStore" class="net.cpollet.read.v2.impl.attribute.DirectAttributeStore">
+    <bean id="address.attributeStore" class="net.cpollet.seles.impl.attribute.DirectAttributeStore">
         <constructor-arg name="attributes">
             <list>
-                <bean class="net.cpollet.read.v2.api.attribute.AttributeDef">
+                <bean class="net.cpollet.seles.api.attribute.AttributeDef">
                     <constructor-arg name="name" value="street"/>
                     <constructor-arg name="deprecated" value="false"/>
                     <constructor-arg name="accessLevel">
                         <util:constant
-                                static-field="net.cpollet.read.v2.client.domain.AccessLevelImpl.PUBLIC"/>
+                                static-field="net.cpollet.seles.client.domain.AccessLevelImpl.PUBLIC"/>
                     </constructor-arg>
                     <constructor-arg name="method" ref="address.method.standard"/>
                     <constructor-arg name="modes">
@@ -26,18 +26,18 @@
         </constructor-arg>
     </bean>
 
-    <bean id="address.executor" class="net.cpollet.read.v2.impl.execution.DefaultExecutor">
+    <bean id="address.executor" class="net.cpollet.seles.impl.execution.DefaultExecutor">
         <constructor-arg name="attributeStore" ref="address.attributeStore"/>
         <constructor-arg name="idValidator">
-            <bean class="net.cpollet.read.v2.impl.domain.CachedIdValidator">
+            <bean class="net.cpollet.seles.impl.domain.CachedIdValidator">
                 <constructor-arg name="nested">
-                    <bean class="net.cpollet.read.v2.client.domain.DefaultIdValidator"/>
+                    <bean class="net.cpollet.seles.client.domain.DefaultIdValidator"/>
                 </constructor-arg>
             </bean>
         </constructor-arg>
         <constructor-arg name="filteringPredicate" ref="accessLevel.filtering.predicate"/>
         <constructor-arg name="guard">
-            <bean class="net.cpollet.read.v2.impl.execution.DefaultExecutorGuard">
+            <bean class="net.cpollet.seles.impl.execution.DefaultExecutorGuard">
                 <constructor-arg name="haltOnAttributeConversionError" value="false"/>
                 <constructor-arg name="haltOnIdValidationError" value="false"/>
                 <constructor-arg name="haltOnInputValueConversionError" value="false"/>
@@ -47,12 +47,12 @@
         </constructor-arg>
     </bean>
 
-    <bean id="address.method.standard" class="net.cpollet.read.v2.impl.methods.StandardMethod">
+    <bean id="address.method.standard" class="net.cpollet.seles.impl.methods.StandardMethod">
         <constructor-arg name="idTypeProvider">
             <null/>
         </constructor-arg>
     </bean>
 
-    <bean id="address.converter.default" class="net.cpollet.read.v2.client.conversion.DefaultValueConverter"/>
-    <bean id="address.caster.default" class="net.cpollet.read.v2.client.conversion.DefaultValueCaster"/>
+    <bean id="address.converter.default" class="net.cpollet.seles.client.conversion.DefaultValueConverter"/>
+    <bean id="address.caster.default" class="net.cpollet.seles.client.conversion.DefaultValueCaster"/>
 </beans>
