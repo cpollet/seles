@@ -1,3 +1,9 @@
+[![Build Status](https://travis-ci.org/cpollet/seles.svg?branch=master)](https://travis-ci.org/cpollet/seles)
+
+# seles
+todo
+
+# Misc.
  - CRUD
    - Create ok - fix nested
    - Read ok
