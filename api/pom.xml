@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.cpollet.pocs.read-api-v2</groupId>
-        <artifactId>read-api-v2</artifactId>
+        <groupId>net.cpollet.seles</groupId>
+        <artifactId>seles</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
-    <artifactId>read-api-v2-api</artifactId>
+    <artifactId>seles-api</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

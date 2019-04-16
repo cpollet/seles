@@ -4,24 +4,24 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.cpollet.pocs.read-api-v2</groupId>
-        <artifactId>read-api-v2</artifactId>
+        <groupId>net.cpollet.seles</groupId>
+        <artifactId>seles</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
-    <artifactId>read-api-v2-client</artifactId>
+    <artifactId>seles-client</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
-            <groupId>net.cpollet.pocs.read-api-v2</groupId>
-            <artifactId>read-api-v2-api</artifactId>
+            <groupId>net.cpollet.seles</groupId>
+            <artifactId>seles-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.cpollet.pocs.read-api-v2</groupId>
-            <artifactId>read-api-v2-impl</artifactId>
+            <groupId>net.cpollet.seles</groupId>
+            <artifactId>seles-impl</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
