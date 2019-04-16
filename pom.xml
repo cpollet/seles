@@ -20,6 +20,11 @@
         <module>client</module>
     </modules>
 
+    <scm>
+        <connection>scm:git:git@github.com:cpollet/seles.git</connection>
+        <url>https://github.com/cpollet/seles</url>
+    </scm>
+
     <build>
         <pluginManagement>
             <plugins>
