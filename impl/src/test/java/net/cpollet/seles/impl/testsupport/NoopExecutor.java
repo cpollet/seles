@@ -15,5 +15,46 @@
  */
 package net.cpollet.seles.impl.testsupport;
 
-public class NoopExecutor {
+import net.cpollet.seles.api.attribute.AttributeStore;
+import net.cpollet.seles.api.domain.Id;
+import net.cpollet.seles.api.execution.Executor;
+import net.cpollet.seles.api.execution.Request;
+import net.cpollet.seles.api.execution.Response;
+
+public class NoopExecutor<T extends Id> implements Executor<T> {
+    private final AttributeStore<T> store;
+
+    public NoopExecutor(AttributeStore<T> store) {
+        this.store = store;
+    }
+
+    @Override
+    public AttributeStore<T> attributeStore() {
+        return store;
+    }
+
+    @Override
+    public Response<T> read(Request<T> request) {
+        return null;
+    }
+
+    @Override
+    public Response<T> update(Request<T> request) {
+        return null;
+    }
+
+    @Override
+    public Response<T> create(Request<T> request) {
+        return null;
+    }
+
+    @Override
+    public Response<T> delete(Request<T> request) {
+        return null;
+    }
+
+    @Override
+    public Response<T> search(Request<T> request) {
+        return null;
+    }
 }

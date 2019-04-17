@@ -33,10 +33,10 @@ class ExpandStarStageTest {
         // GIVEN
         DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Arrays.asList(
                 new AttributeDef<>(
-                        "attribute_1", VoidAccessLevel.INSTANCE, false, null, Collections.emptySet(), null, null
+                        "attribute_1", VoidAccessLevel.INSTANCE_1, false, null, Collections.emptySet(), null, null
                 ),
                 new AttributeDef<>(
-                        "attribute_2", VoidAccessLevel.INSTANCE, true, null, Collections.emptySet(), null, null
+                        "attribute_2", VoidAccessLevel.INSTANCE_1, true, null, Collections.emptySet(), null, null
                 )
         ));
         ExpandStarStage<StringId> stage = new ExpandStarStage<>(store, request -> {
@@ -57,10 +57,10 @@ class ExpandStarStageTest {
         // GIVEN
         DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Arrays.asList(
                 new AttributeDef<>(
-                        "attribute_1", VoidAccessLevel.INSTANCE, false, null, Collections.emptySet(), null, null
+                        "attribute_1", VoidAccessLevel.INSTANCE_1, false, null, Collections.emptySet(), null, null
                 ),
                 new AttributeDef<>(
-                        "attribute_2", VoidAccessLevel.INSTANCE, true, null, Collections.emptySet(), null, null
+                        "attribute_2", VoidAccessLevel.INSTANCE_1, true, null, Collections.emptySet(), null, null
                 )
         ));
         ExpandStarStage<StringId> stage = new ExpandStarStage<>(store, request -> {
@@ -81,10 +81,10 @@ class ExpandStarStageTest {
         // GIVEN
         DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Arrays.asList(
                 new AttributeDef<>(
-                        "attribute_1", VoidAccessLevel.INSTANCE, false, null, Collections.emptySet(), null, null
+                        "attribute_1", VoidAccessLevel.INSTANCE_1, false, null, Collections.emptySet(), null, null
                 ),
                 new AttributeDef<>(
-                        "attribute_2", VoidAccessLevel.INSTANCE, true, null, Collections.emptySet(), null, null
+                        "attribute_2", VoidAccessLevel.INSTANCE_1, true, null, Collections.emptySet(), null, null
                 )
         ));
         ExpandStarStage<StringId> stage = new ExpandStarStage<>(store, request -> {

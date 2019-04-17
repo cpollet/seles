@@ -37,10 +37,10 @@ class LogDeprecatedStageTest {
         LogDeprecatedStage<StringId> stage = new LogDeprecatedStage<>(new NoopStage());
         DirectAttributeStore<StringId> store = new DirectAttributeStore<>("", Arrays.asList(
                 new AttributeDef<>(
-                        "non-deprecated", VoidAccessLevel.INSTANCE, false, null, Collections.emptySet(), null, null
+                        "non-deprecated", VoidAccessLevel.INSTANCE_1, false, null, Collections.emptySet(), null, null
                 ),
                 new AttributeDef<>(
-                        "deprecated", VoidAccessLevel.INSTANCE, true, null, Collections.emptySet(), null, null
+                        "deprecated", VoidAccessLevel.INSTANCE_1, true, null, Collections.emptySet(), null, null
                 )
         ));
 

@@ -35,7 +35,7 @@ public final class NestedAttributeStore<T extends Id> implements AttributeStore<
     private final Map<String, AttributeDef<T>> store;
     private final AttributeStore<T> parentStore;
 
-    public NestedAttributeStore(AttributeStore<T> parentStore, List<NestedAttributes<Id>> attributes) {
+    public NestedAttributeStore(AttributeStore<T> parentStore, Collection<NestedAttributes<Id>> attributes) {
         HashMap<String, AttributeDef<T>> tmpStore = new HashMap<>(
                 parentStore.attributes().stream()
                         .collect(
