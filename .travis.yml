@@ -1,4 +1,6 @@
 language: java
+git:
+  depth: false
 jdk:
   - oraclejdk8
 cache:
