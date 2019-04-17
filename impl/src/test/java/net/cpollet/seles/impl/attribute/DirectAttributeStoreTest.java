@@ -30,7 +30,7 @@ class DirectAttributeStoreTest {
     void fetch_returnsAttribute_whenFound() {
         // GIVEN
         AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>("idAttribute", Collections.singletonList(
+        DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Collections.singleton(
                 attribute
         ));
 
@@ -47,7 +47,7 @@ class DirectAttributeStoreTest {
     void fetch_returnsEmptyAttribute_whenNotFound() {
         // GIVEN
         AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>("idAttribute", Collections.singletonList(
+        DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Collections.singleton(
                 attribute
         ));
 
@@ -63,7 +63,7 @@ class DirectAttributeStoreTest {
     void idAttribute_returnsIdAttribute_whenDefined() {
         // GIVEN
         AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>("idAttribute", Collections.singletonList(
+        DirectAttributeStore<StringId> store = new DirectAttributeStore<>("idAttribute", Collections.singleton(
                 attribute
         ));
 
@@ -93,7 +93,7 @@ class DirectAttributeStoreTest {
     void idAttribute_returnsEmptyIdAttribute_whenNotFound() {
         // GIVEN
         AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>("unknown", Collections.singletonList(
+        DirectAttributeStore<StringId> store = new DirectAttributeStore<>("unknown", Collections.singleton(
                 attribute
         ));
 
@@ -109,7 +109,7 @@ class DirectAttributeStoreTest {
     void idAttribute_returnsEmptyIdAttribute_whenNotDefined() {
         // GIVEN
         AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Collections.singletonList(
+        DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Collections.singleton(
                 attribute
         ));
 
@@ -125,7 +125,7 @@ class DirectAttributeStoreTest {
     void attributes_returnsAttributesCollection() {
         // GIVEN
         AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>("idAttribute", Collections.singletonList(
+        DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Collections.singleton(
                 attribute
         ));
 
@@ -141,7 +141,7 @@ class DirectAttributeStoreTest {
     @Test
     void attributes_returnsUnmodifiableCollection() {
         AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>("idAttribute", Collections.singletonList(
+        DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Collections.singleton(
                 attribute
         ));
 
@@ -155,6 +155,6 @@ class DirectAttributeStoreTest {
             return;
         }
 
-        Assertions.fail("exception not thrown");
+        Assertions.fail("Exception not thrown");
     }
 }
