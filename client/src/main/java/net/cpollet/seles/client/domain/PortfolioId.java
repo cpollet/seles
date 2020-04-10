@@ -19,7 +19,7 @@ import net.cpollet.seles.api.domain.Id;
 
 import java.util.Objects;
 
-public class PortfolioId implements Id<String> {
+public class PortfolioId implements Id {
     private final String id;
 
     public PortfolioId(String id) {

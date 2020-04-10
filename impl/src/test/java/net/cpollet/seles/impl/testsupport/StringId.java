@@ -19,7 +19,7 @@ import net.cpollet.seles.api.domain.Id;
 
 import java.util.Objects;
 
-public class StringId implements Id<String> {
+public class StringId implements Id {
     private final String id;
 
     public StringId(String id) {

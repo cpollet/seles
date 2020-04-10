@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class SearchResult<T extends Id> {
-    private static final SearchResult EMPTY = new SearchResult();
+    private static final SearchResult<Id> EMPTY = new SearchResult<>();
 
     private final MergeAlgorithm mergeAlgorithm;
     private final Set<T> ids;

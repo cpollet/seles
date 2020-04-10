@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class FetchResult<T extends Id> {
-    private static final FetchResult EMPTY = new FetchResult();
+    private static final FetchResult<Id> EMPTY = new FetchResult<>();
 
     private final MergeAlgorithm mergeAlgorithm;
     private final Map<T, Map<AttributeDef<T>, Object>> result;

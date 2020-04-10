@@ -19,7 +19,7 @@ import net.cpollet.seles.api.domain.Id;
 
 import java.util.Objects;
 
-public class PersonId implements Id<Integer> {
+public class PersonId implements Id {
     private final Integer id;
 
     public PersonId(int id) {

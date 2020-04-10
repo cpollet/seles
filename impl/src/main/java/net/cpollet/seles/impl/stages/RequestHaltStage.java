@@ -30,9 +30,9 @@ import java.util.function.Function;
  */
 public final class RequestHaltStage<T extends Id, A> implements Stage<T, A> {
     private final Stage<T, A> next;
-    private final Function<Guarded, Boolean> guard;
+    private final Function<Guarded<?>, Boolean> guard;
 
-    public RequestHaltStage(Function<Guarded, Boolean> guard, Stage<T, A> next) {
+    public RequestHaltStage(Function<Guarded<?>, Boolean> guard, Stage<T, A> next) {
         this.next = next;
         this.guard = guard;
     }
