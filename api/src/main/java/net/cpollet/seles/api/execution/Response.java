@@ -15,11 +15,8 @@
  */
 package net.cpollet.seles.api.execution;
 
-import com.google.gson.GsonBuilder;
-
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 public final class Response<T> {
@@ -51,15 +48,7 @@ public final class Response<T> {
         return messages;
     }
 
-    @Override
-    public String toString() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("success", !hasErrors());
-        map.put("executionTime", executionTime);
-        map.put("result", values);
-        map.put("messages", messages);
-        map.put("errors", errors);
-
-        return new GsonBuilder().setPrettyPrinting().create().toJson(map);
+    public long executionTime() {
+        return executionTime;
     }
 }

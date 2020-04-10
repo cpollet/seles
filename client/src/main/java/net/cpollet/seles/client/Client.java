@@ -61,36 +61,46 @@ public class Client {
     private static void read(Executor<PortfolioId> portfolioExecutor) {
         System.out.println("-- READ ------");
         System.out.println(
-                portfolioExecutor.read(
-                        Request.read(
-                                new DefaultPrincipal("name"),
-                                Arrays.asList(
-                                        new PortfolioId("100000"),
-                                        new PortfolioId("200000"),
-                                        new PortfolioId("999999")
-                                ),
-                                Arrays.asList(
-                                        "id",
-                                        "status",
-                                        "ownerId",
-                                        "currency",
-                                        "unknown",
-                                        "owner.email",
-                                        "owner.unknown",
-                                        "owner.portfolioId",
-                                        "owner.address.street"
+                new GsonBuilder()
+                        .setPrettyPrinting()
+                        .create()
+                        .toJson(
+                                portfolioExecutor.read(
+                                        Request.read(
+                                                new DefaultPrincipal("name"),
+                                                Arrays.asList(
+                                                        new PortfolioId("100000"),
+                                                        new PortfolioId("200000"),
+                                                        new PortfolioId("999999")
+                                                ),
+                                                Arrays.asList(
+                                                        "id",
+                                                        "status",
+                                                        "ownerId",
+                                                        "currency",
+                                                        "unknown",
+                                                        "owner.email",
+                                                        "owner.unknown",
+                                                        "owner.portfolioId",
+                                                        "owner.address.street"
+                                                )
+                                        )
                                 )
                         )
-                )
         );
         System.out.println(
-                portfolioExecutor.read(
-                        Request.read(
-                                new DefaultPrincipal("name"),
-                                Collections.singletonList(new PortfolioId("200000")),
-                                Collections.singletonList("*")
+                new GsonBuilder()
+                        .setPrettyPrinting()
+                        .create()
+                        .toJson(
+                                portfolioExecutor.read(
+                                        Request.read(
+                                                new DefaultPrincipal("name"),
+                                                Collections.singletonList(new PortfolioId("200000")),
+                                                Collections.singletonList("*")
+                                        )
+                                )
                         )
-                )
         );
     }
 
@@ -104,37 +114,47 @@ public class Client {
         attributesValues.put("unknown", "?");
 
         System.out.println(
-                portfolioExecutor.update(
-                        Request.write(
-                                new DefaultPrincipal("name"),
-                                Arrays.asList(
-                                        new PortfolioId("100000"),
-                                        new PortfolioId("200000"),
-                                        new PortfolioId("999999")
-                                ),
-                                attributesValues
+                new GsonBuilder()
+                        .setPrettyPrinting()
+                        .create()
+                        .toJson(
+                                portfolioExecutor.update(
+                                        Request.write(
+                                                new DefaultPrincipal("name"),
+                                                Arrays.asList(
+                                                        new PortfolioId("100000"),
+                                                        new PortfolioId("200000"),
+                                                        new PortfolioId("999999")
+                                                ),
+                                                attributesValues
+                                        )
+                                )
                         )
-                )
         );
     }
 
     private static void delete(Executor<PortfolioId> portfolioExecutor) {
         System.out.println("-- DELETE ------");
         System.out.println(
-                portfolioExecutor.delete(
-                        Request.delete(
-                                new DefaultPrincipal("name"),
-                                Arrays.asList(
-                                        new PortfolioId("100000"),
-                                        new PortfolioId("200000"),
-                                        new PortfolioId("999999")
-                                ),
-                                Arrays.asList(
-                                        "id",
-                                        "status"
+                new GsonBuilder()
+                        .setPrettyPrinting()
+                        .create()
+                        .toJson(
+                                portfolioExecutor.delete(
+                                        Request.delete(
+                                                new DefaultPrincipal("name"),
+                                                Arrays.asList(
+                                                        new PortfolioId("100000"),
+                                                        new PortfolioId("200000"),
+                                                        new PortfolioId("999999")
+                                                ),
+                                                Arrays.asList(
+                                                        "id",
+                                                        "status"
+                                                )
+                                        )
                                 )
                         )
-                )
         );
     }
 
@@ -147,12 +167,17 @@ public class Client {
         attributesValues.put("description", "lol");
 
         System.out.println(
-                portfolioExecutor.create(
-                        Request.create(
-                                new DefaultPrincipal("name"),
-                                attributesValues
+                new GsonBuilder()
+                        .setPrettyPrinting()
+                        .create()
+                        .toJson(
+                                portfolioExecutor.create(
+                                        Request.create(
+                                                new DefaultPrincipal("name"),
+                                                attributesValues
+                                        )
+                                )
                         )
-                )
         );
     }
 
@@ -165,12 +190,17 @@ public class Client {
         attributesValues.put("description", "...");
 
         System.out.println(
-                portfolioExecutor.search(
-                        Request.search(
-                                new DefaultPrincipal("name"),
-                                attributesValues
+                new GsonBuilder()
+                        .setPrettyPrinting()
+                        .create()
+                        .toJson(
+                                portfolioExecutor.search(
+                                        Request.search(
+                                                new DefaultPrincipal("name"),
+                                                attributesValues
+                                        )
+                                )
                         )
-                )
         );
     }
 }
