@@ -29,8 +29,8 @@ public final class AttributeDef {
     private final boolean deprecated;
     private final Method<Id> method;
     private final Set<Mode> modes;
-    private final ValueConverter converter; // FIXME
-    private final ValueConverter caster; // FIXME
+    private final ValueConverter<AttributeDef> converter;
+    private final ValueConverter<AttributeDef> caster;
 
     public AttributeDef(
             String name,
@@ -38,8 +38,8 @@ public final class AttributeDef {
             boolean deprecated,
             Method<Id> method,
             Set<Mode> modes,
-            ValueConverter converter,
-            ValueConverter caster) {
+            ValueConverter<AttributeDef> converter,
+            ValueConverter<AttributeDef> caster) {
         this.name = name;
         this.accessLevel = accessLevel;
         this.deprecated = deprecated;
@@ -73,11 +73,11 @@ public final class AttributeDef {
         return accessLevel;
     }
 
-    public ValueConverter converter() {
+    public ValueConverter<AttributeDef> converter() {
         return converter;
     }
 
-    public ValueConverter caster() {
+    public ValueConverter<AttributeDef> caster() {
         return caster;
     }
 
