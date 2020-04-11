@@ -60,8 +60,22 @@ public final class InternalResponse<A> {
         this(Collections.emptyMap());
     }
 
-    static Response unwrap(InternalResponse<String> response) {
-        return new Response(response.values, response.errors, response.messages, response.executionTime);
+    static <T extends Id> Response<T> unwrap(InternalResponse<String> response) {
+        return new Response<>(
+                response.values.entrySet().stream()
+                        .collect(Collectors.toMap(
+                                e -> cast(e.getKey()),
+                                Map.Entry::getValue
+                        )),
+                response.errors,
+                response.messages,
+                response.executionTime
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T cast(Id id) {
+        return (T) id;
     }
 
     /**

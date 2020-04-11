@@ -101,10 +101,10 @@ public final class NestedAttributeStore implements AttributeStore {
     public static class NestedAttributes {
         private final String prefix;
         private final String attribute;
-        private final Executor executor;
+        private final Executor<Id> executor;
         private final Function<Object, Id> idProvider;
 
-        public NestedAttributes(String prefix, String attribute, Executor executor, Function<Object, Id> idProvider) {
+        public NestedAttributes(String prefix, String attribute, Executor<Id> executor, Function<Object, Id> idProvider) {
             this.prefix = prefix;
             this.attribute = attribute;
             this.executor = executor;

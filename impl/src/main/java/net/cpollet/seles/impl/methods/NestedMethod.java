@@ -36,10 +36,10 @@ import java.util.stream.Collectors;
 public final class NestedMethod implements Method<Id> {
     private final String prefix;
     private final AttributeDef attribute;
-    private final Executor executor;
+    private final Executor <Id>executor;
     private final Function<Object, Id> idProvider;
 
-    public NestedMethod(String prefix, AttributeDef attribute, Executor executor, Function<Object, Id> idProvider) {
+    public NestedMethod(String prefix, AttributeDef attribute, Executor<Id> executor, Function<Object, Id> idProvider) {
         this.prefix = prefix;
         this.attribute = attribute;
         this.executor = executor;
@@ -61,7 +61,7 @@ public final class NestedMethod implements Method<Id> {
                         a -> a
                 ));
 
-        Response response = nestedFetch(principal, attributeNamesToAttributeDefs.keySet(), nestedIdsToIds.keySet());
+        Response<Id> response = nestedFetch(principal, attributeNamesToAttributeDefs.keySet(), nestedIdsToIds.keySet());
 
         Map<Id, Map<AttributeDef, Object>> result = response.values().entrySet().stream()
                 .collect(Collectors.toMap(
@@ -85,7 +85,7 @@ public final class NestedMethod implements Method<Id> {
         return string.substring(prefix.length() + 1);
     }
 
-    private Response nestedFetch(Principal principal, Collection<String> attributes, Collection<Id> nestedIds) {
+    private Response<Id> nestedFetch(Principal principal, Collection<String> attributes, Collection<Id> nestedIds) {
         return executor.read(Request.read(
                 principal,
                 nestedIds,

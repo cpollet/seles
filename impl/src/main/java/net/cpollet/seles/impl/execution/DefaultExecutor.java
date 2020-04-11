@@ -18,6 +18,7 @@ package net.cpollet.seles.impl.execution;
 import net.cpollet.seles.api.attribute.AccessLevelPredicate;
 import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.api.attribute.AttributeStore;
+import net.cpollet.seles.api.domain.Id;
 import net.cpollet.seles.api.domain.IdValidator;
 import net.cpollet.seles.api.execution.Executor;
 import net.cpollet.seles.api.execution.Request;
@@ -41,7 +42,7 @@ import net.cpollet.seles.impl.stages.UpdateRequestExecutionStage;
 import net.cpollet.seles.impl.stages.ValueConversionStage;
 
 // FIXME deserves a refactoring
-public final class DefaultExecutor implements Executor {
+public final class DefaultExecutor implements Executor<Id> {
     private final AttributeStore attributeStore;
     private final IdValidator idValidator;
     private final AccessLevelPredicate filteringPredicate;
@@ -167,7 +168,7 @@ public final class DefaultExecutor implements Executor {
     }
 
     @Override
-    public Response read(Request request) {
+    public Response<Id> read(Request<Id> request) {
         return InternalResponse.unwrap(
                 readStack.execute(
                         InternalRequest.wrap(InternalRequest.RequestType.READ, request)
@@ -176,7 +177,7 @@ public final class DefaultExecutor implements Executor {
     }
 
     @Override
-    public Response update(Request request) {
+    public Response<Id> update(Request<Id> request) {
         return InternalResponse.unwrap(
                 updateStack.execute(
                         InternalRequest.wrap(InternalRequest.RequestType.UPDATE, request)
@@ -185,7 +186,7 @@ public final class DefaultExecutor implements Executor {
     }
 
     @Override
-    public Response create(Request request) {
+    public Response<Id> create(Request<Id> request) {
         return InternalResponse.unwrap(
                 createStack.execute(
                         InternalRequest.wrap(InternalRequest.RequestType.CREATE, request)
@@ -194,7 +195,7 @@ public final class DefaultExecutor implements Executor {
     }
 
     @Override
-    public Response delete(Request request) {
+    public Response<Id> delete(Request<Id> request) {
         return InternalResponse.unwrap(
                 deleteStack.execute(
                         InternalRequest.wrap(InternalRequest.RequestType.DELETE, request)
@@ -203,7 +204,7 @@ public final class DefaultExecutor implements Executor {
     }
 
     @Override
-    public Response search(Request request) {
+    public Response<Id> search(Request<Id> request) {
         return InternalResponse.unwrap(
                 searchStack.execute(
                         InternalRequest.wrap(InternalRequest.RequestType.SEARCH, request)

@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class Client {
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
-        Executor portfolioExecutor = (Executor) context.getBean("portfolio.executor");
+        @SuppressWarnings("unchecked") Executor<PortfolioId> portfolioExecutor = (Executor<PortfolioId>) context.getBean("portfolio.executor");
         AttributeStore portfolioAttributeStore = (AttributeStore) context.getBean("portfolio.attributeStore");
 
         printMetadata(portfolioAttributeStore);
@@ -58,7 +58,7 @@ public class Client {
         );
     }
 
-    private static void read(Executor portfolioExecutor) {
+    private static void read(Executor<PortfolioId> portfolioExecutor) {
         System.out.println("-- READ ------");
         System.out.println(
                 new GsonBuilder()
@@ -104,7 +104,7 @@ public class Client {
         );
     }
 
-    private static void write(Executor portfolioExecutor) {
+    private static void write(Executor<PortfolioId> portfolioExecutor) {
         System.out.println("-- WRITE ------");
         Map<String, Object> attributesValues = new HashMap<>();
         attributesValues.put("status", 40);
@@ -133,7 +133,7 @@ public class Client {
         );
     }
 
-    private static void delete(Executor portfolioExecutor) {
+    private static void delete(Executor<PortfolioId> portfolioExecutor) {
         System.out.println("-- DELETE ------");
         System.out.println(
                 new GsonBuilder()
@@ -158,7 +158,7 @@ public class Client {
         );
     }
 
-    private static void create(Executor portfolioExecutor) {
+    private static void create(Executor<PortfolioId> portfolioExecutor) {
         System.out.println("-- CREATE ------");
         Map<String, Object> attributesValues = new HashMap<>();
         attributesValues.put("status", 40);
@@ -181,7 +181,7 @@ public class Client {
         );
     }
 
-    private static void search(Executor portfolioExecutor) {
+    private static void search(Executor<PortfolioId> portfolioExecutor) {
         System.out.println("-- SEARCH ------");
         Map<String, Object> attributesValues = new HashMap<>();
         attributesValues.put("status", 30);

@@ -64,7 +64,7 @@ public final class InternalRequest<A> implements Guarded {
         this.guardFlags = Collections.unmodifiableSet(guardFlags);
     }
 
-    static InternalRequest<String> wrap(RequestType type, Request request) {
+    static InternalRequest<String> wrap(RequestType type, Request<Id> request) {
         return new InternalRequest<>(
                 type,
                 request.principal(),

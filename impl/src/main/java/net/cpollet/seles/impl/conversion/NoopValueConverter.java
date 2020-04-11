@@ -15,7 +15,6 @@
  */
 package net.cpollet.seles.impl.conversion;
 
-import net.cpollet.seles.api.conversion.ConversionException;
 import net.cpollet.seles.api.conversion.ValueConverter;
 
 public final class NoopValueConverter implements ValueConverter<Object> {
@@ -25,17 +24,18 @@ public final class NoopValueConverter implements ValueConverter<Object> {
         // nothing
     }
 
-    public static ValueConverter instance() {
-        return instance;
+    @SuppressWarnings("unchecked")
+    public static <T> ValueConverter<T> instance() {
+        return (ValueConverter<T>) instance;
     }
 
     @Override
-    public Object toExternalValue(Object attribute, Object value) throws ConversionException {
+    public Object toExternalValue(Object attribute, Object value) {
         return value;
     }
 
     @Override
-    public Object toInternalValue(Object attribute, Object value) throws ConversionException {
+    public Object toInternalValue(Object attribute, Object value) {
         return value;
     }
 }

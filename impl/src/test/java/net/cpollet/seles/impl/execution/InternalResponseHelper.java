@@ -17,6 +17,7 @@ package net.cpollet.seles.impl.execution;
 
 import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.api.attribute.AttributeStore;
+import net.cpollet.seles.api.domain.Id;
 import net.cpollet.seles.api.execution.Request;
 import net.cpollet.seles.api.execution.Response;
 import net.cpollet.seles.impl.stages.AttributeConversionStage;
@@ -36,7 +37,7 @@ public class InternalResponseHelper {
      * @param response the InternalResponse to transform
      * @return the Response generated from the InternalResponse
      */
-    public static Response toResponse(AttributeStore store, InternalResponse<AttributeDef> response) {
+    public static <T extends Id> Response<T> toResponse(AttributeStore store, InternalResponse<AttributeDef> response) {
         return InternalResponse.unwrap(
                 new AttributeConversionStage(store, request -> response)
                         .execute(
