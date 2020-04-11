@@ -61,7 +61,8 @@ public final class DefaultExecutor implements Executor<Id> {
         this.guard = guard;
         this.readStack =
                 new TimerStage(
-                        new ExpandStarStage(attributeStore,
+                        new ExpandStarStage(
+                                attributeStore,
                                 validateIdAndConvertValues(
                                         AttributeDef.Mode.READ,
                                         new ReadRequestExecutionStage()
@@ -70,7 +71,8 @@ public final class DefaultExecutor implements Executor<Id> {
                 );
         this.updateStack =
                 new TimerStage(
-                        validateIdAndConvertValues(AttributeDef.Mode.WRITE,
+                        validateIdAndConvertValues(
+                                AttributeDef.Mode.WRITE,
                                 new UpdateRequestExecutionStage(
                                         new RequestHaltStage<>(
                                                 req -> guard.haltDueToUpdateError(req.hasGuardFlag(Guarded.Flag.UPDATE_ERROR)),
@@ -88,8 +90,10 @@ public final class DefaultExecutor implements Executor<Id> {
                 );
         this.createStack =
                 new TimerStage(
-                        prepareRequest(AttributeDef.Mode.WRITE,
-                                new CreateRequestExecutionStage(attributeStore,
+                        prepareRequest(
+                                AttributeDef.Mode.WRITE,
+                                new CreateRequestExecutionStage(
+                                        attributeStore,
                                         new UpdateRequestExecutionStage(
                                                 new EmptyResponseStage<>()
                                         ),
@@ -102,7 +106,8 @@ public final class DefaultExecutor implements Executor<Id> {
                 );
         this.searchStack =
                 new TimerStage(
-                        validateIdAndConvertValues(AttributeDef.Mode.SEARCH,
+                        validateIdAndConvertValues(
+                                AttributeDef.Mode.SEARCH,
                                 new SearchRequestExecutionStage()
                         )
                 );
@@ -114,8 +119,10 @@ public final class DefaultExecutor implements Executor<Id> {
     private Stage<String> validateIdAndConvertValues(AttributeDef.Mode mode, Stage<AttributeDef> inner) {
         return validateId(
                 mode,
-                new ValueConversionStage(AttributeDef::caster,
-                        new ValueConversionStage(AttributeDef::converter,
+                new ValueConversionStage(
+                        AttributeDef::caster,
+                        new ValueConversionStage(
+                                AttributeDef::converter,
                                 new RequestHaltStage<>(
                                         req -> guard.haltDueToInputValueConversionError(req.hasGuardFlag(Guarded.Flag.INPUT_VALUE_CONVERSION_ERROR)),
                                         inner
@@ -131,7 +138,8 @@ public final class DefaultExecutor implements Executor<Id> {
     private Stage<String> validateId(AttributeDef.Mode mode, Stage<AttributeDef> inner) {
         return prepareRequest(
                 mode,
-                new IdsValidationStage(idValidator,
+                new IdsValidationStage(
+                        idValidator,
                         new RequestHaltStage<>(
                                 req -> guard.haltDueToIdValidationError(req.hasGuardFlag(Guarded.Flag.INVALID_IDS)),
                                 inner
@@ -144,10 +152,12 @@ public final class DefaultExecutor implements Executor<Id> {
      * Stages used for READ, WRITE, DELETE, CREATE and SEARCH requests.
      */
     private Stage<String> prepareRequest(AttributeDef.Mode mode, Stage<AttributeDef> inner) {
-        return new AttributeConversionStage(attributeStore,
+        return new AttributeConversionStage(
+                attributeStore,
                 new RequestHaltStage<>(
                         req -> guard.haltDueToAttributeConversionError(req.hasGuardFlag(Guarded.Flag.ATTRIBUTE_CONVERSION_ERROR)),
-                        new ModeValidationStage(mode,
+                        new ModeValidationStage(
+                                mode,
                                 new RequestHaltStage<>(
                                         req -> guard.haltDueToModeError(req.hasGuardFlag(Guarded.Flag.INVALID_MODE)),
                                         new LogDeprecatedStage(
