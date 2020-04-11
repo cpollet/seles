@@ -34,11 +34,11 @@ import java.util.stream.Collectors;
  */
 public final class ValueConversionStage implements Stage<AttributeDef> {
     private final Stage<AttributeDef> next;
-    private final Function<AttributeDef, ValueConverter<AttributeDef>> converterSupplier;
+    private final Function<AttributeDef, ValueConverter<AttributeDef>> valueConverter;
 
-    public ValueConversionStage(Function<AttributeDef, ValueConverter<AttributeDef>> converterSupplier, Stage<AttributeDef> next) {
+    public ValueConversionStage(Function<AttributeDef, ValueConverter<AttributeDef>> valueConverter, Stage<AttributeDef> next) {
         this.next = next;
-        this.converterSupplier = converterSupplier;
+        this.valueConverter = valueConverter;
     }
 
     @Override
@@ -46,7 +46,7 @@ public final class ValueConversionStage implements Stage<AttributeDef> {
         Map<AttributeDef, ValueConverter<AttributeDef>> converters = request.attributes().stream()
                 .collect(Collectors.toMap(
                         a -> a,
-                        converterSupplier
+                        valueConverter
                 ));
 
         ConversionResult<InternalRequest<AttributeDef>> conversionResult = request.convertValues(converters);
