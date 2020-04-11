@@ -33,18 +33,18 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class StandardMethod<T extends Id> implements Method<T> {
+public final class StandardMethod implements Method<Id> {
     private static final Logger LOGGER = LoggerFactory.getLogger(StandardMethod.class);
 
-    private final Function<Object, T> idTypeProvider;
+    private final Function<Object, Id> idTypeProvider;
 
-    public StandardMethod(Function<Object, T> idTypeProvider) {
+    public StandardMethod(Function<Object, Id> idTypeProvider) {
         this.idTypeProvider = idTypeProvider;
     }
 
     @Override
-    public FetchResult<T> fetch(Principal principal, List<AttributeDef<T>> attributes, Collection<T> ids) {
-        return new FetchResult<>(
+    public FetchResult fetch(Principal principal, List<AttributeDef> attributes, Collection<Id> ids) {
+        return new FetchResult(
                 ids.stream()
                         .collect(Collectors.toMap(
                                 id -> id,
@@ -60,7 +60,7 @@ public final class StandardMethod<T extends Id> implements Method<T> {
     }
 
     @Override
-    public Collection<String> update(Principal principal, Map<AttributeDef<T>, Object> attributeValues, Collection<T> ids) {
+    public Collection<String> update(Principal principal, Map<AttributeDef, Object> attributeValues, Collection<Id> ids) {
         ids.forEach(
                 id -> attributeValues.forEach((a, v) -> LOGGER.info("UPDATE {}:{} -> {}", id, a, v))
         );
@@ -69,7 +69,7 @@ public final class StandardMethod<T extends Id> implements Method<T> {
     }
 
     @Override
-    public Collection<String> delete(Principal principal, List<AttributeDef<T>> attributes, Collection<T> ids) {
+    public Collection<String> delete(Principal principal, List<AttributeDef> attributes, Collection<Id> ids) {
         ids.forEach(
                 id -> attributes.forEach(a -> LOGGER.info("DELETE {}:{}", id, a))
         );
@@ -78,21 +78,21 @@ public final class StandardMethod<T extends Id> implements Method<T> {
     }
 
     @Override
-    public CreateResult<T> create(Principal principal, Map<AttributeDef<T>, Object> values) {
+    public CreateResult create(Principal principal, Map<AttributeDef, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("CREATE {} -> {}", a, v)
         );
 
-        return new CreateResult<>(idTypeProvider.apply("100000"));
+        return new CreateResult(idTypeProvider.apply("100000"));
     }
 
     @Override
-    public SearchResult<T> search(Principal principal, Map<AttributeDef<T>, Object> values) {
+    public SearchResult search(Principal principal, Map<AttributeDef, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("SEARCH {} -> {}", a, v)
         );
 
-        return new SearchResult<>(
+        return new SearchResult(
                 Arrays.asList(idTypeProvider.apply("100000"), idTypeProvider.apply("222222"))
         );
     }

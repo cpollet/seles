@@ -18,11 +18,10 @@ package net.cpollet.seles.client.conversion;
 import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.api.conversion.ConversionException;
 import net.cpollet.seles.api.conversion.ValueConverter;
-import net.cpollet.seles.api.domain.Id;
 
-public class DefaultValueConverter<T extends Id> implements ValueConverter<AttributeDef<T>> {
+public class DefaultValueConverter implements ValueConverter<AttributeDef> {
     @Override
-    public Object toExternalValue(AttributeDef<T> attribute, Object value) throws ConversionException {
+    public Object toExternalValue(AttributeDef attribute, Object value) throws ConversionException {
         if (attribute.name().equals("currency") && value.equals("currency:100000")) {
             throw new ConversionException("attribute=currency; value=currency:100000");
         }
@@ -31,7 +30,7 @@ public class DefaultValueConverter<T extends Id> implements ValueConverter<Attri
     }
 
     @Override
-    public Object toInternalValue(AttributeDef<T> attribute, Object value) throws ConversionException {
+    public Object toInternalValue(AttributeDef attribute, Object value) throws ConversionException {
         if (attribute.name().equals("currency") && value.equals("internalCast(CHF)")) {
             throw new ConversionException("attribute=currency; value=internalCast(CHF)");
         }

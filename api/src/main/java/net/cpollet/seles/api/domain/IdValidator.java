@@ -17,6 +17,6 @@ package net.cpollet.seles.api.domain;
 
 import java.util.Collection;
 
-public interface IdValidator<T extends Id> {
-    Collection<T> invalidIds(Collection<T> ids);
+public interface IdValidator { // TODO should we have a parameter type here?
+    Collection<Id> invalidIds(Collection<Id> ids);
 }

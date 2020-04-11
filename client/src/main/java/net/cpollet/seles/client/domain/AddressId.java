@@ -22,7 +22,7 @@ import java.util.Objects;
 public class AddressId implements Id {
     private final Integer id;
 
-     AddressId(Integer id) {
+    AddressId(Integer id) {
         this.id = id;
     }
 

@@ -23,31 +23,23 @@ import net.cpollet.seles.api.methods.Method;
 import java.util.Objects;
 import java.util.Set;
 
-public final class AttributeDef<T extends Id> {
+public final class AttributeDef {
     private final String name;
     private final AccessLevel accessLevel;
     private final boolean deprecated;
-    private final Method<T> method;
+    private final Method<Id> method;
     private final Set<Mode> modes;
-    private final ValueConverter<AttributeDef<T>> converter;
-    private final ValueConverter<AttributeDef<T>> caster;
-
-    public enum Mode {
-        READ,
-        WRITE,
-        DELETE,
-        CREATE,
-        SEARCH
-    }
+    private final ValueConverter converter; // FIXME
+    private final ValueConverter caster; // FIXME
 
     public AttributeDef(
             String name,
             AccessLevel accessLevel,
             boolean deprecated,
-            Method<T> method,
+            Method<Id> method,
             Set<Mode> modes,
-            ValueConverter<AttributeDef<T>> converter,
-            ValueConverter<AttributeDef<T>> caster) {
+            ValueConverter converter,
+            ValueConverter caster) {
         this.name = name;
         this.accessLevel = accessLevel;
         this.deprecated = deprecated;
@@ -61,7 +53,7 @@ public final class AttributeDef<T extends Id> {
         return name;
     }
 
-    public Method<T> method() {
+    public Method<Id> method() {
         return method;
     }
 
@@ -81,11 +73,11 @@ public final class AttributeDef<T extends Id> {
         return accessLevel;
     }
 
-    public ValueConverter<AttributeDef<T>> converter() {
+    public ValueConverter converter() {
         return converter;
     }
 
-    public ValueConverter<AttributeDef<T>> caster() {
+    public ValueConverter caster() {
         return caster;
     }
 
@@ -114,5 +106,13 @@ public final class AttributeDef<T extends Id> {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    public enum Mode {
+        READ,
+        WRITE,
+        DELETE,
+        CREATE,
+        SEARCH
     }
 }

@@ -16,7 +16,6 @@
 package net.cpollet.seles.impl.stages;
 
 import net.cpollet.seles.api.attribute.AttributeDef;
-import net.cpollet.seles.api.domain.Id;
 import net.cpollet.seles.impl.execution.InternalRequest;
 import net.cpollet.seles.impl.execution.InternalResponse;
 
@@ -26,15 +25,15 @@ import java.util.stream.Collectors;
  * Puts warning in the {@link InternalResponse} for each deprecated {@link AttributeDef} used in the
  * {@link InternalRequest}.
  */
-public final class LogDeprecatedStage<T extends Id> implements Stage<T, AttributeDef<T>> {
-    private final Stage<T, AttributeDef<T>> next;
+public final class LogDeprecatedStage implements Stage<AttributeDef> {
+    private final Stage<AttributeDef> next;
 
-    public LogDeprecatedStage(Stage<T, AttributeDef<T>> next) {
+    public LogDeprecatedStage(Stage<AttributeDef> next) {
         this.next = next;
     }
 
     @Override
-    public InternalResponse<T, AttributeDef<T>> execute(InternalRequest<T, AttributeDef<T>> request) {
+    public InternalResponse<AttributeDef> execute(InternalRequest<AttributeDef> request) {
         return next.execute(request)
                 .withMessages(
                         request.attributes().stream()

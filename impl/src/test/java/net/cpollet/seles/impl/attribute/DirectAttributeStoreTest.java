@@ -16,7 +16,6 @@
 package net.cpollet.seles.impl.attribute;
 
 import net.cpollet.seles.api.attribute.AttributeDef;
-import net.cpollet.seles.impl.testsupport.StringId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -29,13 +28,13 @@ class DirectAttributeStoreTest {
     @Test
     void fetch_returnsAttribute_whenFound() {
         // GIVEN
-        AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Collections.singleton(
+        AttributeDef attribute = new AttributeDef("idAttribute", null, false, null, null, null, null);
+        DirectAttributeStore store = new DirectAttributeStore(Collections.singleton(
                 attribute
         ));
 
         // WHEN
-        Optional<AttributeDef<StringId>> optionalAttribute = store.fetch("idAttribute");
+        Optional<AttributeDef> optionalAttribute = store.fetch("idAttribute");
 
         // THEN
         Assertions.assertThat(optionalAttribute)
@@ -46,13 +45,13 @@ class DirectAttributeStoreTest {
     @Test
     void fetch_returnsEmptyAttribute_whenNotFound() {
         // GIVEN
-        AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Collections.singleton(
+        AttributeDef attribute = new AttributeDef("idAttribute", null, false, null, null, null, null);
+        DirectAttributeStore store = new DirectAttributeStore(Collections.singleton(
                 attribute
         ));
 
         // WHEN
-        Optional<AttributeDef<StringId>> optionalAttribute = store.fetch("unkonown");
+        Optional<AttributeDef> optionalAttribute = store.fetch("unkonown");
 
         // THEN
         Assertions.assertThat(optionalAttribute)
@@ -62,13 +61,13 @@ class DirectAttributeStoreTest {
     @Test
     void idAttribute_returnsIdAttribute_whenDefined() {
         // GIVEN
-        AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>("idAttribute", Collections.singleton(
+        AttributeDef attribute = new AttributeDef("idAttribute", null, false, null, null, null, null);
+        DirectAttributeStore store = new DirectAttributeStore("idAttribute", Collections.singleton(
                 attribute
         ));
 
         // WHEN
-        Optional<AttributeDef<StringId>> optionalAttribute = store.idAttribute();
+        Optional<AttributeDef> optionalAttribute = store.idAttribute();
 
         // THEN
         Assertions.assertThat(optionalAttribute)
@@ -79,10 +78,10 @@ class DirectAttributeStoreTest {
     @Test
     void idAttribute_returnsEmptyIdAttribute_whenNoAttributes() {
         // GIVEN
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>("idAttribute", Collections.emptyList());
+        DirectAttributeStore store = new DirectAttributeStore("idAttribute", Collections.emptyList());
 
         // WHEN
-        Optional<AttributeDef<StringId>> optionalAttribute = store.idAttribute();
+        Optional<AttributeDef> optionalAttribute = store.idAttribute();
 
         // THEN
         Assertions.assertThat(optionalAttribute)
@@ -92,13 +91,13 @@ class DirectAttributeStoreTest {
     @Test
     void idAttribute_returnsEmptyIdAttribute_whenNotFound() {
         // GIVEN
-        AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>("unknown", Collections.singleton(
+        AttributeDef attribute = new AttributeDef("idAttribute", null, false, null, null, null, null);
+        DirectAttributeStore store = new DirectAttributeStore("unknown", Collections.singleton(
                 attribute
         ));
 
         // WHEN
-        Optional<AttributeDef<StringId>> optionalAttribute = store.idAttribute();
+        Optional<AttributeDef> optionalAttribute = store.idAttribute();
 
         // THEN
         Assertions.assertThat(optionalAttribute)
@@ -108,13 +107,13 @@ class DirectAttributeStoreTest {
     @Test
     void idAttribute_returnsEmptyIdAttribute_whenNotDefined() {
         // GIVEN
-        AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Collections.singleton(
+        AttributeDef attribute = new AttributeDef("idAttribute", null, false, null, null, null, null);
+        DirectAttributeStore store = new DirectAttributeStore(Collections.singleton(
                 attribute
         ));
 
         // WHEN
-        Optional<AttributeDef<StringId>> optionalAttribute = store.idAttribute();
+        Optional<AttributeDef> optionalAttribute = store.idAttribute();
 
         // THEN
         Assertions.assertThat(optionalAttribute)
@@ -124,13 +123,13 @@ class DirectAttributeStoreTest {
     @Test
     void attributes_returnsAttributesCollection() {
         // GIVEN
-        AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Collections.singleton(
+        AttributeDef attribute = new AttributeDef("idAttribute", null, false, null, null, null, null);
+        DirectAttributeStore store = new DirectAttributeStore(Collections.singleton(
                 attribute
         ));
 
         // WHEN
-        Collection<AttributeDef<StringId>> attributes = store.attributes();
+        Collection<AttributeDef> attributes = store.attributes();
 
         // THEN
         Assertions.assertThat(attributes)
@@ -140,17 +139,18 @@ class DirectAttributeStoreTest {
 
     @Test
     void attributes_returnsUnmodifiableCollection() {
-        AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>(Collections.singleton(
+        AttributeDef attribute = new AttributeDef("idAttribute", null, false, null, null, null, null);
+        DirectAttributeStore store = new DirectAttributeStore(Collections.singleton(
                 attribute
         ));
 
-        Collection<AttributeDef<StringId>> attributes = store.attributes();
+        Collection<AttributeDef> attributes = store.attributes();
 
         try {
             // WHEN
-            attributes.add(new AttributeDef<>("attribute", null, false, null, null, null, null));
-        } catch (UnsupportedOperationException e) {
+            attributes.add(new AttributeDef("attribute", null, false, null, null, null, null));
+        }
+        catch (UnsupportedOperationException e) {
             // THEN
             return;
         }

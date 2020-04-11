@@ -30,12 +30,12 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class NestedAttributeStore<T extends Id> implements AttributeStore<T> {
-    private final Map<String, AttributeDef<T>> store;
-    private final AttributeStore<T> parentStore;
+public final class NestedAttributeStore implements AttributeStore {
+    private final Map<String, AttributeDef> store;
+    private final AttributeStore parentStore;
 
-    public NestedAttributeStore(AttributeStore<T> parentStore, Collection<NestedAttributes<Id>> attributes) {
-        HashMap<String, AttributeDef<T>> tmpStore = new HashMap<>(
+    public NestedAttributeStore(AttributeStore parentStore, Collection<NestedAttributes> attributes) {
+        HashMap<String, AttributeDef> tmpStore = new HashMap<>(
                 parentStore.attributes().stream()
                         .collect(
                                 Collectors.toMap(
@@ -47,7 +47,7 @@ public final class NestedAttributeStore<T extends Id> implements AttributeStore<
 
         attributes.forEach(
                 a -> {
-                    NestedMethod<T, Id> method = new NestedMethod<>(
+                    NestedMethod method = new NestedMethod(
                             a.prefix,
                             parentStore.fetch(a.attribute).orElseThrow(IllegalArgumentException::new),
                             a.executor,
@@ -63,7 +63,7 @@ public final class NestedAttributeStore<T extends Id> implements AttributeStore<
 
                                 tmpStore.put(
                                         attributeName,
-                                        new AttributeDef<>(
+                                        new AttributeDef(
                                                 attributeName,
                                                 na.accessLevel(),
                                                 na.deprecated(),
@@ -84,27 +84,27 @@ public final class NestedAttributeStore<T extends Id> implements AttributeStore<
     }
 
     @Override
-    public Optional<AttributeDef<T>> fetch(String attributeName) {
+    public Optional<AttributeDef> fetch(String attributeName) {
         return Optional.ofNullable(store.get(attributeName));
     }
 
     @Override
-    public Optional<AttributeDef<T>> idAttribute() {
+    public Optional<AttributeDef> idAttribute() {
         return parentStore.idAttribute();
     }
 
     @Override
-    public Collection<AttributeDef<T>> attributes() {
+    public Collection<AttributeDef> attributes() {
         return store.values();
     }
 
-    public static class NestedAttributes<U extends Id> {
+    public static class NestedAttributes {
         private final String prefix;
         private final String attribute;
-        private final Executor<U> executor;
-        private final Function<Object, U> idProvider;
+        private final Executor executor;
+        private final Function<Object, Id> idProvider;
 
-        public NestedAttributes(String prefix, String attribute, Executor<U> executor, Function<Object, U> idProvider) {
+        public NestedAttributes(String prefix, String attribute, Executor executor, Function<Object, Id> idProvider) {
             this.prefix = prefix;
             this.attribute = attribute;
             this.executor = executor;

@@ -33,13 +33,13 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class NestedMethod<T extends Id, U extends Id> implements Method<T> {
+public final class NestedMethod implements Method<Id> {
     private final String prefix;
-    private final AttributeDef<T> attribute;
-    private final Executor<U> executor;
-    private final Function<Object, U> idProvider;
+    private final AttributeDef attribute;
+    private final Executor executor;
+    private final Function<Object, Id> idProvider;
 
-    public NestedMethod(String prefix, AttributeDef<T> attribute, Executor<U> executor, Function<Object, U> idProvider) {
+    public NestedMethod(String prefix, AttributeDef attribute, Executor executor, Function<Object, Id> idProvider) {
         this.prefix = prefix;
         this.attribute = attribute;
         this.executor = executor;
@@ -47,23 +47,23 @@ public final class NestedMethod<T extends Id, U extends Id> implements Method<T>
     }
 
     @Override
-    public FetchResult<T> fetch(Principal principal, List<AttributeDef<T>> attributes, Collection<T> ids) {
-        Map<U, T> nestedIdsToIds = attribute.method().fetch(principal, Collections.singletonList(attribute), ids)
+    public FetchResult fetch(Principal principal, List<AttributeDef> attributes, Collection<Id> ids) {
+        Map<Id, Id> nestedIdsToIds = attribute.method().fetch(principal, Collections.singletonList(attribute), ids)
                 .result().entrySet().stream()
                 .collect(Collectors.toMap(
                         e -> idProvider.apply(e.getValue().get(attribute)),
                         Map.Entry::getKey
                 ));
 
-        Map<String, AttributeDef<T>> attributeNamesToAttributeDefs = attributes.stream()
+        Map<String, AttributeDef> attributeNamesToAttributeDefs = attributes.stream()
                 .collect(Collectors.toMap(
                         a -> removePrefix(a.name()),
                         a -> a
                 ));
 
-        Response<U> response = nestedFetch(principal, attributeNamesToAttributeDefs.keySet(), nestedIdsToIds.keySet());
+        Response response = nestedFetch(principal, attributeNamesToAttributeDefs.keySet(), nestedIdsToIds.keySet());
 
-        Map<T, Map<AttributeDef<T>, Object>> result = response.values().entrySet().stream()
+        Map<Id, Map<AttributeDef, Object>> result = response.values().entrySet().stream()
                 .collect(Collectors.toMap(
                         e -> nestedIdsToIds.get(e.getKey()),
                         e -> e.getValue().entrySet().stream()
@@ -73,7 +73,7 @@ public final class NestedMethod<T extends Id, U extends Id> implements Method<T>
                                 ))
                 ));
 
-        return new FetchResult<>(
+        return new FetchResult(
                 result,
                 response.errors().stream()
                         .map(e -> String.format("[%s].%s", prefix, e))
@@ -85,7 +85,7 @@ public final class NestedMethod<T extends Id, U extends Id> implements Method<T>
         return string.substring(prefix.length() + 1);
     }
 
-    private Response<U> nestedFetch(Principal principal, Collection<String> attributes, Collection<U> nestedIds) {
+    private Response nestedFetch(Principal principal, Collection<String> attributes, Collection<Id> nestedIds) {
         return executor.read(Request.read(
                 principal,
                 nestedIds,
@@ -94,22 +94,22 @@ public final class NestedMethod<T extends Id, U extends Id> implements Method<T>
     }
 
     @Override
-    public Collection<String> update(Principal principal, Map<AttributeDef<T>, Object> attributeValues, Collection<T> ids) {
+    public Collection<String> update(Principal principal, Map<AttributeDef, Object> attributeValues, Collection<Id> ids) {
         throw new RuntimeException("not implemented");
     }
 
     @Override
-    public Collection<String> delete(Principal principal, List<AttributeDef<T>> attributes, Collection<T> ids) {
+    public Collection<String> delete(Principal principal, List<AttributeDef> attributes, Collection<Id> ids) {
         throw new RuntimeException("not implemented");
     }
 
     @Override
-    public CreateResult<T> create(Principal principal, Map<AttributeDef<T>, Object> values) {
+    public CreateResult create(Principal principal, Map<AttributeDef, Object> values) {
         throw new RuntimeException("not implemented");
     }
 
     @Override
-    public SearchResult<T> search(Principal principal, Map<AttributeDef<T>, Object> values) {
+    public SearchResult search(Principal principal, Map<AttributeDef, Object> values) {
         throw new RuntimeException("not implemented");
     }
 }

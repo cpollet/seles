@@ -15,7 +15,11 @@
  */
 package net.cpollet.seles.impl;
 
-public interface Guarded<T> {
+public interface Guarded {
+    boolean hasGuardFlag(Flag flag);
+
+    Guarded addGuardedFlagIf(boolean condition, Flag flag);
+
     enum Flag {
         ATTRIBUTE_CONVERSION_ERROR,
         INVALID_IDS,
@@ -23,8 +27,4 @@ public interface Guarded<T> {
         UPDATE_ERROR,
         INVALID_MODE
     }
-
-    boolean hasGuardFlag(Flag flag);
-
-    T addGuardedFlagIf(boolean condition, Flag flag);
 }

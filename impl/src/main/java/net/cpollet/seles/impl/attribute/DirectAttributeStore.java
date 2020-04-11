@@ -17,7 +17,6 @@ package net.cpollet.seles.impl.attribute;
 
 import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.api.attribute.AttributeStore;
-import net.cpollet.seles.api.domain.Id;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,11 +24,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public final class DirectAttributeStore<T extends Id> implements AttributeStore<T> {
-    private final Map<String, AttributeDef<T>> attributes;
-    private final AttributeDef<T> idAttribute;
+public final class DirectAttributeStore implements AttributeStore {
+    private final Map<String, AttributeDef> attributes;
+    private final AttributeDef idAttribute;
 
-    public DirectAttributeStore(String idAttribute, Collection<AttributeDef<T>> attributes) {
+    public DirectAttributeStore(String idAttribute, Collection<AttributeDef> attributes) {
         this.attributes = Collections.unmodifiableMap(
                 attributes.stream()
                         .collect(Collectors.toMap(
@@ -40,22 +39,22 @@ public final class DirectAttributeStore<T extends Id> implements AttributeStore<
         this.idAttribute = attributes.isEmpty() ? null : this.attributes.get(idAttribute);
     }
 
-    public DirectAttributeStore(Collection<AttributeDef<T>> attributes) {
+    public DirectAttributeStore(Collection<AttributeDef> attributes) {
         this("", attributes);
     }
 
     @Override
-    public Optional<AttributeDef<T>> fetch(String attributeName) {
+    public Optional<AttributeDef> fetch(String attributeName) {
         return Optional.ofNullable(attributes.get(attributeName));
     }
 
     @Override
-    public Optional<AttributeDef<T>> idAttribute() {
+    public Optional<AttributeDef> idAttribute() {
         return Optional.ofNullable(idAttribute);
     }
 
     @Override
-    public Collection<AttributeDef<T>> attributes() {
+    public Collection<AttributeDef> attributes() {
         return attributes.values();
     }
 }

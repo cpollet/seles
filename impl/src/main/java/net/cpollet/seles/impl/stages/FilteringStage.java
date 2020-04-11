@@ -30,22 +30,22 @@ import java.util.stream.Collectors;
  * and passes the newly created request object to the lower {@link Stage}. Puts '*****' as a value in the
  * {@link InternalResponse} for each removed attribute.
  */
-public final class FilteringStage<T extends Id> implements Stage<T, AttributeDef<T>> {
-    private final Stage<T, AttributeDef<T>> next;
-    private final AccessLevelPredicate<T> predicate;
+public final class FilteringStage implements Stage<AttributeDef> {
+    private final Stage<AttributeDef> next;
+    private final AccessLevelPredicate predicate;
 
-    public FilteringStage(AccessLevelPredicate<T> predicate, Stage<T, AttributeDef<T>> next) {
+    public FilteringStage(AccessLevelPredicate predicate, Stage<AttributeDef> next) {
         this.predicate = predicate;
         this.next = next;
     }
 
     @Override
-    public InternalResponse<T, AttributeDef<T>> execute(InternalRequest<T, AttributeDef<T>> request) {
-        Set<AttributeDef<T>> filteredAttributes = request.attributes().stream()
+    public InternalResponse<AttributeDef> execute(InternalRequest<AttributeDef> request) {
+        Set<AttributeDef> filteredAttributes = request.attributes().stream()
                 .filter(attribute -> predicate.test(request.principal(), attribute))
                 .collect(Collectors.toSet());
 
-        Map<T, Map<AttributeDef<T>, String>> filteredValues = request.ids().stream()
+        Map<Id, Map<AttributeDef, String>> filteredValues = request.ids().stream()
                 .collect(Collectors.toMap(
                         id -> id,
                         id -> filteredAttributes.stream()

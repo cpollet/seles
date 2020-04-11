@@ -35,13 +35,13 @@ import java.util.stream.Collectors;
 /**
  * Executes a CREATE {@link InternalRequest} and returns the created entity's ID.
  */
-public final class CreateRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
-    private final Stage<T, AttributeDef<T>> next;
-    private final Stage<T, AttributeDef<T>> update;
-    private final Method<T> idAttributeMethod;
-    private final Set<AttributeDef<T>> requiredAttributes;
+public final class CreateRequestExecutionStage implements Stage<AttributeDef> {
+    private final Stage<AttributeDef> next;
+    private final Stage<AttributeDef> update;
+    private final Method<Id> idAttributeMethod;
+    private final Set<AttributeDef> requiredAttributes;
 
-    public CreateRequestExecutionStage(AttributeStore<T> store, Stage<T, AttributeDef<T>> update, Stage<T, AttributeDef<T>> next) {
+    public CreateRequestExecutionStage(AttributeStore store, Stage<AttributeDef> update, Stage<AttributeDef> next) {
         this.next = next;
         this.update = update;
         this.idAttributeMethod = store.idAttribute()
@@ -55,24 +55,24 @@ public final class CreateRequestExecutionStage<T extends Id> implements Stage<T,
     }
 
     @Override
-    public InternalResponse<T, AttributeDef<T>> execute(InternalRequest<T, AttributeDef<T>> request) {
+    public InternalResponse<AttributeDef> execute(InternalRequest<AttributeDef> request) {
         if (idAttributeMethod == null) {
             throw new IllegalStateException("creation not supported, no id-attribute method provided");
         }
 
-        Optional<InternalResponse<T, AttributeDef<T>>> errorResponse = validateRequiredAttributes(request.attributes());
+        Optional<InternalResponse<AttributeDef>> errorResponse = validateRequiredAttributes(request.attributes());
         if (errorResponse.isPresent()) {
             return errorResponse.get();
         }
 
-        List<AttributeDef<T>> mainAttributes = mainAttributes(request);
+        List<AttributeDef> mainAttributes = mainAttributes(request);
 
-        Result<T> idOrError = createMainEntity(request, mainAttributes);
+        Result idOrError = createMainEntity(request, mainAttributes);
         if (!idOrError.isSuccessful()) {
             return idOrError.response();
         }
 
-        InternalResponse<T, AttributeDef<T>> updateResponse = updateSecondaryEntities(
+        InternalResponse<AttributeDef> updateResponse = updateSecondaryEntities(
                 idOrError.id(),
                 request,
                 mainAttributes
@@ -88,14 +88,14 @@ public final class CreateRequestExecutionStage<T extends Id> implements Stage<T,
                 .mergeMessages(updateResponse);
     }
 
-    private Optional<InternalResponse<T, AttributeDef<T>>> validateRequiredAttributes(Collection<AttributeDef<T>> attributes) {
-        Set<AttributeDef<T>> missingAttributes = requiredAttributes.stream()
+    private Optional<InternalResponse<AttributeDef>> validateRequiredAttributes(Collection<AttributeDef> attributes) {
+        Set<AttributeDef> missingAttributes = requiredAttributes.stream()
                 .filter(a -> !attributes.contains(a))
                 .collect(Collectors.toSet());
 
         if (!missingAttributes.isEmpty()) {
             return Optional.of(
-                    new InternalResponse<T, AttributeDef<T>>()
+                    new InternalResponse<AttributeDef>()
                             .withErrors(
                                     missingAttributes.stream()
                                             .map(a -> String.format("[%s] is required for creation", a))
@@ -111,9 +111,9 @@ public final class CreateRequestExecutionStage<T extends Id> implements Stage<T,
      * Returns the list of all attributes that are handled by the same method as the id-attribute, i.e. the ones
      * for which we don't want to execute an update afterwards.
      */
-    private List<AttributeDef<T>> mainAttributes(InternalRequest<T, AttributeDef<T>> request) {
+    private List<AttributeDef> mainAttributes(InternalRequest<AttributeDef> request) {
         return request
-                .attributes(new AttributesGrouper<>())
+                .attributes(new AttributesGrouper())
                 .get(idAttributeMethod);
     }
 
@@ -121,8 +121,8 @@ public final class CreateRequestExecutionStage<T extends Id> implements Stage<T,
      * Create the "main" entity instance with its attributes (i.e. the ones that are using the same method as the id
      * attribute)
      */
-    private Result<T> createMainEntity(InternalRequest<T, AttributeDef<T>> request, List<AttributeDef<T>> attributes) {
-        CreateResult<T> createResult = idAttributeMethod.create(
+    private Result createMainEntity(InternalRequest<AttributeDef> request, List<AttributeDef> attributes) {
+        CreateResult createResult = idAttributeMethod.create(
                 request.principal(),
                 request.values(attributes)
         );
@@ -130,17 +130,16 @@ public final class CreateRequestExecutionStage<T extends Id> implements Stage<T,
         return createResult.id()
                 .map(Result::success)
                 .orElseGet(() -> Result.error(
-                        new InternalResponse<T, AttributeDef<T>>()
+                        new InternalResponse<AttributeDef>()
                                 .withErrors(createResult.errors())
                 ));
-
     }
 
     /**
      * Inserts the remaining attributes (i.e. the ones that are not using the same method as the id-attribute). This
      * action actually becomes an update, as the main entity already exists.
      */
-    private InternalResponse<T, AttributeDef<T>> updateSecondaryEntities(T id, InternalRequest<T, AttributeDef<T>> request, List<AttributeDef<T>> alreadyInsertedAttributes) {
+    private InternalResponse<AttributeDef> updateSecondaryEntities(Id id, InternalRequest<AttributeDef> request, List<AttributeDef> alreadyInsertedAttributes) {
         return update.execute(
                 request
                         .withIds(Collections.singletonList(id))
@@ -148,38 +147,38 @@ public final class CreateRequestExecutionStage<T extends Id> implements Stage<T,
         );
     }
 
-    private static final class Result<T extends Id> {
-        private final T id;
-        private final InternalResponse<T, AttributeDef<T>> response;
+    private static final class Result {
+        private final Id id;
+        private final InternalResponse<AttributeDef> response;
 
-        Result(T id, InternalResponse<T, AttributeDef<T>> response) {
+        Result(Id id, InternalResponse<AttributeDef> response) {
             this.id = id;
             this.response = response;
         }
 
-        static <T extends Id> Result<T> success(T id) {
+        static Result success(Id id) {
             if (id == null) {
                 throw new NullPointerException("id cannot be null");
             }
-            return new Result<>(id, null);
+            return new Result(id, null);
         }
 
-        static <T extends Id> Result<T> error(InternalResponse<T, AttributeDef<T>> response) {
+        static Result error(InternalResponse<AttributeDef> response) {
             if (response == null) {
                 throw new NullPointerException("error cannot be null");
             }
-            return new Result<>(null, response);
+            return new Result(null, response);
         }
 
         boolean isSuccessful() {
             return id != null;
         }
 
-        InternalResponse<T, AttributeDef<T>> response() {
+        InternalResponse<AttributeDef> response() {
             return response;
         }
 
-        public T id() {
+        public Id id() {
             return id;
         }
     }

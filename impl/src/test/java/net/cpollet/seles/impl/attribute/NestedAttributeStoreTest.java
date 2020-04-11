@@ -21,7 +21,6 @@ import net.cpollet.seles.api.domain.Id;
 import net.cpollet.seles.impl.conversion.NoopValueConverter;
 import net.cpollet.seles.impl.methods.NestedMethod;
 import net.cpollet.seles.impl.testsupport.NoopExecutor;
-import net.cpollet.seles.impl.testsupport.StringId;
 import net.cpollet.seles.impl.testsupport.VoidAccessLevel;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -37,14 +36,14 @@ class NestedAttributeStoreTest {
     @Test
     void fetch_returnsAttribute_whenNotNested() {
         // GIVEN
-        AttributeDef<StringId> attribute = new AttributeDef<>("idAttribute", null, false, null, null, null, null);
-        DirectAttributeStore<StringId> store = new DirectAttributeStore<>("idAttribute", Collections.singleton(
+        AttributeDef attribute = new AttributeDef("idAttribute", null, false, null, null, null, null);
+        DirectAttributeStore store = new DirectAttributeStore("idAttribute", Collections.singleton(
                 attribute
         ));
-        NestedAttributeStore<StringId> nestedStore = new NestedAttributeStore<>(store, Collections.emptySet());
+        NestedAttributeStore nestedStore = new NestedAttributeStore(store, Collections.emptySet());
 
         // WHEN
-        Optional<AttributeDef<StringId>> optionalAttribute = nestedStore.fetch("idAttribute");
+        Optional<AttributeDef> optionalAttribute = nestedStore.fetch("idAttribute");
 
         // THEN
         Assertions.assertThat(optionalAttribute)
@@ -55,7 +54,7 @@ class NestedAttributeStoreTest {
     @Test
     void fetch_returnsNestedAttribute_whenFound() {
         // GIVEN
-        AttributeDef<StringId> innerId = new AttributeDef<>(
+        AttributeDef innerId = new AttributeDef(
                 "innerId",
                 null,
                 false,
@@ -64,11 +63,11 @@ class NestedAttributeStoreTest {
                 null,
                 null
         );
-        DirectAttributeStore<StringId> outerStore = new DirectAttributeStore<>(Collections.singleton(
+        DirectAttributeStore outerStore = new DirectAttributeStore(Collections.singleton(
                 innerId
         ));
 
-        AttributeDef<StringId> innerAttribute = new AttributeDef<>(
+        AttributeDef innerAttribute = new AttributeDef(
                 "attribute",
                 VoidAccessLevel.INSTANCE_1,
                 false,
@@ -77,19 +76,19 @@ class NestedAttributeStoreTest {
                 null,
                 null
         );
-        DirectAttributeStore<StringId> innerStore = new DirectAttributeStore<>(Collections.singletonList(
+        DirectAttributeStore innerStore = new DirectAttributeStore(Collections.singletonList(
                 innerAttribute
         ));
 
-        @SuppressWarnings("unchecked") Collection<NestedAttributeStore.NestedAttributes<Id>> list = Collections.singleton(
+        Collection<NestedAttributeStore.NestedAttributes> list = Collections.singleton(
                 new NestedAttributeStore.NestedAttributes(
-                        "prefix", "innerId", new NoopExecutor<>(innerStore), o -> o
+                        "prefix", "innerId", new NoopExecutor(innerStore), o -> (Id) o
                 )
         );
-        NestedAttributeStore<StringId> nestedStore = new NestedAttributeStore<>(outerStore, list);
+        NestedAttributeStore nestedStore = new NestedAttributeStore(outerStore, list);
 
         // WHEN
-        Optional<AttributeDef<StringId>> optionalAttribute = nestedStore.fetch("prefix.attribute");
+        Optional<AttributeDef> optionalAttribute = nestedStore.fetch("prefix.attribute");
 
         // THEN
         Assertions.assertThat(optionalAttribute)
@@ -116,7 +115,7 @@ class NestedAttributeStoreTest {
     @Test
     void new_fails_whenNestedAttribute_alreadyExists() {
         // GIVEN
-        AttributeDef<StringId> innerId = new AttributeDef<>(
+        AttributeDef innerId = new AttributeDef(
                 "innerId",
                 null,
                 false,
@@ -125,7 +124,7 @@ class NestedAttributeStoreTest {
                 null,
                 null
         );
-        AttributeDef<StringId> nested = new AttributeDef<>(
+        AttributeDef nested = new AttributeDef(
                 "prefix.attribute",
                 null,
                 false,
@@ -134,11 +133,11 @@ class NestedAttributeStoreTest {
                 null,
                 null
         );
-        DirectAttributeStore<StringId> outerStore = new DirectAttributeStore<>(Arrays.asList(
+        DirectAttributeStore outerStore = new DirectAttributeStore(Arrays.asList(
                 innerId, nested
         ));
 
-        AttributeDef<StringId> innerAttribute = new AttributeDef<>(
+        AttributeDef innerAttribute = new AttributeDef(
                 "attribute",
                 VoidAccessLevel.INSTANCE_1,
                 false,
@@ -147,19 +146,20 @@ class NestedAttributeStoreTest {
                 null,
                 null
         );
-        DirectAttributeStore<StringId> innerStore = new DirectAttributeStore<>(Collections.singletonList(
+        DirectAttributeStore innerStore = new DirectAttributeStore(Collections.singletonList(
                 innerAttribute
         ));
 
-        @SuppressWarnings("unchecked") List<NestedAttributeStore.NestedAttributes<Id>> list = Collections.singletonList(
+        List<NestedAttributeStore.NestedAttributes> list = Collections.singletonList(
                 new NestedAttributeStore.NestedAttributes(
-                        "prefix", "innerId", new NoopExecutor<>(innerStore), o -> o
+                        "prefix", "innerId", new NoopExecutor(innerStore), o -> (Id) o
                 )
         );
 
         try {
-            new NestedAttributeStore<>(outerStore, list);
-        } catch (IllegalStateException e) {
+            new NestedAttributeStore(outerStore, list);
+        }
+        catch (IllegalStateException e) {
             Assertions.assertThat(e.getMessage())
                     .isEqualTo("Attribute [prefix.attribute] already exists");
             return;
@@ -171,7 +171,7 @@ class NestedAttributeStoreTest {
     @Test
     void attributes_returnsAllAttributes() {
         // GIVEN
-        AttributeDef<StringId> innerId = new AttributeDef<>(
+        AttributeDef innerId = new AttributeDef(
                 "innerId",
                 null,
                 false,
@@ -180,11 +180,11 @@ class NestedAttributeStoreTest {
                 null,
                 null
         );
-        DirectAttributeStore<StringId> outerStore = new DirectAttributeStore<>(Collections.singleton(
+        DirectAttributeStore outerStore = new DirectAttributeStore(Collections.singleton(
                 innerId
         ));
 
-        AttributeDef<StringId> innerAttribute = new AttributeDef<>(
+        AttributeDef innerAttribute = new AttributeDef(
                 "attribute",
                 VoidAccessLevel.INSTANCE_1,
                 false,
@@ -193,19 +193,19 @@ class NestedAttributeStoreTest {
                 null,
                 null
         );
-        DirectAttributeStore<StringId> innerStore = new DirectAttributeStore<>(Collections.singletonList(
+        DirectAttributeStore innerStore = new DirectAttributeStore(Collections.singletonList(
                 innerAttribute
         ));
 
-        @SuppressWarnings("unchecked") Collection<NestedAttributeStore.NestedAttributes<Id>> list = Collections.singleton(
+        Collection<NestedAttributeStore.NestedAttributes> list = Collections.singleton(
                 new NestedAttributeStore.NestedAttributes(
-                        "prefix", "innerId", new NoopExecutor<>(innerStore), o -> o
+                        "prefix", "innerId", new NoopExecutor(innerStore), o -> (Id) o
                 )
         );
-        NestedAttributeStore<StringId> nestedStore = new NestedAttributeStore<>(outerStore, list);
+        NestedAttributeStore nestedStore = new NestedAttributeStore(outerStore, list);
 
         // WHEN
-        Collection<AttributeDef<StringId>> attributes = nestedStore.attributes();
+        Collection<AttributeDef> attributes = nestedStore.attributes();
 
         // THEN
         Assertions.assertThat(attributes)
@@ -218,7 +218,7 @@ class NestedAttributeStoreTest {
     void idAttribute_delegatesToParentStore() {
         // GIVEN
         AttributeStoreSpy store = new AttributeStoreSpy();
-        NestedAttributeStore<StringId> nestedStore = new NestedAttributeStore<>(store, Collections.emptySet());
+        NestedAttributeStore nestedStore = new NestedAttributeStore(store, Collections.emptySet());
 
         // WHEN
         nestedStore.idAttribute();
@@ -228,22 +228,22 @@ class NestedAttributeStoreTest {
                 .isTrue();
     }
 
-    private class AttributeStoreSpy implements AttributeStore<StringId> {
+    private static class AttributeStoreSpy implements AttributeStore {
         private boolean idAttributeCalled = false;
 
         @Override
-        public Optional<AttributeDef<StringId>> fetch(String attributeName) {
+        public Optional<AttributeDef> fetch(String attributeName) {
             return Optional.empty();
         }
 
         @Override
-        public Optional<AttributeDef<StringId>> idAttribute() {
+        public Optional<AttributeDef> idAttribute() {
             idAttributeCalled = true;
             return Optional.empty();
         }
 
         @Override
-        public Collection<AttributeDef<StringId>> attributes() {
+        public Collection<AttributeDef> attributes() {
             return Collections.emptySet();
         }
     }

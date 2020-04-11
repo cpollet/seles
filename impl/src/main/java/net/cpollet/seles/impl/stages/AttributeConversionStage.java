@@ -17,7 +17,6 @@ package net.cpollet.seles.impl.stages;
 
 import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.api.attribute.AttributeStore;
-import net.cpollet.seles.api.domain.Id;
 import net.cpollet.seles.impl.Guarded;
 import net.cpollet.seles.impl.data.BiMap;
 import net.cpollet.seles.impl.execution.InternalRequest;
@@ -32,18 +31,18 @@ import java.util.stream.Collectors;
  * {@link InternalRequest}&lt;T, {@link AttributeDef}&lt;T&gt;&gt; and does the reverse
  * transformation from a {@link InternalResponse}.
  */
-public final class AttributeConversionStage<T extends Id> implements Stage<T, String> {
-    private final Stage<T, AttributeDef<T>> next;
-    private final AttributeStore<T> attributesStore;
+public final class AttributeConversionStage implements Stage<String> {
+    private final Stage<AttributeDef> next;
+    private final AttributeStore attributesStore;
 
-    public AttributeConversionStage(AttributeStore<T> attributesStore, Stage<T, AttributeDef<T>> next) {
+    public AttributeConversionStage(AttributeStore attributesStore, Stage<AttributeDef> next) {
         this.next = next;
         this.attributesStore = attributesStore;
     }
 
     @Override
-    public InternalResponse<T, String> execute(final InternalRequest<T, String> request) {
-        BiMap<AttributeDef<T>, String> validAttributesMap = new BiMap<>(
+    public InternalResponse<String> execute(final InternalRequest<String> request) {
+        BiMap<AttributeDef, String> validAttributesMap = new BiMap<>(
                 request.attributes().stream()
                         .map(attributesStore::fetch)
                         .filter(Optional::isPresent)

@@ -35,8 +35,8 @@ public class OwnerIdMethod implements Method<PortfolioId> {
     private static final Logger LOGGER = LoggerFactory.getLogger(OwnerIdMethod.class);
 
     @Override
-    public FetchResult<PortfolioId> fetch(Principal principal, List<AttributeDef<PortfolioId>> attributes, Collection<PortfolioId> ids) {
-        return new FetchResult<>(
+    public FetchResult fetch(Principal principal, List<AttributeDef> attributes, Collection<PortfolioId> ids) {
+        return new FetchResult(
                 ids.stream()
                         .collect(Collectors.toMap(
                                 id -> id,
@@ -52,7 +52,7 @@ public class OwnerIdMethod implements Method<PortfolioId> {
     }
 
     @Override
-    public Collection<String> update(Principal principal, Map<AttributeDef<PortfolioId>, Object> attributeValues, Collection<PortfolioId> ids) {
+    public Collection<String> update(Principal principal, Map<AttributeDef, Object> attributeValues, Collection<PortfolioId> ids) {
         ids.forEach(
                 id -> attributeValues.forEach((a, v) -> LOGGER.info("UPDATE {}:{} -> {}", id, a, v))
         );
@@ -61,7 +61,7 @@ public class OwnerIdMethod implements Method<PortfolioId> {
     }
 
     @Override
-    public Collection<String> delete(Principal principal, List<AttributeDef<PortfolioId>> attributes, Collection<PortfolioId> ids) {
+    public Collection<String> delete(Principal principal, List<AttributeDef> attributes, Collection<PortfolioId> ids) {
         ids.forEach(
                 id -> attributes.forEach(a -> LOGGER.info("DELETE {}:{}", id, a))
         );
@@ -70,21 +70,21 @@ public class OwnerIdMethod implements Method<PortfolioId> {
     }
 
     @Override
-    public CreateResult<PortfolioId> create(Principal principal, Map<AttributeDef<PortfolioId>, Object> values) {
+    public CreateResult create(Principal principal, Map<AttributeDef, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("CREATE {} -> {}", a, v)
         );
 
-        return new CreateResult<>(new PortfolioId("111111"));
+        return new CreateResult(new PortfolioId("111111"));
     }
 
     @Override
-    public SearchResult<PortfolioId> search(Principal principal, Map<AttributeDef<PortfolioId>, Object> values) {
+    public SearchResult search(Principal principal, Map<AttributeDef, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("SEARCH {} -> {}", a, v)
         );
 
-        return new SearchResult<>(
+        return new SearchResult(
                 Collections.singletonList(new PortfolioId("222222"))
         );
     }

@@ -16,18 +16,17 @@
 package net.cpollet.seles.api.execution;
 
 import net.cpollet.seles.api.attribute.AttributeStore;
-import net.cpollet.seles.api.domain.Id;
 
-public interface Executor<T extends Id> {
-    AttributeStore<T> attributeStore();
+public interface Executor {
+    AttributeStore attributeStore();
 
-    Response<T> read(Request<T> request);
+    Response read(Request request);
 
-    Response<T> update(Request<T> request);
+    Response update(Request request);
 
-    Response<T> create(Request<T> request);
+    Response create(Request request);
 
-    Response<T> delete(Request<T> request);
+    Response delete(Request request);
 
-    Response<T> search(Request<T> request);
+    Response search(Request request);
 }

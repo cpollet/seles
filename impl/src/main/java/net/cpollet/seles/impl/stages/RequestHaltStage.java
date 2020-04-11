@@ -15,7 +15,6 @@
  */
 package net.cpollet.seles.impl.stages;
 
-import net.cpollet.seles.api.domain.Id;
 import net.cpollet.seles.impl.Guarded;
 import net.cpollet.seles.impl.execution.InternalRequest;
 import net.cpollet.seles.impl.execution.InternalResponse;
@@ -28,17 +27,17 @@ import java.util.function.Function;
  *
  * @see Guarded
  */
-public final class RequestHaltStage<T extends Id, A> implements Stage<T, A> {
-    private final Stage<T, A> next;
-    private final Function<Guarded<?>, Boolean> guard;
+public final class RequestHaltStage<A> implements Stage<A> {
+    private final Stage<A> next;
+    private final Function<Guarded, Boolean> guard;
 
-    public RequestHaltStage(Function<Guarded<?>, Boolean> guard, Stage<T, A> next) {
+    public RequestHaltStage(Function<Guarded, Boolean> guard, Stage<A> next) {
         this.next = next;
         this.guard = guard;
     }
 
     @Override
-    public InternalResponse<T, A> execute(InternalRequest<T, A> request) {
+    public InternalResponse<A> execute(InternalRequest<A> request) {
         if (guard.apply(request)) {
             return new InternalResponse<>();
         }

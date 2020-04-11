@@ -21,16 +21,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
-public final class CreateResult<T extends Id> {
-    private final T id;
+public final class CreateResult {
+    private final Id id;
     private final Collection<String> errors;
 
-    private CreateResult(T id, Collection<String> errors) {
+    private CreateResult(Id id, Collection<String> errors) {
         this.id = id;
         this.errors = Collections.unmodifiableCollection(errors);
     }
 
-    public CreateResult(T id) {
+    public CreateResult(Id id) {
         this(id, Collections.emptySet());
     }
 
@@ -38,7 +38,7 @@ public final class CreateResult<T extends Id> {
         this(null, errors);
     }
 
-    public Optional<T> id() {
+    public Optional<Id> id() {
         return Optional.ofNullable(id);
     }
 

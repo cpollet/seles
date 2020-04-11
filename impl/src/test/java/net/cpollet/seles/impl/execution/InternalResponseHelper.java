@@ -20,7 +20,6 @@ import net.cpollet.seles.api.attribute.AttributeStore;
 import net.cpollet.seles.api.execution.Request;
 import net.cpollet.seles.api.execution.Response;
 import net.cpollet.seles.impl.stages.AttributeConversionStage;
-import net.cpollet.seles.impl.testsupport.StringId;
 import net.cpollet.seles.impl.testsupport.VoidPrincipal;
 
 import java.util.Collections;
@@ -37,9 +36,9 @@ public class InternalResponseHelper {
      * @param response the InternalResponse to transform
      * @return the Response generated from the InternalResponse
      */
-    public static Response<StringId> toResponse(AttributeStore<StringId> store, InternalResponse<StringId, AttributeDef<StringId>> response) {
+    public static Response toResponse(AttributeStore store, InternalResponse<AttributeDef> response) {
         return InternalResponse.unwrap(
-                new AttributeConversionStage<>(store, request -> response)
+                new AttributeConversionStage(store, request -> response)
                         .execute(
                                 InternalRequest.wrap(
                                         InternalRequest.RequestType.READ,

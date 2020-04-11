@@ -35,8 +35,8 @@ public class AddressIdMethod implements Method<PersonId> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AddressIdMethod.class);
 
     @Override
-    public FetchResult<PersonId> fetch(Principal principal, List<AttributeDef<PersonId>> attributes, Collection<PersonId> ids) {
-        return new FetchResult<>(
+    public FetchResult fetch(Principal principal, List<AttributeDef> attributes, Collection<PersonId> ids) {
+        return new FetchResult(
                 ids.stream()
                         .collect(Collectors.toMap(
                                 id -> id,
@@ -52,7 +52,7 @@ public class AddressIdMethod implements Method<PersonId> {
     }
 
     @Override
-    public Collection<String> update(Principal principal, Map<AttributeDef<PersonId>, Object> attributeValues, Collection<PersonId> ids) {
+    public Collection<String> update(Principal principal, Map<AttributeDef, Object> attributeValues, Collection<PersonId> ids) {
         ids.forEach(
                 id -> attributeValues.forEach((a, v) -> LOGGER.info("UPDATE {}:{} -> {}", id, a, v))
         );
@@ -61,7 +61,7 @@ public class AddressIdMethod implements Method<PersonId> {
     }
 
     @Override
-    public Collection<String> delete(Principal principal, List<AttributeDef<PersonId>> attributes, Collection<PersonId> ids) {
+    public Collection<String> delete(Principal principal, List<AttributeDef> attributes, Collection<PersonId> ids) {
         ids.forEach(
                 id -> attributes.forEach(a -> LOGGER.info("DELETE {}:{}", id, a))
         );
@@ -70,21 +70,21 @@ public class AddressIdMethod implements Method<PersonId> {
     }
 
     @Override
-    public CreateResult<PersonId> create(Principal principal, Map<AttributeDef<PersonId>, Object> values) {
+    public CreateResult create(Principal principal, Map<AttributeDef, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("CREATE {} -> {}", a, v)
         );
 
-        return new CreateResult<>(new PersonId(111111));
+        return new CreateResult(new PersonId(111111));
     }
 
     @Override
-    public SearchResult<PersonId> search(Principal principal, Map<AttributeDef<PersonId>, Object> values) {
+    public SearchResult search(Principal principal, Map<AttributeDef, Object> values) {
         values.forEach(
                 (a, v) -> LOGGER.info("SEARCH {} -> {}", a, v)
         );
 
-        return new SearchResult<>(
+        return new SearchResult(
                 Collections.singletonList(new PersonId(100000))
         );
     }

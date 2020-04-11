@@ -31,20 +31,20 @@ import java.util.Map;
 /**
  * Executes a READ {@link InternalRequest}.
  */
-public final class ReadRequestExecutionStage<T extends Id> implements Stage<T, AttributeDef<T>> {
+public final class ReadRequestExecutionStage implements Stage<AttributeDef> {
     @Override
-    public InternalResponse<T, AttributeDef<T>> execute(final InternalRequest<T, AttributeDef<T>> request) {
-        FetchResult<T> fetchResult = fetch(
+    public InternalResponse<AttributeDef> execute(final InternalRequest<AttributeDef> request) {
+        FetchResult fetchResult = fetch(
                 request.principal(),
                 request.ids(),
-                request.attributes(new AttributesGrouper<>())
+                request.attributes(new AttributesGrouper())
         );
 
         return new InternalResponse<>(fetchResult.result())
                 .withErrors(fetchResult.errors());
     }
 
-    private FetchResult<T> fetch(Principal principal, Collection<T> ids, Map<Method<T>, List<AttributeDef<T>>> attributesGroupedByMethod) {
+    private FetchResult fetch(Principal principal, Collection<Id> ids, Map<Method<Id>, List<AttributeDef>> attributesGroupedByMethod) {
         return attributesGroupedByMethod.entrySet().stream()
                 .map(e -> e.getKey().fetch(principal, e.getValue(), ids))
                 .reduce(FetchResult.emptyResult(), FetchResult::merge);

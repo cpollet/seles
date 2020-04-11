@@ -16,42 +16,42 @@
 package net.cpollet.seles.impl.domain;
 
 import net.cpollet.seles.api.Cache;
-import net.cpollet.seles.api.domain.IdValidator;
 import net.cpollet.seles.api.domain.Id;
+import net.cpollet.seles.api.domain.IdValidator;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class CachedIdValidator<T extends Id> implements IdValidator<T>, Cache {
-    private final IdValidator<T> nested;
-    private final Set<T> validIds;
+public final class CachedIdValidator implements IdValidator, Cache {
+    private final IdValidator nested;
+    private final Set<Id> validIds;
 
-    public CachedIdValidator(IdValidator<T> nested) {
+    public CachedIdValidator(IdValidator nested) {
         this.nested = nested;
         this.validIds = Collections.synchronizedSet(new HashSet<>());
     }
 
     @Override
-    public Collection<T> invalidIds(Collection<T> ids) {
-        HashSet<T> idsToValidate = cachedIds(ids, validIds);
+    public Collection<Id> invalidIds(Collection<Id> ids) {
+        HashSet<Id> idsToValidate = cachedIds(ids, validIds);
 
-        Collection<T> invalidIds = nested.invalidIds(idsToValidate);
+        Collection<Id> invalidIds = nested.invalidIds(idsToValidate);
 
         updateCache(idsToValidate, invalidIds);
 
         return invalidIds;
     }
 
-    private HashSet<T> cachedIds(Collection<T> ids, Collection<T> validIds) {
-        HashSet<T> idsToValidate = new HashSet<>(ids);
+    private HashSet<Id> cachedIds(Collection<Id> ids, Collection<Id> validIds) {
+        HashSet<Id> idsToValidate = new HashSet<>(ids);
         idsToValidate.removeAll(validIds);
         return idsToValidate;
     }
 
-    private void updateCache(Collection<T> ids, Collection<T> invalidIds) {
-        HashSet<T> newValidIds = new HashSet<>(ids);
+    private void updateCache(Collection<Id> ids, Collection<Id> invalidIds) {
+        HashSet<Id> newValidIds = new HashSet<>(ids);
         newValidIds.removeAll(invalidIds);
         validIds.addAll(newValidIds);
     }
@@ -59,6 +59,6 @@ public final class CachedIdValidator<T extends Id> implements IdValidator<T>, Ca
     @Override
     public void invalidate() {
         // remove all elements of the final validIds Set
-        validIds.retainAll(Collections.<T>emptySet());
+        validIds.retainAll(Collections.<Id>emptySet());
     }
 }

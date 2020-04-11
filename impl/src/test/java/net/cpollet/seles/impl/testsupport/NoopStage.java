@@ -20,9 +20,9 @@ import net.cpollet.seles.impl.execution.InternalRequest;
 import net.cpollet.seles.impl.execution.InternalResponse;
 import net.cpollet.seles.impl.stages.Stage;
 
-public class NoopStage implements Stage<StringId, AttributeDef<StringId>> {
+public class NoopStage implements Stage<AttributeDef> {
     @Override
-    public InternalResponse<StringId, AttributeDef<StringId>> execute(InternalRequest<StringId, AttributeDef<StringId>> request) {
+    public InternalResponse<AttributeDef> execute(InternalRequest<AttributeDef> request) {
         return new InternalResponse<>();
     }
 }

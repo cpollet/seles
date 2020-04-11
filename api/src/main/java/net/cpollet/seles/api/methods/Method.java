@@ -24,13 +24,13 @@ import java.util.List;
 import java.util.Map;
 
 public interface Method<T extends Id> {
-    FetchResult<T> fetch(Principal principal, List<AttributeDef<T>> attributes, Collection<T> ids);
+    FetchResult fetch(Principal principal, List<AttributeDef> attributes, Collection<T> ids);
 
-    Collection<String> update(Principal principal, Map<AttributeDef<T>, Object> attributeValues, Collection<T> ids);
+    Collection<String> update(Principal principal, Map<AttributeDef, Object> attributeValues, Collection<T> ids);
 
-    Collection<String> delete(Principal principal, List<AttributeDef<T>> attributes, Collection<T> ids);
+    Collection<String> delete(Principal principal, List<AttributeDef> attributes, Collection<T> ids);
 
-    CreateResult<T> create(Principal principal, Map<AttributeDef<T>, Object> values);
+    CreateResult create(Principal principal, Map<AttributeDef, Object> values);
 
-    SearchResult<T> search(Principal principal, Map<AttributeDef<T>, Object> values);
+    SearchResult search(Principal principal, Map<AttributeDef, Object> values);
 }

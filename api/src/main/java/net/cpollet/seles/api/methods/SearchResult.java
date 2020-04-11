@@ -23,24 +23,24 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class SearchResult<T extends Id> {
-    private static final SearchResult<Id> EMPTY = new SearchResult<>();
+public final class SearchResult {
+    private static final SearchResult EMPTY = new SearchResult();
 
     private final MergeAlgorithm mergeAlgorithm;
-    private final Set<T> ids;
+    private final Set<Id> ids;
     private final Collection<String> errors;
 
-    public SearchResult(MergeAlgorithm mergeAlgorithm, Collection<T> ids, Collection<String> errors) {
+    public SearchResult(MergeAlgorithm mergeAlgorithm, Collection<Id> ids, Collection<String> errors) {
         this.mergeAlgorithm = mergeAlgorithm;
         this.ids = Collections.unmodifiableSet(new HashSet<>(ids));
         this.errors = Collections.unmodifiableCollection(errors);
     }
 
-    public SearchResult(Collection<T> ids, Collection<String> errors) {
+    public SearchResult(Collection<Id> ids, Collection<String> errors) {
         this(new MergeAlgorithm(), ids, errors);
     }
 
-    public SearchResult(Collection<T> ids) {
+    public SearchResult(Collection<Id> ids) {
         this(ids, Collections.emptyList());
     }
 
@@ -48,12 +48,11 @@ public final class SearchResult<T extends Id> {
         this(Collections.emptyList(), Collections.emptyList());
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends Id> SearchResult<T> emptyResult() {
-        return (SearchResult<T>) EMPTY;
+    public static SearchResult emptyResult() {
+        return EMPTY;
     }
 
-    public Collection<T> ids() {
+    public Collection<Id> ids() {
         return ids;
     }
 
@@ -61,25 +60,25 @@ public final class SearchResult<T extends Id> {
         return errors;
     }
 
-    public SearchResult<T> merge(SearchResult<T> other) {
+    public SearchResult merge(SearchResult other) {
         return mergeAlgorithm.merge(this, other);
     }
 
     public static class MergeAlgorithm {
-        <T extends Id> SearchResult<T> merge(SearchResult<T> a, SearchResult<T> b) {
+        SearchResult merge(SearchResult a, SearchResult b) {
             if (a == EMPTY) {
                 return b;
             }
             if (b == EMPTY) {
                 return a;
             }
-            Collection<T> ids = new HashSet<>(a.ids());
+            Collection<Id> ids = new HashSet<>(a.ids());
             ids.retainAll(b.ids());
 
             Collection<String> errors = new ArrayList<>(a.errors());
             errors.addAll(b.errors());
 
-            return new SearchResult<>(this, ids, errors);
+            return new SearchResult(this, ids, errors);
         }
     }
 }

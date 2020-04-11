@@ -35,25 +35,24 @@ import java.util.stream.Collectors;
  * Represents a response, as used and transformed from {@link net.cpollet.seles.impl.stages.Stage} to
  * {@link net.cpollet.seles.impl.stages.Stage} instances. Instances are immutable.
  *
- * @param <T> the type of the entity's ID, an implementation of {@link Id}
  * @param <A> the type of the attribute; usually {@link String} or {@link net.cpollet.seles.api.attribute.AttributeDef}
  */
-public final class InternalResponse<T extends Id, A> {
+public final class InternalResponse<A> {
     private static final Logger LOGGER = LoggerFactory.getLogger(InternalRequest.class);
 
-    private final Map<T, Map<A, Object>> values;
+    private final Map<Id, Map<A, Object>> values;
     private final Collection<String> errors;
     private final Collection<String> messages;
     private final long executionTime;
 
-    private InternalResponse(Map<T, Map<A, Object>> values, Collection<String> errors, Collection<String> messages, long executionTime) {
+    private InternalResponse(Map<Id, Map<A, Object>> values, Collection<String> errors, Collection<String> messages, long executionTime) {
         this.values = Collections.unmodifiableMap(values);
         this.errors = Collections.unmodifiableCollection(errors);
         this.messages = Collections.unmodifiableCollection(messages);
         this.executionTime = executionTime;
     }
 
-    public InternalResponse(Map<T, Map<A, Object>> values) {
+    public InternalResponse(Map<Id, Map<A, Object>> values) {
         this(values, Collections.emptyList(), Collections.emptyList(), 0L);
     }
 
@@ -61,8 +60,8 @@ public final class InternalResponse<T extends Id, A> {
         this(Collections.emptyMap());
     }
 
-    static <T extends Id> Response<T> unwrap(InternalResponse<T, String> response) {
-        return new Response<>(response.values, response.errors, response.messages, response.executionTime);
+    static Response unwrap(InternalResponse<String> response) {
+        return new Response(response.values, response.errors, response.messages, response.executionTime);
     }
 
     /**
@@ -75,8 +74,8 @@ public final class InternalResponse<T extends Id, A> {
      * @return the response, with attributes mapped from type A to type B
      * @see InternalRequest#mapAttributes(BiMap) for the reverse operation
      */
-    public <B> InternalResponse<T, B> mapAttributes(BiMap<A, B> conversionMap) {
-        Map<T, Map<B, Object>> convertedMap = values.entrySet().stream()
+    public <B> InternalResponse<B> mapAttributes(BiMap<A, B> conversionMap) {
+        Map<Id, Map<B, Object>> convertedMap = values.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         e -> convertAttributes(e.getValue(), conversionMap)
@@ -85,7 +84,7 @@ public final class InternalResponse<T extends Id, A> {
         return new InternalResponse<>(convertedMap, errors, messages, executionTime);
     }
 
-    private  <B> Map<B, Object> convertAttributes(Map<A, Object> map, BiMap<A, B> conversionMap) {
+    private <B> Map<B, Object> convertAttributes(Map<A, Object> map, BiMap<A, B> conversionMap) {
         return map.entrySet().stream()
                 .collect(Collectors.toMap(
                         e -> conversionMap.getRight(e.getKey()),
@@ -93,8 +92,8 @@ public final class InternalResponse<T extends Id, A> {
                 ));
     }
 
-    public InternalResponse<T, A> convertValues(Map<A, ValueConverter<A>> converters) {
-        Map<T, Map<A, Object>> convertedValues = new HashMap<>(values.size());
+    public InternalResponse<A> convertValues(Map<A, ValueConverter<A>> converters) {
+        Map<Id, Map<A, Object>> convertedValues = new HashMap<>(values.size());
         List<String> conversionErrors = new ArrayList<>();
 
         values.forEach((id, attributesValues) -> {
@@ -102,7 +101,8 @@ public final class InternalResponse<T extends Id, A> {
             attributesValues.forEach((attribute, value) -> {
                 try {
                     convertedValues.get(id).put(attribute, converters.get(attribute).toExternalValue(attribute, value));
-                } catch (ConversionException e) {
+                }
+                catch (ConversionException e) {
                     LOGGER.error("Error while converting output value of attribute {}", attribute, e);
                     conversionErrors.add(String.format("Error while converting attribute [%s] value for key [%s]", attribute, id));
                 }
@@ -113,7 +113,7 @@ public final class InternalResponse<T extends Id, A> {
                 .withErrors(conversionErrors);
     }
 
-    public InternalResponse<T, A> withErrors(Collection<String> errors) {
+    public InternalResponse<A> withErrors(Collection<String> errors) {
         if (errors.isEmpty()) {
             return this;
         }
@@ -123,11 +123,11 @@ public final class InternalResponse<T extends Id, A> {
         return new InternalResponse<>(values, mergedErrors, messages, executionTime);
     }
 
-    public InternalResponse<T, A> mergeErrors(InternalResponse<T, A> other) {
+    public InternalResponse<A> mergeErrors(InternalResponse<A> other) {
         return withErrors(other.errors);
     }
 
-    public InternalResponse<T, A> withMessages(Collection<String> messages) {
+    public InternalResponse<A> withMessages(Collection<String> messages) {
         if (messages.isEmpty()) {
             return this;
         }
@@ -137,11 +137,11 @@ public final class InternalResponse<T extends Id, A> {
         return new InternalResponse<>(values, errors, mergedMessages, executionTime);
     }
 
-    public InternalResponse<T, A> mergeMessages(InternalResponse<T, A> other) {
+    public InternalResponse<A> mergeMessages(InternalResponse<A> other) {
         return withMessages(other.messages);
     }
 
-    public InternalResponse<T, A> withExecutionTime(long executionTime) {
+    public InternalResponse<A> withExecutionTime(long executionTime) {
         return new InternalResponse<>(values, errors, messages, executionTime);
     }
 
@@ -149,8 +149,8 @@ public final class InternalResponse<T extends Id, A> {
         return !errors.isEmpty();
     }
 
-    public InternalResponse<T, A> append(Map<T, Map<A, String>> values) {
-        HashMap<T, Map<A, Object>> newResult = new HashMap<>(this.values);
+    public InternalResponse<A> append(Map<Id, Map<A, String>> values) {
+        HashMap<Id, Map<A, Object>> newResult = new HashMap<>(this.values);
         values.forEach((key, value) -> {
             newResult.putIfAbsent(key, new HashMap<>());
             newResult.get(key).putAll(value);

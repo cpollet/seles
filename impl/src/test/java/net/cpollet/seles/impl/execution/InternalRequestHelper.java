@@ -19,7 +19,6 @@ import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.api.attribute.AttributeStore;
 import net.cpollet.seles.api.execution.Request;
 import net.cpollet.seles.impl.stages.AttributeConversionStage;
-import net.cpollet.seles.impl.testsupport.StringId;
 import net.cpollet.seles.impl.testsupport.VoidPrincipal;
 
 import java.util.Collections;
@@ -37,10 +36,10 @@ public class InternalRequestHelper {
      * @param store the store containing the attributes to include in the request
      * @return the generated request
      */
-    public static InternalRequest<StringId, AttributeDef<StringId>> toAttributeDefInternalRequest(AttributeStore<StringId> store) {
-        final Holder<InternalRequest<StringId, AttributeDef<StringId>>> holder = new Holder<>();
+    public static InternalRequest<AttributeDef> toAttributeDefInternalRequest(AttributeStore store) {
+        final Holder<InternalRequest<AttributeDef>> holder = new Holder<>();
 
-        new AttributeConversionStage<>(store, request -> {
+        new AttributeConversionStage(store, request -> {
             holder.object = request;
             return new InternalResponse<>();
         }).execute(
@@ -54,7 +53,7 @@ public class InternalRequestHelper {
         return holder.object;
     }
 
-    public static InternalRequest<StringId, String> toStringInternalRequest(List<String> attributes) {
+    public static InternalRequest<String> toStringInternalRequest(List<String> attributes) {
         return InternalRequest.wrap(
                 InternalRequest.RequestType.READ,
                 Request.read(

@@ -29,15 +29,13 @@ import java.util.function.Function;
 /**
  * Groups a collection of {@link AttributeDef} by {@link Method}. The result is a map from method to a collection of
  * attributes using this method.
- *
- * @param <T>
  */
-public final class AttributesGrouper<T extends Id> implements Function<Collection<AttributeDef<T>>, Map<Method<T>, List<AttributeDef<T>>>> {
+public final class AttributesGrouper implements Function<Collection<AttributeDef>, Map<Method<Id>, List<AttributeDef>>> {
     @Override
-    public Map<Method<T>, List<AttributeDef<T>>> apply(Collection<AttributeDef<T>> attributeDefs) {
-        Map<Method<T>, List<AttributeDef<T>>> attributesGroupedByMethod = new HashMap<>();
+    public Map<Method<Id>, List<AttributeDef>> apply(Collection<AttributeDef> attributeDefs) {
+        Map<Method<Id>, List<AttributeDef>> attributesGroupedByMethod = new HashMap<>();
 
-        for (AttributeDef<T> attribute : attributeDefs) {
+        for (AttributeDef attribute : attributeDefs) {
             attributesGroupedByMethod.putIfAbsent(attribute.method(), new ArrayList<>());
             attributesGroupedByMethod.get(attribute.method()).add(attribute);
         }
