@@ -44,9 +44,6 @@ import net.cpollet.seles.impl.stages.ValueConversionStage;
 // FIXME deserves a refactoring
 public final class DefaultExecutor implements Executor<Id> {
     private final AttributeStore attributeStore;
-    private final IdValidator idValidator;
-    private final AccessLevelPredicate filteringPredicate;
-    private final DefaultExecutorGuard guard;
 
     private final Stage<String> readStack;
     private final Stage<String> updateStack;
@@ -56,59 +53,83 @@ public final class DefaultExecutor implements Executor<Id> {
 
     public DefaultExecutor(AttributeStore attributeStore, IdValidator idValidator, AccessLevelPredicate filteringPredicate, DefaultExecutorGuard guard) {
         this.attributeStore = attributeStore;
-        this.idValidator = idValidator;
-        this.filteringPredicate = filteringPredicate;
-        this.guard = guard;
+
+        Context readContext = new Context(
+                AttributeDef.Mode.READ,
+                attributeStore,
+                idValidator,
+                filteringPredicate,
+                guard
+        );
         this.readStack =
                 new TimerStage(
                         new ExpandStarStage(
-                                attributeStore,
                                 validateIdAndConvertValues(
-                                        AttributeDef.Mode.READ,
-                                        new ReadRequestExecutionStage()
-                                )
+                                        new ReadRequestExecutionStage(), readContext
+                                ), readContext
                         )
                 );
+
+        Context writeContext = new Context(
+                AttributeDef.Mode.WRITE,
+                attributeStore,
+                idValidator,
+                filteringPredicate,
+                guard
+        );
         this.updateStack =
                 new TimerStage(
                         validateIdAndConvertValues(
-                                AttributeDef.Mode.WRITE,
                                 new UpdateRequestExecutionStage(
                                         new RequestHaltStage<>(
-                                                req -> guard.haltDueToUpdateError(req.hasGuardFlag(Guarded.Flag.UPDATE_ERROR)),
-                                                new ReadRequestExecutionStage()
+                                                new ReadRequestExecutionStage(),
+                                                req -> writeContext.guard.haltDueToUpdateError(req.hasGuardFlag(Guarded.Flag.UPDATE_ERROR))
                                         )
-                                )
+                                ), writeContext
                         )
                 );
+
+        Context deleteContext = new Context(
+                AttributeDef.Mode.DELETE,
+                attributeStore,
+                idValidator,
+                filteringPredicate,
+                guard
+        );
         this.deleteStack =
                 new TimerStage(
                         validateId(
-                                AttributeDef.Mode.DELETE,
-                                new DeleteRequestExecutionStage()
+                                new DeleteRequestExecutionStage(), deleteContext
                         )
                 );
+
         this.createStack =
                 new TimerStage(
                         prepareRequest(
-                                AttributeDef.Mode.WRITE,
                                 new CreateRequestExecutionStage(
-                                        attributeStore,
                                         new UpdateRequestExecutionStage(
                                                 new EmptyResponseStage<>()
                                         ),
                                         new RequestHaltStage<>(
-                                                req -> guard.haltDueToUpdateError(req.hasGuardFlag(Guarded.Flag.UPDATE_ERROR)),
-                                                new ReadRequestExecutionStage()
-                                        )
-                                )
+                                                new ReadRequestExecutionStage(),
+                                                req -> guard.haltDueToUpdateError(req.hasGuardFlag(Guarded.Flag.UPDATE_ERROR))
+                                        ),
+                                        writeContext
+                                ), writeContext
                         )
                 );
+
+        Context searchContext = new Context(
+                AttributeDef.Mode.SEARCH,
+                attributeStore,
+                idValidator,
+                filteringPredicate,
+                guard
+        );
         this.searchStack =
                 new TimerStage(
                         validateIdAndConvertValues(
-                                AttributeDef.Mode.SEARCH,
-                                new SearchRequestExecutionStage()
+                                new SearchRequestExecutionStage(), searchContext
                         )
                 );
     }
@@ -116,59 +137,54 @@ public final class DefaultExecutor implements Executor<Id> {
     /**
      * Stages used for READ, WRITE and SEARCH requests.
      */
-    private Stage<String> validateIdAndConvertValues(AttributeDef.Mode mode, Stage<AttributeDef> inner) {
+    private Stage<String> validateIdAndConvertValues(Stage<AttributeDef> inner, Context context) {
         return validateId(
-                mode,
                 new ValueConversionStage(
                         AttributeDef::caster,
                         new ValueConversionStage(
                                 AttributeDef::converter,
                                 new RequestHaltStage<>(
-                                        req -> guard.haltDueToInputValueConversionError(req.hasGuardFlag(Guarded.Flag.INPUT_VALUE_CONVERSION_ERROR)),
-                                        inner
+                                        inner,
+                                        req -> context.guard.haltDueToInputValueConversionError(req.hasGuardFlag(Guarded.Flag.INPUT_VALUE_CONVERSION_ERROR))
                                 )
                         )
-                )
+                ), context
         );
     }
 
     /**
      * Stages used for READ, WRITE, DELETE and SEARCH requests.
      */
-    private Stage<String> validateId(AttributeDef.Mode mode, Stage<AttributeDef> inner) {
+    private Stage<String> validateId(Stage<AttributeDef> inner, Context context) {
         return prepareRequest(
-                mode,
                 new IdsValidationStage(
-                        idValidator,
                         new RequestHaltStage<>(
-                                req -> guard.haltDueToIdValidationError(req.hasGuardFlag(Guarded.Flag.INVALID_IDS)),
-                                inner
-                        )
-                )
+                                inner,
+                                req -> context.guard.haltDueToIdValidationError(req.hasGuardFlag(Guarded.Flag.INVALID_IDS))
+                        ),
+                        context
+                ), context
         );
     }
 
     /**
      * Stages used for READ, WRITE, DELETE, CREATE and SEARCH requests.
      */
-    private Stage<String> prepareRequest(AttributeDef.Mode mode, Stage<AttributeDef> inner) {
+    private Stage<String> prepareRequest(Stage<AttributeDef> inner, Context context) {
         return new AttributeConversionStage(
-                attributeStore,
                 new RequestHaltStage<>(
-                        req -> guard.haltDueToAttributeConversionError(req.hasGuardFlag(Guarded.Flag.ATTRIBUTE_CONVERSION_ERROR)),
                         new ModeValidationStage(
-                                mode,
                                 new RequestHaltStage<>(
-                                        req -> guard.haltDueToModeError(req.hasGuardFlag(Guarded.Flag.INVALID_MODE)),
                                         new LogDeprecatedStage(
                                                 new FilteringStage(
-                                                        filteringPredicate,
-                                                        inner
+                                                        inner, context
                                                 )
-                                        )
-                                )
-                        )
-                )
+                                        ),
+                                        req -> context.guard.haltDueToModeError(req.hasGuardFlag(Guarded.Flag.INVALID_MODE))
+                                ), context
+                        ),
+                        req -> context.guard.haltDueToAttributeConversionError(req.hasGuardFlag(Guarded.Flag.ATTRIBUTE_CONVERSION_ERROR))
+                ), context
         );
     }
 

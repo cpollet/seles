@@ -17,6 +17,7 @@ package net.cpollet.seles.impl.stages;
 
 import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.impl.attribute.DirectAttributeStore;
+import net.cpollet.seles.impl.execution.Context;
 import net.cpollet.seles.impl.execution.InternalRequestHelper;
 import net.cpollet.seles.impl.testsupport.VoidAccessLevel;
 import org.assertj.core.api.Assertions;
@@ -38,14 +39,14 @@ class ExpandStarStageTest {
                         "attribute_2", VoidAccessLevel.INSTANCE_1, true, null, Collections.emptySet(), null, null
                 )
         ));
-        ExpandStarStage stage = new ExpandStarStage(store, request -> {
+        ExpandStarStage stage = new ExpandStarStage(request -> {
             // THEN
             Assertions.assertThat("attribute_1").isIn(request.attributes());
             Assertions.assertThat("attribute_2").isIn(request.attributes());
             Assertions.assertThat(2).isEqualTo(request.attributes().size());
 
             return null; // we don't care about return value
-        });
+        }, new Context(null, store, null, null, null));
 
         // WHEN
         stage.execute(InternalRequestHelper.toStringInternalRequest(Collections.singletonList("*")));
@@ -62,14 +63,14 @@ class ExpandStarStageTest {
                         "attribute_2", VoidAccessLevel.INSTANCE_1, true, null, Collections.emptySet(), null, null
                 )
         ));
-        ExpandStarStage stage = new ExpandStarStage(store, request -> {
+        ExpandStarStage stage = new ExpandStarStage(request -> {
             // THEN
             Assertions.assertThat("attribute_1").isIn(request.attributes());
             Assertions.assertThat("attribute_2").isIn(request.attributes());
             Assertions.assertThat(2).isEqualTo(request.attributes().size());
 
             return null; // we don't care about return value
-        });
+        }, new Context(null, store, null, null, null));
 
         // WHEN
         stage.execute(InternalRequestHelper.toStringInternalRequest(Arrays.asList("*", "attribute_1")));
@@ -86,13 +87,13 @@ class ExpandStarStageTest {
                         "attribute_2", VoidAccessLevel.INSTANCE_1, true, null, Collections.emptySet(), null, null
                 )
         ));
-        ExpandStarStage stage = new ExpandStarStage(store, request -> {
+        ExpandStarStage stage = new ExpandStarStage(request -> {
             // THEN
             Assertions.assertThat("attribute_1").isIn(request.attributes());
             Assertions.assertThat(1).isEqualTo(request.attributes().size());
 
             return null; // we don't care about return value
-        });
+        }, new Context(null, store, null, null, null));
 
         // WHEN
         stage.execute(InternalRequestHelper.toStringInternalRequest(Collections.singletonList("attribute_1")));

@@ -17,6 +17,7 @@ package net.cpollet.seles.impl.stages;
 
 import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.impl.Guarded;
+import net.cpollet.seles.impl.execution.Context;
 import net.cpollet.seles.impl.execution.InternalRequest;
 import net.cpollet.seles.impl.execution.InternalResponse;
 
@@ -32,9 +33,9 @@ public final class ModeValidationStage implements Stage<AttributeDef> {
     private final Stage<AttributeDef> next;
     private final AttributeDef.Mode mode;
 
-    public ModeValidationStage(AttributeDef.Mode mode, Stage<AttributeDef> next) {
+    public ModeValidationStage(Stage<AttributeDef> next, Context context) {
         this.next = next;
-        this.mode = mode;
+        this.mode = context.mode;
     }
 
     @Override

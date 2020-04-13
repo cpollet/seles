@@ -17,6 +17,7 @@ package net.cpollet.seles.impl.stages;
 
 import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.api.attribute.AttributeStore;
+import net.cpollet.seles.impl.execution.Context;
 import net.cpollet.seles.impl.execution.InternalRequest;
 import net.cpollet.seles.impl.execution.InternalResponse;
 
@@ -30,9 +31,9 @@ public final class ExpandStarStage implements Stage<String> {
     private final Stage<String> next;
     private final AttributeStore attributeStore;
 
-    public ExpandStarStage(AttributeStore attributeStore, Stage<String> next) {
+    public ExpandStarStage(Stage<String> next, Context context) {
         this.next = next;
-        this.attributeStore = attributeStore;
+        this.attributeStore = context.attributeStore;
     }
 
     @Override

@@ -22,6 +22,7 @@ import net.cpollet.seles.api.methods.CreateResult;
 import net.cpollet.seles.api.methods.Method;
 import net.cpollet.seles.impl.Guarded;
 import net.cpollet.seles.impl.attribute.AttributesGrouper;
+import net.cpollet.seles.impl.execution.Context;
 import net.cpollet.seles.impl.execution.InternalRequest;
 import net.cpollet.seles.impl.execution.InternalResponse;
 
@@ -41,14 +42,14 @@ public final class CreateRequestExecutionStage implements Stage<AttributeDef> {
     private final Method<Id> idAttributeMethod;
     private final Set<AttributeDef> requiredAttributes;
 
-    public CreateRequestExecutionStage(AttributeStore store, Stage<AttributeDef> update, Stage<AttributeDef> next) {
+    public CreateRequestExecutionStage(Stage<AttributeDef> update, Stage<AttributeDef> next, Context context) {
         this.next = next;
         this.update = update;
-        this.idAttributeMethod = store.idAttribute()
+        this.idAttributeMethod = context.attributeStore.idAttribute()
                 .map(AttributeDef::method)
                 .orElse(null);
         this.requiredAttributes = Collections.unmodifiableSet(
-                store.attributes().stream()
+                context.attributeStore.attributes().stream()
                         .filter(a -> a.modes().contains(AttributeDef.Mode.CREATE))
                         .collect(Collectors.toSet())
         );

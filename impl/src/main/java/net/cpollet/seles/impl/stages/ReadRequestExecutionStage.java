@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public final class ReadRequestExecutionStage implements Stage<AttributeDef> {
     @Override
-    public InternalResponse<AttributeDef> execute(final InternalRequest<AttributeDef> request) {
+    public InternalResponse<AttributeDef> execute(InternalRequest<AttributeDef> request) {
         FetchResult fetchResult = fetch(
                 request.principal(),
                 request.ids(),

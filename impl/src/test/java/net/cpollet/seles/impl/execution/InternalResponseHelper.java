@@ -39,7 +39,10 @@ public class InternalResponseHelper {
      */
     public static <T extends Id> Response<T> toResponse(AttributeStore store, InternalResponse<AttributeDef> response) {
         return InternalResponse.unwrap(
-                new AttributeConversionStage(store, request -> response)
+                new AttributeConversionStage(
+                        request -> response,
+                        new Context(null, store, null, null, null)
+                )
                         .execute(
                                 InternalRequest.wrap(
                                         InternalRequest.RequestType.READ,

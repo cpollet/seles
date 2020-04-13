@@ -19,6 +19,7 @@ import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.api.domain.Id;
 import net.cpollet.seles.api.domain.IdValidator;
 import net.cpollet.seles.impl.Guarded;
+import net.cpollet.seles.impl.execution.Context;
 import net.cpollet.seles.impl.execution.InternalRequest;
 import net.cpollet.seles.impl.execution.InternalResponse;
 
@@ -34,9 +35,9 @@ public final class IdsValidationStage implements Stage<AttributeDef> {
     private final Stage<AttributeDef> next;
     private final IdValidator idValidator;
 
-    public IdsValidationStage(IdValidator idValidator, Stage<AttributeDef> next) {
+    public IdsValidationStage(Stage<AttributeDef> next, Context context) {
         this.next = next;
-        this.idValidator = idValidator;
+        this.idValidator =context.idValidator;
     }
 
     public InternalResponse<AttributeDef> execute(final InternalRequest<AttributeDef> request) {

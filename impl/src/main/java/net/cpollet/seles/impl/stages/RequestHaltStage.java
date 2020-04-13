@@ -31,7 +31,7 @@ public final class RequestHaltStage<A> implements Stage<A> {
     private final Stage<A> next;
     private final Function<Guarded, Boolean> guard;
 
-    public RequestHaltStage(Function<Guarded, Boolean> guard, Stage<A> next) {
+    public RequestHaltStage(Stage<A> next, Function<Guarded, Boolean> guard) {
         this.next = next;
         this.guard = guard;
     }

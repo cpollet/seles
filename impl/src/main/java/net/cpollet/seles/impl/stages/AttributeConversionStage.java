@@ -19,6 +19,7 @@ import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.api.attribute.AttributeStore;
 import net.cpollet.seles.impl.Guarded;
 import net.cpollet.seles.impl.data.BiMap;
+import net.cpollet.seles.impl.execution.Context;
 import net.cpollet.seles.impl.execution.InternalRequest;
 import net.cpollet.seles.impl.execution.InternalResponse;
 
@@ -35,9 +36,9 @@ public final class AttributeConversionStage implements Stage<String> {
     private final Stage<AttributeDef> next;
     private final AttributeStore attributesStore;
 
-    public AttributeConversionStage(AttributeStore attributesStore, Stage<AttributeDef> next) {
+    public AttributeConversionStage(Stage<AttributeDef> next, Context context) {
         this.next = next;
-        this.attributesStore = attributesStore;
+        this.attributesStore = context.attributeStore;
     }
 
     @Override

@@ -18,6 +18,7 @@ package net.cpollet.seles.impl.stages;
 import net.cpollet.seles.api.attribute.AccessLevelPredicate;
 import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.api.domain.Id;
+import net.cpollet.seles.impl.execution.Context;
 import net.cpollet.seles.impl.execution.InternalRequest;
 import net.cpollet.seles.impl.execution.InternalResponse;
 
@@ -34,8 +35,8 @@ public final class FilteringStage implements Stage<AttributeDef> {
     private final Stage<AttributeDef> next;
     private final AccessLevelPredicate predicate;
 
-    public FilteringStage(AccessLevelPredicate predicate, Stage<AttributeDef> next) {
-        this.predicate = predicate;
+    public FilteringStage(Stage<AttributeDef> next, Context context) {
+        this.predicate = context.filteringPredicate;
         this.next = next;
     }
 
