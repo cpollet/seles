@@ -34,7 +34,10 @@ public final class ModeValidationStage implements Stage<AttributeDef> {
     private final AttributeDef.Mode mode;
 
     public ModeValidationStage(Stage<AttributeDef> next, Context context) {
-        this.next = next;
+        this.next = new RequestHaltStage<>(
+                next,
+                req -> context.guard.haltOnModeError && req.hasGuardFlag(Guarded.Flag.INVALID_MODE)
+        );
         this.mode = context.mode;
     }
 

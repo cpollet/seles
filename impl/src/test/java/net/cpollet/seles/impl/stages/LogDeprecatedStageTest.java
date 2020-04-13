@@ -44,7 +44,7 @@ class LogDeprecatedStageTest {
         ));
 
         // WHEN
-        Response res = InternalResponseHelper.toResponse(
+        Response<?> res = InternalResponseHelper.toResponse(
                 store,
                 stage.execute(
                         InternalRequestHelper.toAttributeDefInternalRequest(store)

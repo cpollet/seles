@@ -16,11 +16,11 @@
 package net.cpollet.seles.impl.execution;
 
 public final class DefaultExecutorGuard {
-    private final boolean haltOnAttributeConversionError;
-    private final boolean haltOnIdValidationError;
-    private final boolean haltOnInputValueConversionError;
-    private final boolean haltOnUpdateError;
-    private final boolean haltOnModeError;
+    public final boolean haltOnAttributeConversionError;
+    public final boolean haltOnIdValidationError;
+    public final boolean haltOnInputValueConversionError;
+    public final boolean haltOnUpdateError;
+    public final boolean haltOnModeError;
 
     public DefaultExecutorGuard(boolean haltOnAttributeConversionError, boolean haltOnIdValidationError, boolean haltOnInputValueConversionError, boolean haltOnUpdateError, boolean haltOnModeError) {
         this.haltOnAttributeConversionError = haltOnAttributeConversionError;
@@ -28,6 +28,10 @@ public final class DefaultExecutorGuard {
         this.haltOnInputValueConversionError = haltOnInputValueConversionError;
         this.haltOnUpdateError = haltOnUpdateError;
         this.haltOnModeError = haltOnModeError;
+    }
+
+    public DefaultExecutorGuard() {
+        this(false, false, false, false, false);
     }
 
     boolean haltDueToAttributeConversionError(boolean attributeConversionError) {

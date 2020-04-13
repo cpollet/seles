@@ -27,7 +27,6 @@ import net.cpollet.seles.impl.Guarded;
 import net.cpollet.seles.impl.stages.AttributeConversionStage;
 import net.cpollet.seles.impl.stages.CreateRequestExecutionStage;
 import net.cpollet.seles.impl.stages.DeleteRequestExecutionStage;
-import net.cpollet.seles.impl.stages.EmptyResponseStage;
 import net.cpollet.seles.impl.stages.ExpandStarStage;
 import net.cpollet.seles.impl.stages.FilteringStage;
 import net.cpollet.seles.impl.stages.IdsValidationStage;
@@ -55,8 +54,7 @@ public final class DefaultExecutor implements Executor<Id> {
 
     public DefaultExecutor(AttributeStore attributeStore, IdValidator idValidator, AccessLevelPredicate filteringPredicate, DefaultExecutorGuard guard) {
         this.attributeStore = attributeStore;
-
-        Context readContext = new Context(
+        Context baseContext = new Context(
                 AttributeDef.Mode.READ,
                 attributeStore,
                 idValidator,
@@ -64,129 +62,71 @@ public final class DefaultExecutor implements Executor<Id> {
                 guard,
                 Arrays.asList(AttributeDef::converter, AttributeDef::caster)
         );
-        this.readStack =
-                new TimerStage(
-                        new ExpandStarStage(
-                                validateIdAndConvertValues(
-                                        new ReadRequestExecutionStage(), readContext
-                                ), readContext
-                        )
-                );
-
-        Context writeContext = new Context(
-                AttributeDef.Mode.WRITE,
-                attributeStore,
-                idValidator,
-                filteringPredicate,
-                guard,
-                Arrays.asList(AttributeDef::converter, AttributeDef::caster)
+        this.readStack = StackBuilder.build(
+                baseContext,
+                Arrays.asList(
+                        TimerStage.class,
+                        ExpandStarStage.class,
+                        AttributeConversionStage.class,
+                        ModeValidationStage.class,
+                        LogDeprecatedStage.class,
+                        FilteringStage.class,
+                        IdsValidationStage.class,
+                        ValueConversionStage.class,
+                        ReadRequestExecutionStage.class
+                )
         );
-        this.updateStack =
-                new TimerStage(
-                        validateIdAndConvertValues(
-                                new UpdateRequestExecutionStage(
-                                        new RequestHaltStage<>(
-                                                new ReadRequestExecutionStage(),
-                                                req -> writeContext.guard.haltDueToUpdateError(req.hasGuardFlag(Guarded.Flag.UPDATE_ERROR))
-                                        )
-                                ), writeContext
-                        )
-                );
-
-        Context deleteContext = new Context(
-                AttributeDef.Mode.DELETE,
-                attributeStore,
-                idValidator,
-                filteringPredicate,
-                guard,
-                Arrays.asList(AttributeDef::converter, AttributeDef::caster)
+        this.updateStack = StackBuilder.build(
+                baseContext.withMode(AttributeDef.Mode.WRITE),
+                Arrays.asList(
+                        TimerStage.class,
+                        AttributeConversionStage.class,
+                        ModeValidationStage.class,
+                        LogDeprecatedStage.class,
+                        FilteringStage.class,
+                        IdsValidationStage.class,
+                        ValueConversionStage.class,
+                        UpdateRequestExecutionStage.class,
+                        ReadRequestExecutionStage.class
+                )
         );
-        this.deleteStack =
-                new TimerStage(
-                        validateId(
-                                new DeleteRequestExecutionStage(), deleteContext
-                        )
-                );
-
-        this.createStack =
-                new TimerStage(
-                        prepareRequest(
-                                new CreateRequestExecutionStage(
-                                        new UpdateRequestExecutionStage(
-                                                new EmptyResponseStage<>()
-                                        ),
-                                        new RequestHaltStage<>(
-                                                new ReadRequestExecutionStage(),
-                                                req -> guard.haltDueToUpdateError(req.hasGuardFlag(Guarded.Flag.UPDATE_ERROR))
-                                        ),
-                                        writeContext
-                                ), writeContext
-                        )
-                );
-
-        Context searchContext = new Context(
-                AttributeDef.Mode.SEARCH,
-                attributeStore,
-                idValidator,
-                filteringPredicate,
-                guard,
-                Arrays.asList(AttributeDef::converter, AttributeDef::caster)
+        this.deleteStack = StackBuilder.build(
+                baseContext.withMode(AttributeDef.Mode.DELETE),
+                Arrays.asList(
+                        TimerStage.class,
+                        AttributeConversionStage.class,
+                        ModeValidationStage.class,
+                        LogDeprecatedStage.class,
+                        FilteringStage.class,
+                        IdsValidationStage.class,
+                        DeleteRequestExecutionStage.class
+                )
         );
-        this.searchStack =
-                new TimerStage(
-                        validateIdAndConvertValues(
-                                new SearchRequestExecutionStage(), searchContext
-                        )
-                );
-    }
-
-    /**
-     * Stages used for READ, WRITE and SEARCH requests.
-     */
-    private Stage<String> validateIdAndConvertValues(Stage<AttributeDef> inner, Context context) {
-        return validateId(
-                new ValueConversionStage(
-                        new RequestHaltStage<>(
-                                inner,
-                                req -> context.guard.haltDueToInputValueConversionError(req.hasGuardFlag(Guarded.Flag.INPUT_VALUE_CONVERSION_ERROR))
-                        ), context
-                ), context
+        this.createStack = StackBuilder.build(
+                baseContext.withMode(AttributeDef.Mode.WRITE),
+                Arrays.asList(
+                        TimerStage.class,
+                        AttributeConversionStage.class,
+                        ModeValidationStage.class,
+                        LogDeprecatedStage.class,
+                        FilteringStage.class,
+                        ValueConversionStage.class,
+                        CreateRequestExecutionStage.class,
+                        ReadRequestExecutionStage.class
+                )
         );
-    }
-
-    /**
-     * Stages used for READ, WRITE, DELETE and SEARCH requests.
-     */
-    private Stage<String> validateId(Stage<AttributeDef> inner, Context context) {
-        return prepareRequest(
-                new IdsValidationStage(
-                        new RequestHaltStage<>(
-                                inner,
-                                req -> context.guard.haltDueToIdValidationError(req.hasGuardFlag(Guarded.Flag.INVALID_IDS))
-                        ),
-                        context
-                ), context
-        );
-    }
-
-    /**
-     * Stages used for READ, WRITE, DELETE, CREATE and SEARCH requests.
-     */
-    private Stage<String> prepareRequest(Stage<AttributeDef> inner, Context context) {
-        return new AttributeConversionStage(
-                new RequestHaltStage<>(
-                        new ModeValidationStage(
-                                new RequestHaltStage<>(
-                                        new LogDeprecatedStage(
-                                                new FilteringStage(
-                                                        inner, context
-                                                )
-                                        ),
-                                        req -> context.guard.haltDueToModeError(req.hasGuardFlag(Guarded.Flag.INVALID_MODE))
-                                ), context
-                        ),
-                        req -> context.guard.haltDueToAttributeConversionError(req.hasGuardFlag(Guarded.Flag.ATTRIBUTE_CONVERSION_ERROR))
-                ), context
+        this.searchStack = StackBuilder.build(
+                baseContext.withMode(AttributeDef.Mode.SEARCH),
+                Arrays.asList(
+                        TimerStage.class,
+                        AttributeConversionStage.class,
+                        ModeValidationStage.class,
+                        LogDeprecatedStage.class,
+                        FilteringStage.class,
+                        IdsValidationStage.class,
+                        ValueConversionStage.class,
+                        SearchRequestExecutionStage.class
+                )
         );
     }
 

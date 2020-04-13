@@ -16,7 +16,6 @@
 package net.cpollet.seles.impl.stages;
 
 import net.cpollet.seles.api.attribute.AttributeDef;
-import net.cpollet.seles.api.attribute.AttributeStore;
 import net.cpollet.seles.api.domain.Id;
 import net.cpollet.seles.api.methods.CreateResult;
 import net.cpollet.seles.api.methods.Method;
@@ -42,9 +41,15 @@ public final class CreateRequestExecutionStage implements Stage<AttributeDef> {
     private final Method<Id> idAttributeMethod;
     private final Set<AttributeDef> requiredAttributes;
 
-    public CreateRequestExecutionStage(Stage<AttributeDef> update, Stage<AttributeDef> next, Context context) {
-        this.next = next;
-        this.update = update;
+    public CreateRequestExecutionStage(Stage<AttributeDef> next, Context context) {
+        this.next = new RequestHaltStage<>(
+                next,
+                req -> context.guard.haltOnUpdateError && req.hasGuardFlag(Guarded.Flag.UPDATE_ERROR)
+        );
+        this.update = new UpdateRequestExecutionStage(
+                new EmptyResponseStage<>(),
+                context
+        );
         this.idAttributeMethod = context.attributeStore.idAttribute()
                 .map(AttributeDef::method)
                 .orElse(null);

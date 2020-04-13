@@ -18,6 +18,7 @@ package net.cpollet.seles.impl.stages;
 import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.impl.Guarded;
 import net.cpollet.seles.impl.attribute.AttributesGrouper;
+import net.cpollet.seles.impl.execution.Context;
 import net.cpollet.seles.impl.execution.InternalRequest;
 import net.cpollet.seles.impl.execution.InternalResponse;
 
@@ -30,8 +31,11 @@ import java.util.List;
 public final class UpdateRequestExecutionStage implements Stage<AttributeDef> {
     private final Stage<AttributeDef> next;
 
-    public UpdateRequestExecutionStage(Stage<AttributeDef> next) {
-        this.next = next;
+    public UpdateRequestExecutionStage(Stage<AttributeDef> next, Context context) {
+        this.next = new RequestHaltStage<>(
+                next,
+                req -> context.guard.haltOnUpdateError && req.hasGuardFlag(Guarded.Flag.UPDATE_ERROR)
+        );
     }
 
     @Override

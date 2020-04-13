@@ -36,8 +36,11 @@ public final class IdsValidationStage implements Stage<AttributeDef> {
     private final IdValidator idValidator;
 
     public IdsValidationStage(Stage<AttributeDef> next, Context context) {
-        this.next = next;
-        this.idValidator =context.idValidator;
+        this.next = new RequestHaltStage<>(
+                next,
+                req -> context.guard.haltOnIdValidationError && req.hasGuardFlag(Guarded.Flag.INVALID_IDS)
+        );
+        this.idValidator = context.idValidator;
     }
 
     public InternalResponse<AttributeDef> execute(final InternalRequest<AttributeDef> request) {

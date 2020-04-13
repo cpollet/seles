@@ -39,10 +39,13 @@ public class InternalRequestHelper {
     public static InternalRequest<AttributeDef> toAttributeDefInternalRequest(AttributeStore store) {
         final Holder<InternalRequest<AttributeDef>> holder = new Holder<>();
 
-        new AttributeConversionStage(request -> {
-            holder.object = request;
-            return new InternalResponse<>();
-        }, new Context(null, store, null, null, null, null)).execute(
+        new AttributeConversionStage(
+                request -> {
+                    holder.object = request;
+                    return new InternalResponse<>();
+                },
+                new Context(null, store, null, null, new DefaultExecutorGuard(), null)
+        ).execute(
                 toStringInternalRequest(
                         store.attributes().stream()
                                 .map(AttributeDef::name)

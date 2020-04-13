@@ -37,12 +37,15 @@ public final class ValueConversionStage implements Stage<AttributeDef> {
     private final Stage<AttributeDef> next;
 
     public ValueConversionStage(Stage<AttributeDef> next, Context context) {
-        this.next = context.convertersProvider.stream()
-                .reduce(
-                        next,
-                        Converter::new,
-                        (s1, s2) -> s2
-                );
+        this.next = new RequestHaltStage<>(
+                context.convertersProvider.stream()
+                        .reduce(
+                                next,
+                                Converter::new,
+                                (s1, s2) -> s2
+                        ),
+                req -> context.guard.haltOnInputValueConversionError && req.hasGuardFlag(Guarded.Flag.INPUT_VALUE_CONVERSION_ERROR)
+        );
     }
 
     @Override

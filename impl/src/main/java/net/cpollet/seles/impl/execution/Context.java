@@ -32,4 +32,15 @@ public class Context {
         this.guard = guard;
         this.convertersProvider = convertersProvider;
     }
+
+    public Context withMode(AttributeDef.Mode mode) {
+        return new Context(
+                mode,
+                attributeStore,
+                idValidator,
+                filteringPredicate,
+                guard,
+                convertersProvider
+        );
+    }
 }
