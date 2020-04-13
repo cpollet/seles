@@ -6,22 +6,30 @@ import net.cpollet.seles.api.attribute.AttributeStore;
 import net.cpollet.seles.api.conversion.ValueConverter;
 import net.cpollet.seles.api.domain.IdValidator;
 
+import java.util.List;
+import java.util.function.Function;
+
 public class Context {
     public final AttributeDef.Mode mode;
     public final AttributeStore attributeStore;
     public final IdValidator idValidator;
     public final AccessLevelPredicate filteringPredicate;
     public final DefaultExecutorGuard guard;
+    public final List<Function<AttributeDef, ValueConverter<AttributeDef>>> convertersProvider;
 
-    public Context(AttributeDef.Mode mode, AttributeStore attributeStore, IdValidator idValidator, AccessLevelPredicate filteringPredicate, DefaultExecutorGuard guard) {
+    public Context(
+            AttributeDef.Mode mode,
+            AttributeStore attributeStore,
+            IdValidator idValidator,
+            AccessLevelPredicate filteringPredicate,
+            DefaultExecutorGuard guard,
+            List<Function<AttributeDef, ValueConverter<AttributeDef>>> convertersProvider
+    ) {
         this.mode = mode;
         this.attributeStore = attributeStore;
         this.idValidator = idValidator;
         this.filteringPredicate = filteringPredicate;
         this.guard = guard;
-    }
-
-    public ValueConverter<AttributeDef> valueConverter(AttributeDef attributeDef) {
-        return attributeDef.converter();
+        this.convertersProvider = convertersProvider;
     }
 }

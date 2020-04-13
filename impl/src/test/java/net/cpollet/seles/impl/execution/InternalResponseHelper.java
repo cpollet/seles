@@ -41,7 +41,7 @@ public class InternalResponseHelper {
         return InternalResponse.unwrap(
                 new AttributeConversionStage(
                         request -> response,
-                        new Context(null, store, null, null, null)
+                        new Context(null, store, null, null, null, null)
                 )
                         .execute(
                                 InternalRequest.wrap(

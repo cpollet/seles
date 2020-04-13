@@ -19,6 +19,7 @@ import net.cpollet.seles.api.attribute.AttributeDef;
 import net.cpollet.seles.api.conversion.ValueConverter;
 import net.cpollet.seles.impl.Guarded;
 import net.cpollet.seles.impl.conversion.ConversionResult;
+import net.cpollet.seles.impl.execution.Context;
 import net.cpollet.seles.impl.execution.InternalRequest;
 import net.cpollet.seles.impl.execution.InternalResponse;
 
@@ -34,29 +35,47 @@ import java.util.stream.Collectors;
  */
 public final class ValueConversionStage implements Stage<AttributeDef> {
     private final Stage<AttributeDef> next;
-    private final Function<AttributeDef, ValueConverter<AttributeDef>> valueConverter;
 
-    public ValueConversionStage(Function<AttributeDef, ValueConverter<AttributeDef>> valueConverter, Stage<AttributeDef> next) {
-        this.next = next;
-        this.valueConverter = valueConverter;
+    public ValueConversionStage(Stage<AttributeDef> next, Context context) {
+        this.next = context.convertersProvider.stream()
+                .reduce(
+                        next,
+                        Converter::new,
+                        (s1, s2) -> s2
+                );
     }
 
     @Override
     public InternalResponse<AttributeDef> execute(InternalRequest<AttributeDef> request) {
-        Map<AttributeDef, ValueConverter<AttributeDef>> converters = request.attributes().stream()
-                .collect(Collectors.toMap(
-                        a -> a,
-                        valueConverter
-                ));
+        return next.execute(request);
+    }
 
-        ConversionResult<InternalRequest<AttributeDef>> conversionResult = request.convertValues(converters);
+    private static class Converter implements Stage<AttributeDef> {
+        private final Stage<AttributeDef> next;
+        private final Function<AttributeDef, ValueConverter<AttributeDef>> valueConverter;
 
-        return next
-                .execute(conversionResult
-                        .result()
-                        .addGuardedFlagIf(!conversionResult.errors().isEmpty(), Guarded.Flag.INPUT_VALUE_CONVERSION_ERROR)
-                )
-                .convertValues(converters)
-                .withErrors(conversionResult.errors());
+        private Converter(Stage<AttributeDef> next, Function<AttributeDef, ValueConverter<AttributeDef>> valueConverter) {
+            this.next = next;
+            this.valueConverter = valueConverter;
+        }
+
+        @Override
+        public InternalResponse<AttributeDef> execute(InternalRequest<AttributeDef> request) {
+            Map<AttributeDef, ValueConverter<AttributeDef>> converters = request.attributes().stream()
+                    .collect(Collectors.toMap(
+                            a -> a,
+                            valueConverter
+                    ));
+
+            ConversionResult<InternalRequest<AttributeDef>> conversionResult = request.convertValues(converters);
+
+            return next
+                    .execute(conversionResult
+                            .result()
+                            .addGuardedFlagIf(!conversionResult.errors().isEmpty(), Guarded.Flag.INPUT_VALUE_CONVERSION_ERROR)
+                    )
+                    .convertValues(converters)
+                    .withErrors(conversionResult.errors());
+        }
     }
 }

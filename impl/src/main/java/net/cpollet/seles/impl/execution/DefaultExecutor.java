@@ -41,6 +41,8 @@ import net.cpollet.seles.impl.stages.TimerStage;
 import net.cpollet.seles.impl.stages.UpdateRequestExecutionStage;
 import net.cpollet.seles.impl.stages.ValueConversionStage;
 
+import java.util.Arrays;
+
 // FIXME deserves a refactoring
 public final class DefaultExecutor implements Executor<Id> {
     private final AttributeStore attributeStore;
@@ -59,7 +61,8 @@ public final class DefaultExecutor implements Executor<Id> {
                 attributeStore,
                 idValidator,
                 filteringPredicate,
-                guard
+                guard,
+                Arrays.asList(AttributeDef::converter, AttributeDef::caster)
         );
         this.readStack =
                 new TimerStage(
@@ -75,7 +78,8 @@ public final class DefaultExecutor implements Executor<Id> {
                 attributeStore,
                 idValidator,
                 filteringPredicate,
-                guard
+                guard,
+                Arrays.asList(AttributeDef::converter, AttributeDef::caster)
         );
         this.updateStack =
                 new TimerStage(
@@ -94,7 +98,8 @@ public final class DefaultExecutor implements Executor<Id> {
                 attributeStore,
                 idValidator,
                 filteringPredicate,
-                guard
+                guard,
+                Arrays.asList(AttributeDef::converter, AttributeDef::caster)
         );
         this.deleteStack =
                 new TimerStage(
@@ -124,7 +129,8 @@ public final class DefaultExecutor implements Executor<Id> {
                 attributeStore,
                 idValidator,
                 filteringPredicate,
-                guard
+                guard,
+                Arrays.asList(AttributeDef::converter, AttributeDef::caster)
         );
         this.searchStack =
                 new TimerStage(
@@ -140,14 +146,10 @@ public final class DefaultExecutor implements Executor<Id> {
     private Stage<String> validateIdAndConvertValues(Stage<AttributeDef> inner, Context context) {
         return validateId(
                 new ValueConversionStage(
-                        AttributeDef::caster,
-                        new ValueConversionStage(
-                                AttributeDef::converter,
-                                new RequestHaltStage<>(
-                                        inner,
-                                        req -> context.guard.haltDueToInputValueConversionError(req.hasGuardFlag(Guarded.Flag.INPUT_VALUE_CONVERSION_ERROR))
-                                )
-                        )
+                        new RequestHaltStage<>(
+                                inner,
+                                req -> context.guard.haltDueToInputValueConversionError(req.hasGuardFlag(Guarded.Flag.INPUT_VALUE_CONVERSION_ERROR))
+                        ), context
                 ), context
         );
     }

@@ -46,7 +46,7 @@ class ExpandStarStageTest {
             Assertions.assertThat(2).isEqualTo(request.attributes().size());
 
             return null; // we don't care about return value
-        }, new Context(null, store, null, null, null));
+        }, new Context(null, store, null, null, null, null));
 
         // WHEN
         stage.execute(InternalRequestHelper.toStringInternalRequest(Collections.singletonList("*")));
@@ -70,7 +70,7 @@ class ExpandStarStageTest {
             Assertions.assertThat(2).isEqualTo(request.attributes().size());
 
             return null; // we don't care about return value
-        }, new Context(null, store, null, null, null));
+        }, new Context(null, store, null, null, null, null));
 
         // WHEN
         stage.execute(InternalRequestHelper.toStringInternalRequest(Arrays.asList("*", "attribute_1")));
@@ -93,7 +93,7 @@ class ExpandStarStageTest {
             Assertions.assertThat(1).isEqualTo(request.attributes().size());
 
             return null; // we don't care about return value
-        }, new Context(null, store, null, null, null));
+        }, new Context(null, store, null, null, null, null));
 
         // WHEN
         stage.execute(InternalRequestHelper.toStringInternalRequest(Collections.singletonList("attribute_1")));
