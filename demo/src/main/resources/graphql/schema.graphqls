@@ -1,0 +1,14 @@
+type Portfolio {
+    id: ID!
+    ownerId: ID
+    currency: String
+}
+
+
+type Query {
+    portfolios: [Portfolio]
+}
+
+schema {
+    query: Query
+}
